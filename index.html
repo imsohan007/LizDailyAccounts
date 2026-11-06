@@ -415,11 +415,14 @@ function normDate(x){
   if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
   if(/^\d{4}-\d{2}-\d{2}T/.test(s)){const d=new Date(s);if(!isNaN(d))return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);return m[1]+'-'+m[2]+'-'+m[3]}
   m=s.match(/^(\d{4})[\/.\-](\d{1,2})[\/.\-](\d{1,2})/);if(m)return m[1]+'-'+z(m[2])+'-'+z(m[3]);
-  m=s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})/);if(m){const a=+m[1],b=+m[2];return a>12||b<=12?m[3]+'-'+z(b)+'-'+z(a):m[3]+'-'+z(a)+'-'+z(b)}
+  m=s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})/);if(m){const a=+m[1],b=+m[2];return a>12?m[3]+'-'+z(b)+'-'+z(a):m[3]+'-'+z(a)+'-'+z(b)}
   const d=new Date(s);if(!isNaN(d))return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
   return s;
 }
-const pick=(head,n)=>head.indexOf(n);
+const hn=x=>String(x==null?'':x).toLowerCase().replace(/\s+/g,' ').trim();
+const pick=(head,n)=>{const k=hn(n);return head.findIndex(h=>hn(h)===k)};
+const pickAny=(head,names,kw)=>{for(const n of names){const i=pick(head,n);if(i>=0)return i}
+  if(kw)return head.findIndex(h=>{const x=hn(h);return kw.every(w=>w[0]==='!'?!x.includes(w.slice(1)):x.includes(w))});return -1};
 function rowsFor(res,date){const di=Math.max(0,pick(res.head,'Date'));return res.rows.filter(r=>normDate(r[di])===date)}
 
 async function build(){
@@ -452,8 +455,14 @@ function getNotes(){
 }
 let D={prev:0,sale:0,rec:0,cin:0,exp:0,cout:0,cod:0,hand:0},TXT={},busy=false;
 function initD(){
-  const dr=DATA.daily.rows[0],h=DATA.daily.head,g=n=>{const i=pick(h,n);return dr&&i>=0?num(dr[i]):0};
-  D={prev:g('Previous Ledger'),sale:g('Ajker Cash Sell'),rec:g('Recovery Sell'),cin:g('Cash In'),exp:g('Expense'),cout:g('Cash Out (Deposit)'),cod:g('COD'),hand:g('Cash In Hand')};
+  const dr=DATA.daily.rows[0],h=DATA.daily.head;
+  const g=(names,kw)=>{const i=pickAny(h,names,kw);return dr&&i>=0?num(dr[i]):0};
+  D={prev:g(['Previous Ledger'],['previous']),
+     sale:g(['IBOS Cash Sales','Ajker Cash Sell','Cash Sales','Cash Sell'],['sale','!recovery']),
+     rec:g(['Recovery Sales','Recovery Sell','Recovery'],['recovery']),
+     cin:g(['Cash In']),exp:g(['Expense','Expenses']),
+     cout:g(['Cash Out (Deposit)','Cash Out','Deposit'],['cash out']),
+     cod:g(['COD']),hand:g(['Cash In Hand','Cash on Hand'],['hand'])};
   TXT={};
 }
 const edAttr=(id,extra,o)=>'class="ed" contenteditable="true" tabindex="0" data-id="'+id+'" '+extra+' data-o="'+esc(o)+'"';
