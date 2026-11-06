@@ -3,117 +3,176 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Liz Fashion – Daily Accounts</title>
+<title>Liz Fashion – AponBazaar | Daily Accounts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 [hidden]{display:none!important}
-:root{--navy:#0f2742;--gold:#c8a24a;--ink:#1c2733;--mut:#64748b;--line:#dde3ea;--accbg:#f3e9cf;--okbg:#e3f4ea;--ok:#1b7a43;--badbg:#fdeceb;--bad:#b42318}
+:root{
+  --blue:#1F449C;--blue-d:#152f70;--blue-l:#e8eefb;--blue-xl:#f4f7fd;
+  --yellow:#F8B518;--yellow-d:#d99a06;--yellow-l:#fff4d6;
+  --ink:#16213a;--mut:#64708a;--line:#e3e8f2;--bg:#f2f5fb;
+  --ok:#14803c;--okbg:#e7f6ed;--bad:#c0281c;--badbg:#fdeceb;
+}
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(180deg,#d9e1ec,#eef1f6 360px);color:var(--ink);font:15px/1.55 Inter,"Hind Siliguri",system-ui,sans-serif;min-height:100vh}
-.top{background:linear-gradient(120deg,#0b1e34,#16385c);color:#fff;border-bottom:3px solid var(--gold)}
-.top .in{max-width:960px;margin:auto;padding:12px 16px;display:flex;align-items:center;gap:12px}
-.brand{display:flex;align-items:center;gap:12px;margin-right:auto}
-.brand b{display:block;font-size:17px;font-weight:700}
-.brand span{font-size:12.5px;color:#a9bcd3}
-.logo{width:40px;height:40px;border-radius:50%;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:none}
-.lang{display:flex;background:rgba(255,255,255,.12);border-radius:8px;padding:3px}
-.lang button{border:0;background:transparent;color:#d5e0ee;padding:6px 12px;border-radius:6px;font:inherit;font-size:13px;cursor:pointer}
-.lang button.on{background:#fff;color:var(--navy);font-weight:600}
-.lockb{background:rgba(255,255,255,.12);border:0;color:#fff;padding:7px 12px;border-radius:8px;font:inherit;font-size:13px;cursor:pointer}
-nav{background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(15,39,66,.06)}
-nav .in{max-width:960px;margin:auto;display:flex;overflow-x:auto;padding:0 8px}
-nav button{flex:none;border:0;background:none;padding:14px 16px;font:inherit;font-weight:500;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent}
-nav button.on{color:var(--navy);border-bottom-color:var(--gold);font-weight:700}
-main{max-width:960px;margin:auto;padding:18px 16px 48px}
-.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 4px 14px rgba(15,39,66,.07)}
-h2{font-size:15px;margin:26px 0 10px;color:var(--navy);text-transform:uppercase;letter-spacing:.8px}
-h3{font-size:14px;margin:0 0 4px;color:var(--navy);padding-bottom:8px;border-bottom:2px solid var(--gold);text-transform:uppercase;letter-spacing:.8px}
-label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:14px 0 5px}
-input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font:inherit;color:var(--ink);background:#fff}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);border-color:var(--gold)}
-button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.btns{display:flex;gap:10px;margin-top:20px}
-.btn{padding:12px 18px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
-.btn.pri{flex:1;background:var(--navy);border-color:var(--navy);color:#fff}
-.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy);font-weight:700}
-.btn:disabled{opacity:.5;cursor:default}
-#msg{margin-top:12px;font-size:14px;min-height:20px;color:var(--ok);font-weight:500}
+html{font-family:Inter,"Noto Sans Bengali",system-ui,sans-serif}
+html[lang=bn]{font-family:"Noto Sans Bengali",Inter,system-ui,sans-serif}
+body{margin:0;color:var(--ink);font-size:15px;line-height:1.6;min-height:100vh;background:var(--bg);
+  background-image:radial-gradient(900px 320px at 50% -120px,#d6e1f8,transparent)}
+html[lang=bn] body{font-size:16px}
+button,input,select,textarea{font-family:inherit}
+.num,td,th,input[type=number],.stat b{font-variant-numeric:tabular-nums lining-nums}
+
+/* ---------- Top bar ---------- */
+.top{background:linear-gradient(115deg,var(--blue-d),var(--blue));color:#fff;position:relative}
+.top:after{content:"";display:block;height:4px;background:linear-gradient(90deg,var(--yellow),#ffd566,var(--yellow))}
+.top .in{max-width:1000px;margin:auto;padding:12px 18px;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto;min-width:0}
+.brand b{display:block;font-size:18px;font-weight:700;line-height:1.25}
+.brand span{font-size:12px;color:#ffd566;letter-spacing:1.2px;text-transform:uppercase;font-weight:600}
+html[lang=bn] .brand span{letter-spacing:0;text-transform:none;font-size:13.5px}
+.logo{width:54px;height:54px;border-radius:14px;background:#fff center/160% no-repeat;flex:none;
+  box-shadow:0 0 0 3px rgba(255,255,255,.22),0 6px 14px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;
+  color:var(--blue);font-weight:800;font-size:18px}
+.logo.ok{background-image:var(--logo);font-size:0}
+.lang{display:flex;background:rgba(255,255,255,.14);border-radius:999px;padding:3px}
+.lang button{border:0;background:transparent;color:#dbe5fa;padding:6px 14px;border-radius:999px;font-size:13px;cursor:pointer;font-weight:500}
+.lang button.on{background:var(--yellow);color:var(--blue-d);font-weight:700}
+.lockb{background:rgba(255,255,255,.14);border:0;color:#fff;padding:8px 14px;border-radius:999px;font-size:13px;cursor:pointer}
+.lockb:hover{background:rgba(255,255,255,.24)}
+
+/* ---------- Nav ---------- */
+nav{background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+nav .in{max-width:1000px;margin:auto;display:flex;gap:6px;overflow-x:auto;padding:10px 14px}
+nav button{flex:none;border:0;background:transparent;padding:9px 16px;border-radius:999px;font-weight:600;font-size:14.5px;color:var(--mut);cursor:pointer;transition:.15s}
+nav button:hover{background:var(--blue-l);color:var(--blue)}
+nav button.on{background:var(--blue);color:#fff;box-shadow:0 6px 14px rgba(31,68,156,.3)}
+
+main{max-width:1000px;margin:auto;padding:22px 16px 60px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 10px 30px rgba(21,47,112,.08)}
+h2{font-size:14px;margin:30px 0 10px;color:var(--blue);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+html[lang=bn] h2{text-transform:none;letter-spacing:0;font-size:17px}
+h3{font-size:14px;margin:0 0 4px;color:var(--blue);padding-bottom:9px;border-bottom:3px solid var(--yellow);text-transform:uppercase;letter-spacing:.9px;font-weight:700}
+html[lang=bn] h3{text-transform:none;letter-spacing:0;font-size:17px}
+label{display:block;font-size:13.5px;font-weight:600;color:var(--mut);margin:16px 0 6px}
+input,select,textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:inherit;color:var(--ink);background:#fbfcfe;transition:.15s}
+textarea{min-height:84px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(31,68,156,.14)}
+button:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+.btns{display:flex;gap:10px;margin-top:22px}
+.btn{padding:13px 20px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:inherit;cursor:pointer;transition:.15s}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+.btn.pri{flex:1;background:linear-gradient(135deg,var(--blue),var(--blue-d));border-color:var(--blue-d);color:#fff;box-shadow:0 8px 20px rgba(31,68,156,.28)}
+.btn.pri:hover{color:#fff;filter:brightness(1.08)}
+.btn.gold{background:linear-gradient(135deg,#ffd15a,var(--yellow));border-color:var(--yellow-d);color:var(--blue-d);font-weight:700;box-shadow:0 8px 20px rgba(248,181,24,.38)}
+.btn.gold:hover{color:var(--blue-d);filter:brightness(1.04)}
+.btn:disabled{opacity:.45;cursor:default;box-shadow:none}
+#msg{margin-top:12px;min-height:24px;color:var(--ok);font-weight:600}
 #msg.err,#lmsg{color:var(--bad)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 4px}
-.stat{border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:12px;padding:12px 14px;background:#fff}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 4px}
+.stat{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:linear-gradient(180deg,#fff,var(--blue-xl));position:relative;overflow:hidden}
+.stat:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--blue)}
 .stat small{display:block;color:var(--mut);font-size:13px}
-.stat b{display:block;font-size:26px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
-.stat.ok{background:var(--okbg);border-left-color:var(--ok)}.stat.ok b{color:var(--ok)}
-.stat.bad{background:var(--badbg);border-left-color:var(--bad)}.stat.bad b{color:var(--bad)}
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:14px}
-.sum{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin-top:14px;border-radius:9px;background:var(--accbg);font-weight:700;color:var(--navy)}
-table{border-collapse:collapse;width:100%;font-size:13px}
-th,td{padding:8px 10px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line)}
-th{background:var(--navy);color:#fff;font-weight:600}
-.tbl{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 4px 14px rgba(15,39,66,.05)}
+.stat b{display:block;font-size:26px;font-weight:700;margin-top:2px}
+.stat.ok{background:var(--okbg)}.stat.ok:before{background:var(--ok)}.stat.ok b{color:var(--ok)}
+.stat.bad{background:var(--badbg)}.stat.bad:before{background:var(--bad)}.stat.bad b{color:var(--bad)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:8px}
+.sum{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;margin-top:14px;border-radius:12px;background:var(--yellow-l);border:1px solid #f3d27a;font-weight:700;color:var(--blue-d)}
+input.lk{background:#eef1f7;color:var(--mut);pointer-events:none}
+.dtog{display:block;margin-top:6px;background:none;border:0;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline;padding:0}
+
+/* tables */
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:10px 12px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line)}
+th{background:var(--blue);color:#fff;font-weight:600;font-size:13px}
+tbody tr:nth-child(even) td{background:var(--blue-xl)}
+.tbl{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(21,47,112,.06)}
+.empty{padding:22px;color:var(--mut);text-align:center}
 table.notes{margin-top:10px}
 table.notes td{padding:6px 8px}
-table.notes input{padding:7px 8px;text-align:right}
-table.notes td.r,table.notes th.r{text-align:right;font-variant-numeric:tabular-nums}
-table.notes td:first-child{font-weight:600;color:var(--navy)}
-#lock{padding:16px;min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 20% 10%,#1d4268,#0b1e34 70%)}
-#lock .card{width:100%;max-width:360px;padding:30px 26px;text-align:center;border-top:5px solid var(--gold);border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
-#lock .logo{margin:0 auto 12px;width:56px;height:56px;font-size:20px}
-#lock h1{font-size:20px;margin:0 0 4px;color:var(--navy)}
-#lock p{margin:0 0 6px;color:var(--mut);font-size:14px}
-#lock input{text-align:center;letter-spacing:6px;font-size:18px}
-.rem{display:flex;align-items:center;justify-content:center;gap:8px;margin:14px 0 0;font-weight:500;cursor:pointer}.rem input{width:auto}
-input.lk{background:#f3f5f8;color:var(--mut);pointer-events:none}
-.dtog{display:block;margin-top:6px;background:none;border:0;color:var(--navy);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;text-decoration:underline;padding:0}
-.ctl{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;box-shadow:0 4px 14px rgba(15,39,66,.07)}
-.ctl label{margin:0 0 4px}.dn{display:flex;gap:6px}.dn input{width:auto}.ctl .btn{padding:10px 16px}.ctl .btn.pri{flex:none}
-#rmsg{color:var(--bad);font-size:13px;min-height:18px;margin:8px 2px 0}
-.stage{overflow-x:auto;padding:12px 0 18px}
-.holder{width:600px;margin:0 auto;box-shadow:0 10px 40px rgba(15,39,66,.18)}
-.dlbar{max-width:600px;margin:0 auto}
-.dlbar .btn{width:100%;padding:14px;font-size:16px}
-@media(max-width:720px){.cols{grid-template-columns:1fr;gap:6px}.stats{grid-template-columns:1fr}.stat b{font-size:22px}}
+table.notes input{padding:8px 10px;text-align:right}
+table.notes td.r,table.notes th.r{text-align:right}
+table.notes td:first-child{font-weight:700;color:var(--blue)}
 
-/* ===== SQUARE REPORT (read-only) ===== */
-#rep{width:600px;height:600px;background:#fff;color:#1c2733;font:12.5px/1.4 Inter,"Hind Siliguri",sans-serif;display:flex;flex-direction:column;overflow:hidden}
-#rep .hd{background:linear-gradient(120deg,#0b1e34,#1b3f66);color:#fff;padding:16px 22px;display:flex;align-items:center;gap:12px;border-bottom:4px solid #c8a24a}
-#rep .lg{width:40px;height:40px;border-radius:50%;background:#c8a24a;color:#0f2742;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex:none}
-#rep .nm{flex:1}#rep .nm b{display:block;font-size:17px;font-weight:800}
-#rep .nm span{color:#c8a24a;font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;font-weight:600}
-#rep .dd{text-align:right}#rep .dd b{display:block;font-size:13px;font-weight:700}#rep .dd span{font-size:10.5px;color:#a9bcd3}
-#rep .bd{flex:1;padding:14px 22px 6px;display:flex;flex-direction:column;gap:12px;min-height:0}
-#rep .hero{display:flex;align-items:center;gap:12px;border-radius:12px;padding:10px 14px;border:1.5px solid}
-#rep .hero.ok{background:#e6f5ec;border-color:#16803c;color:#16803c}
-#rep .hero.bad{background:#fdeceb;border-color:#b42318;color:#b42318}
-#rep .hero .ic{width:38px;height:38px;border-radius:50%;color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
-#rep .hero.ok .ic{background:#16803c}#rep .hero.bad .ic{background:#b42318}
-#rep .hero .tx{flex:1}#rep .hero small{display:block;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;font-weight:700}
-#rep .hero .tx b{display:block;font-size:22px;font-weight:800;line-height:1.15}
-#rep .hero .mini{text-align:right;color:#1c2733;font-size:11.5px;line-height:1.6}
+/* login */
+#lock{padding:18px;min-height:calc(100vh - 80px);display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 20% 10%,#2d58c0,var(--blue-d) 70%)}
+#lock .card{width:100%;max-width:390px;padding:34px 28px;text-align:center;border-top:6px solid var(--yellow);border-radius:22px;box-shadow:0 30px 70px rgba(0,0,0,.4)}
+#lock .logo{margin:0 auto 14px;width:92px;height:92px;border-radius:22px;box-shadow:0 0 0 1px var(--line),0 10px 24px rgba(21,47,112,.15);background-color:#fff;background-size:150%}
+#lock h1{font-size:22px;margin:0 0 4px;color:var(--blue)}
+#lock p{margin:0 0 6px;color:var(--mut)}
+#lock input{text-align:center;letter-spacing:8px;font-size:20px}
+.rem{display:flex;align-items:center;justify-content:center;gap:8px;margin:16px 0 0;font-weight:500;cursor:pointer}.rem input{width:auto}
+
+/* report controls */
+.ctl{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;box-shadow:0 10px 30px rgba(21,47,112,.08)}
+.ctl label{margin:0 0 5px}.dn{display:flex;gap:6px}.dn input{width:auto}.ctl .btn{padding:11px 16px}.ctl .btn.pri{flex:none}
+#rmsg{color:var(--bad);font-size:14px;min-height:20px;margin:10px 2px 0}
+.stage{overflow-x:auto;padding:14px 0 20px}
+.holder{width:600px;margin:0 auto;border-radius:8px;box-shadow:0 24px 60px rgba(21,47,112,.3)}
+.dlbar{max-width:600px;margin:0 auto}.dlbar .btn{width:100%;padding:16px;font-size:17px}
+@media(max-width:720px){.cols{grid-template-columns:1fr;gap:6px}.stats{grid-template-columns:1fr}.stat b{font-size:22px}.brand b{font-size:16px}}
+
+/* ================= SQUARE REPORT 600x600 ================= */
+#rep{width:600px;height:600px;background:#fff;color:var(--ink);font-size:12.5px;line-height:1.4;display:flex;flex-direction:column;overflow:hidden;position:relative;
+  font-family:Inter,"Noto Sans Bengali",sans-serif}
+html[lang=bn] #rep{font-family:"Noto Sans Bengali",Inter,sans-serif;font-size:13.5px}
+#rep .hd{background:linear-gradient(115deg,var(--blue-d),var(--blue));color:#fff;padding:16px 24px 15px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
+#rep .hd:before{content:"";position:absolute;right:-50px;top:-80px;width:220px;height:220px;border-radius:50%;background:rgba(248,181,24,.18)}
+#rep .hd:after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:linear-gradient(90deg,var(--yellow),#ffd566,var(--yellow))}
+#rep .lg{width:62px;height:62px;border-radius:14px;background:#fff center/155% no-repeat;flex:none;position:relative;box-shadow:0 0 0 3px var(--yellow),0 8px 18px rgba(0,0,0,.25);
+  display:flex;align-items:center;justify-content:center;color:var(--blue);font-weight:800;font-size:20px}
+#rep .lg.ok{background-image:var(--logo);font-size:0}
+#rep .nm{flex:1;position:relative}
+#rep .nm b{display:block;font-size:19px;font-weight:800;line-height:1.25}
+#rep .nm span{color:#ffd566;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
+html[lang=bn] #rep .nm span{letter-spacing:0;text-transform:none;font-size:13.5px}
+#rep .dd{text-align:right;position:relative}
+#rep .dd b{display:block;font-size:14px;font-weight:700}
+#rep .dd span{font-size:10.5px;color:#b9c9ec}
+#rep .bd{flex:1;padding:14px 24px 6px;display:flex;flex-direction:column;gap:12px;min-height:0;position:relative}
+#rep .hero{display:flex;align-items:center;gap:14px;border-radius:14px;padding:10px 16px;background:#fff;border:1px solid var(--line);border-left:6px solid;box-shadow:0 6px 16px rgba(21,47,112,.08)}
+#rep .hero.ok{border-left-color:var(--ok);color:var(--ok);background:linear-gradient(100deg,#fff 35%,var(--okbg))}
+#rep .hero.bad{border-left-color:var(--bad);color:var(--bad);background:linear-gradient(100deg,#fff 35%,var(--badbg))}
+#rep .hero .ic{box-shadow:0 0 0 5px rgba(0,0,0,.06)}
+#rep .wm{position:absolute;right:-60px;bottom:10px;width:360px;height:360px;background-position:center;background-size:contain;background-repeat:no-repeat;opacity:.05;pointer-events:none}
+#rep .hero .ic{width:40px;height:40px;border-radius:50%;color:#fff;font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+#rep .hero.ok .ic{background:var(--ok)}#rep .hero.bad .ic{background:var(--bad)}
+#rep .hero .tx{flex:1}
+#rep .hero small{display:block;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;font-weight:700}
+html[lang=bn] #rep .hero small{letter-spacing:0;text-transform:none;font-size:13px}
+#rep .hero .tx b{display:block;font-size:25px;font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums lining-nums}
+#rep .hero .mini{text-align:right;color:var(--ink);font-size:12px;line-height:1.7;padding-left:14px;border-left:1px dashed #cdd5e6}
 #rep .cl{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:16px;min-height:0}
-#rep .h{margin:0 0 6px;padding-bottom:5px;border-bottom:2px solid #c8a24a;font-size:11px;font-weight:800;color:#0f2742;text-transform:uppercase;letter-spacing:.8px}
-#rep table{width:100%;border-collapse:collapse;font-size:12px;border:1px solid #e2e8f0}
-#rep td,#rep th{padding:4.5px 9px;border-bottom:1px solid #eef2f6;white-space:nowrap}
-#rep th{background:#0f2742;color:#fff;font-size:10.5px;text-align:left}
-#rep .r{text-align:right;font-variant-numeric:tabular-nums}
-#rep td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
-#rep td.q{color:#1c2733;font-weight:500}
-#rep tr.tot td{background:#f1f5f9;font-weight:700}
-#rep tr.neg td:last-child{color:#b42318}
-#rep tr.fin td{background:#0f2742;color:#fff;font-weight:800;font-size:13px;border:0}
-#rep tfoot td{background:#f3e9cf;color:#0f2742;font-weight:800;border-bottom:0}
-#rep tr.z td{color:#a0aab8}
-#rep .ft{background:#0f2742;color:#a9bcd3;padding:9px 22px;display:flex;justify-content:space-between;font-size:10.5px;border-top:3px solid #c8a24a}
-#rep .ft b{color:#c8a24a}
+#rep .h{margin:0 0 6px;padding-left:9px;border-left:4px solid var(--yellow);font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1px}
+html[lang=bn] #rep .h{text-transform:none;letter-spacing:0;font-size:14px}
+#rep table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+html[lang=bn] #rep table{font-size:13px}
+#rep td,#rep th{padding:4px 10px;border-bottom:1px solid #edf0f6;white-space:nowrap}
+#rep tbody tr:nth-child(even) td{background:#fff}
+#rep tr:last-child td{border-bottom:0}
+#rep th{background:var(--blue);color:#ffd566;font-size:10.5px;letter-spacing:.5px}
+#rep .r{text-align:right}
+#rep td:last-child{text-align:right;font-weight:700}
+#rep td.q{font-weight:500;color:var(--mut)}
+#rep tr.tot td{background:var(--blue-l)!important;font-weight:800;color:var(--blue)}
+#rep tr.neg td:last-child{color:var(--bad)}
+#rep tr.fin td{background:linear-gradient(115deg,var(--blue-d),var(--blue))!important;color:#ffd566;font-weight:800;font-size:13px;border:0}
+#rep tr.fin td:last-child{color:#fff}
+#rep tr.z td{color:#b3bccd}
+#rep tfoot td{background:var(--yellow);color:var(--blue-d);font-weight:800}
+#rep .ft{padding:8px 24px;display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--mut);border-top:3px solid var(--yellow);background:var(--blue-xl)}
+#rep .ft b{color:var(--blue)}
 </style>
 </head>
 <body>
 
 <div class="top"><div class="in">
-  <div class="brand"><div class="logo">LF</div><div><b>Liz Fashion – AponBazaar</b><span data-i="sub"></span></div></div>
+  <div class="brand"><div class="logo" id="hlogo">AB</div><div><b>Liz Fashion – AponBazaar</b><span data-i="sub"></span></div></div>
   <button class="lockb" id="logout" data-i="out" hidden></button>
   <div class="lang" role="group" aria-label="Language">
     <button data-l="bn">বাংলা</button><button data-l="en">English</button>
@@ -121,7 +180,7 @@ input.lk{background:#f3f5f8;color:var(--mut);pointer-events:none}
 </div></div>
 
 <div id="lock"><div class="card">
-  <div class="logo">LF</div>
+  <div class="logo" id="llogo">AB</div>
   <h1 data-i="signin"></h1><p data-i="signinSub"></p>
   <label for="pin" data-i="pin"></label>
   <input id="pin" type="password" inputmode="numeric" autocomplete="off">
@@ -155,6 +214,8 @@ input.lk{background:#f3f5f8;color:var(--mut);pointer-events:none}
 <script>
 // ===== Apps Script Web App URL =====
 const APP_URL = 'https://script.google.com/macros/s/AKfycbx9sC-pVZ9GVxtuXwqRB1cSeslbcKwFYz5Ff5u9BqgODIobZhqqoFjsAl3kXgr3rhb7tQ/exec';
+// ===== Logo file (put logo.png next to this html) =====
+const LOGO = 'logo.png';
 // ====================================
 
 const T={
@@ -166,12 +227,13 @@ const T={
   handlab:'Cash in hand',ledlab:'Ledger amount',match:'Balanced',over:'Cash over',short:'Cash short',
   secL:'Ledger calculation',prev:'Previous ledger',ibos:"Today's cash sales",recov:'Recovery sales',cashin:'Cash in',total:'Total',
   expense:'Expense',cashout:'Cash out (deposit)',cod:'COD',ledger:'Ledger amount',secN:'Note counting',noteCol:'Note',qty:'Qty',handsum:'Total cash in hand',
+  edit:'Edit',lockit:'Lock',
   save:'Save entry',clear:'Clear',saving:'Saving…',saved:'Saved to sheet ✓',recent:'Last 10 entries',loading:'Loading…',none:'No entries yet.',
   wrongpin:'Incorrect PIN',net:'Could not reach the server. Check the Web App deployment.',needdate:'Please select a date.',
   chg:'Change date',auto:'Use today',today:'Today',load:'Show report',dl:'⬇ Download report (JPG)',
   rpt:'Daily Accounts Report',dateL:'Report date',no:'Report No.',sOver:'Cash over',sShort:'Cash short',sOk:'Books balanced',
   hand:'Cash in hand',led:'Current ledger',sale:"Today's cash sales",rec:'Recovery sales',exp:'Expense',rcout:'Cash out (deposit)',diff:'Difference',
-  noDaily:'No cash summary entry found for this date.',gen:'Generated'},
+  noDaily:'No cash summary entry found for this date.',gen:'Generated',tag:'...a little more, more'},
  bn:{sub:'দৈনিক হিসাব',signin:'প্রবেশ করুন',signinSub:'চালিয়ে যেতে আপনার পিন দিন।',pin:'পিন',enter:'প্রবেশ করুন',remember:'এই ডিভাইসে মনে রাখুন',out:'🔒 লক',
   t_daily:'ক্যাশ হিসাব',t_expense:'খরচ',t_cash:'ক্যাশ ইন / আউট',t_recovery:'আদায়',t_baki:'বাকি পাওনা',t_report:'রিপোর্ট',
   date:'তারিখ',name:'খরচের নাম',noteF:'নোট / কারণ',amount:'টাকার পরিমাণ (৳)',code:'খরচের কোড',status:'অবস্থা',
@@ -180,22 +242,27 @@ const T={
   handlab:'হাতে থাকা ক্যাশ',ledlab:'লেজার অ্যামাউন্ট',match:'হিসাব মিলেছে',over:'ক্যাশ বেশি',short:'ক্যাশ কম',
   secL:'লেজার হিসাব',prev:'আগের লেজার',ibos:'আজকের ক্যাশ বিক্রি',recov:'আদায় (রিকভারি) বিক্রি',cashin:'ক্যাশ ইন',total:'মোট',
   expense:'খরচ',cashout:'ক্যাশ আউট (জমা)',cod:'সিওডি (COD)',ledger:'লেজার অ্যামাউন্ট',secN:'নোট গণনা',noteCol:'নোট',qty:'সংখ্যা',handsum:'হাতে মোট ক্যাশ',
+  edit:'বদলান',lockit:'লক',
   save:'এন্ট্রি সেভ করুন',clear:'মুছুন',saving:'সেভ হচ্ছে…',saved:'শিটে সেভ হয়েছে ✓',recent:'সর্বশেষ ১০টি এন্ট্রি',loading:'লোড হচ্ছে…',none:'এখনো কোনো এন্ট্রি নেই।',
   wrongpin:'পিন ভুল হয়েছে',net:'সার্ভারের সাথে যোগাযোগ হয়নি। Web App Deploy ঠিক আছে কিনা দেখুন।',needdate:'অনুগ্রহ করে তারিখ দিন।',
   chg:'তারিখ বদলান',auto:'আজকের তারিখ',today:'আজ',load:'রিপোর্ট দেখুন',dl:'⬇ রিপোর্ট ডাউনলোড (JPG)',
   rpt:'দৈনিক হিসাব রিপোর্ট',dateL:'রিপোর্টের তারিখ',no:'রিপোর্ট নং',sOver:'ক্যাশ বেশি',sShort:'ক্যাশ কম',sOk:'হিসাব মিলেছে',
   hand:'হাতে থাকা ক্যাশ',led:'বর্তমান লেজার',sale:'আজকের ক্যাশ সেল',rec:'আদায় সেল',exp:'খরচ',rcout:'ক্যাশ আউট (জমা)',diff:'পার্থক্য',
-  noDaily:'এই তারিখে ক্যাশ হিসাবের কোনো এন্ট্রি পাওয়া যায়নি।',gen:'তৈরির সময়'}
+  noDaily:'এই তারিখে ক্যাশ হিসাবের কোনো এন্ট্রি পাওয়া যায়নি।',gen:'তৈরির সময়',tag:'...একটু বেশি বেশি'}
 };
 const HB={'Date':'তারিখ','Expense Name':'খরচের নাম','Note':'নোট','Amount':'পরিমাণ','Status':'অবস্থা','Expense Code':'কোড','Entered At':'এন্ট্রির সময়','Type':'ধরন',
  'Customer ID':'কাস্টমার আইডি','Customer Name':'কাস্টমারের নাম','Exchange With Cash':'ক্যাশের বিনিময়ে','Remarks':'মন্তব্য','Name':'নাম','Reason':'কারণ',
  'Previous Ledger':'আগের লেজার','Ajker Cash Sell':'আজকের বিক্রি','Recovery Sell':'আদায়','Cash In':'ক্যাশ ইন','Total':'মোট','Expense':'খরচ','Cash Out (Deposit)':'ক্যাশ আউট (জমা)','COD':'সিওডি','Ledger Amount':'লেজার','Cash In Hand':'হাতের ক্যাশ','Partokkho (Hand - Ledger)':'পার্থক্য'};
+
 let lang='bn';try{lang=localStorage.getItem('lang')||'bn'}catch(e){}
 const t=k=>T[lang][k]||k;
 const $=id=>document.getElementById(id);
 const loc=()=>lang==='bn'?'bn-BD':'en-IN';
+const num=v=>Number(String(v==null?'':v).replace(/[^\d.\-]/g,''))||0;
 const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
-const fmt=v=>'৳ '+(Number(v)||0).toLocaleString(loc());
+const fmt=v=>'৳ '+num(v).toLocaleString(loc());
+const nf=v=>num(v).toLocaleString(loc());
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const NOTES=[1000,500,200,100,50,20,10,5,2,1];
 
 const F={
@@ -207,253 +274,255 @@ const F={
  recovery:{fields:[['date','date','date'],['custId','custId','text'],['custName','custName','text'],['amount','amount','number'],['exchange','exchange','number'],['remarks','remarks','text']]},
  baki:{fields:[['date','date','date'],['name','bname','text'],['amount','amount','number'],['reason','reason','textarea']]}
 };
-let cur='report',PIN='';
-
-async function call(action,type,d){
-  const r=await fetch(APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,type,d,pin:PIN})});
-  const j=await r.json();
-  if(!j.ok)throw new Error(j.error||'Error');
-  return j.data;
+let cur='report',PIN='',prevLocked=true;
+/* Which sheets allow only ONE entry per date. Set true/false per sheet. */
+const ONCE={daily:true,expense:false,cash:false,recovery:false,baki:false};
+T.bn.dup='এই তারিখের এন্ট্রি আগেই করা হয়েছে। একই তারিখে দুইবার করা যাবে না।';
+T.en.dup='An entry for this date already exists. Only one entry per date is allowed.';
+async function dateTaken(sheet,date){
+  try{
+    const r=await call('exists',{sheet,date});
+    if(r&&typeof r.exists==='boolean')return r.exists;
+    if(sheet==='daily'){const q=await call('report',{date});return !!(q&&q.ok!==false&&(q.daily||q.data));}
+  }catch(e){}
+  return false;
 }
-function errText(e){const m=String(e.message||e);if(/PIN/i.test(m))return t('wrongpin');if(/fetch|network|JSON/i.test(m))return t('net');return m}
-function say(m,err){const x=$('msg');x.textContent=m;x.className=err?'err':''}
-const nv=id=>Number(($(id)||{}).value)||0;
+async function guardDate(){
+  if(!ONCE[cur]||!$('f_date'))return false;
+  const dup=await dateTaken(cur,$('f_date').value);
+  $('save').disabled=dup;
+  if(dup)setMsg(t('dup'),true);else if($('msg').className==='err')setMsg('');
+  return dup;
+}
 
-function applyLang(){
+/* ---------- Logo ---------- */
+(function(){
+  const im=new Image();
+  im.onload=()=>{document.documentElement.style.setProperty('--logo',`url("${LOGO}")`);
+    document.querySelectorAll('.logo,#rep .lg').forEach(e=>e.classList.add('ok'));window.__logoOK=true;};
+  im.src=LOGO;
+})();
+
+/* ---------- API ----------
+   POST text/plain JSON: {action, pin, ...}
+   actions: login | add{sheet,data} | recent{sheet} | prev{date} | report{date}
+   Adjust this one function + the 5 action names if your Apps Script differs. */
+async function call(act,data={}){
+  const r=await fetch(APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:act,pin:PIN,...data})});
+  return r.json();
+}
+
+/* ---------- i18n ---------- */
+function applyI18n(){
   document.documentElement.lang=lang;
   document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
   document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===lang));
+  const tabs=['daily','expense','cash','recovery','baki','report'];
+  $('tabs').innerHTML=tabs.map(k=>`<button data-tab="${k}" class="${k===cur?'on':''}">${t('t_'+k)}</button>`).join('');
   $('save').textContent=t('save');$('clear').textContent=t('clear');
+  $('lmsg').textContent='';
 }
-function view(){const r=cur==='report';$('entry').hidden=r;$('repmain').hidden=!r}
-function initRep(){$('d').value=today();build()}
-function tabs(){
-  $('tabs').innerHTML='';
-  Object.keys(F).forEach(k=>{
-    const b=document.createElement('button');b.textContent=t('t_'+k);if(k===cur)b.className='on';
-    b.onclick=()=>{cur=k;tabs();view();if(k==='report')initRep();else{form();recent()}};$('tabs').appendChild(b);
-  });
-}
-function snapshot(){const s={};$('fields').querySelectorAll('input,select,textarea').forEach(e=>s[e.id]=e.value);return s}
-function restore(s){Object.keys(s).forEach(id=>{const e=$(id);if(e&&s[id]!=='')e.value=s[id]});if(cur==='daily')cashCalc()}
 
-function cashView(){
-  const inp=(id,k)=>'<label for="f_'+id+'">'+t(k)+'</label><input id="f_'+id+'" type="number" inputmode="decimal" step="any">';
-  $('fields').innerHTML=
-   '<div style="max-width:220px"><label for="f_date" style="margin-top:0">'+t('date')+'</label><input id="f_date" type="date" value="'+today()+'"></div>'+
-   '<div class="stats">'+
-    '<div class="stat"><small>'+t('handlab')+'</small><b id="s_hand"></b></div>'+
-    '<div class="stat"><small>'+t('ledlab')+'</small><b id="s_led"></b></div>'+
-    '<div class="stat" id="s_box"><small id="s_lab"></small><b id="s_diff"></b></div></div>'+
-   '<div class="cols"><div><h3>'+t('secL')+'</h3>'+
-    inp('prev','prev')+inp('ibos','ibos')+inp('recov','recov')+inp('cashin','cashin')+
-    '<div class="sum"><span>'+t('total')+'</span><span id="s_tot"></span></div>'+
-    inp('expense','expense')+inp('cashout','cashout')+inp('cod','cod')+
-    '<div class="sum"><span>'+t('ledger')+'</span><span id="s_led2"></span></div></div>'+
-   '<div><h3>'+t('secN')+'</h3><table class="notes"><tr><th>'+t('noteCol')+'</th><th>'+t('qty')+'</th><th class="r">'+t('total')+'</th></tr>'+
-    NOTES.map(v=>'<tr><td>৳ '+v+'</td><td><input id="q_'+v+'" type="number" inputmode="numeric" min="0"></td><td class="r" id="t_'+v+'">0</td></tr>').join('')+
-    '</table><div class="sum"><span>'+t('handsum')+'</span><span id="s_hand2"></span></div></div></div>';
-  $('fields').querySelectorAll('input').forEach(i=>i.oninput=cashCalc);
-  cashCalc();
+/* ---------- Entry forms ---------- */
+function buildFields(keepDate){
+  const cfg=F[cur];const box=$('fields');const oldDate=keepDate&&$('f_date')?$('f_date').value:today();
+  if(cfg.custom){ buildDaily(oldDate); return; }
+  box.innerHTML=cfg.fields.map(([k,lab,type,opts])=>{
+    const id='f_'+k;let inp;
+    if(type==='select')inp=`<select id="${id}">${opts.map(o=>`<option value="${esc(o[0])}">${esc(t(o[1]))}</option>`).join('')}</select>`;
+    else if(type==='textarea')inp=`<textarea id="${id}"></textarea>`;
+    else inp=`<input id="${id}" type="${type}" ${type==='number'?'inputmode="decimal" min="0" step="any"':''}>`;
+    return `<label for="${id}">${t(lab)}</label>${inp}`;
+  }).join('');
+  $('f_date').value=oldDate;
+  $('f_date').addEventListener('change',guardDate);guardDate();
 }
-function cashCalc(){
-  if(!$('s_hand'))return;
-  let hand=0;
-  NOTES.forEach(v=>{const x=v*nv('q_'+v);hand+=x;$('t_'+v).textContent=x.toLocaleString(loc())});
-  const tot=nv('f_prev')+nv('f_ibos')+nv('f_recov')+nv('f_cashin');
-  const led=tot-nv('f_expense')-nv('f_cashout')-nv('f_cod');
+function numField(id,lab,locked){
+  return `<label for="${id}">${t(lab)}</label><input id="${id}" type="number" inputmode="decimal" step="any" min="0" ${locked?'class="lk" readonly':''}>`;
+}
+function buildDaily(d){
+  $('fields').innerHTML=`
+   <label for="f_date">${t('date')}</label><input id="f_date" type="date">
+   <div class="cols">
+     <div>
+       <h3>${t('secL')}</h3>
+       ${numField('f_prev','prev',true)}<button type="button" class="dtog" id="ptog">${t('edit')}</button>
+       ${numField('f_sale','ibos')}${numField('f_recov','recov')}${numField('f_cashin','cashin')}
+       ${numField('f_exp','expense')}${numField('f_out','cashout')}${numField('f_cod','cod')}
+       <div class="sum"><span>${t('ledger')}</span><span id="s_led" class="num">৳ 0</span></div>
+     </div>
+     <div>
+       <h3>${t('secN')}</h3>
+       <table class="notes"><thead><tr><th>${t('noteCol')}</th><th class="r">${t('qty')}</th><th class="r">${t('amount')}</th></tr></thead><tbody>
+       ${NOTES.map(n=>`<tr><td>${nf(n)}</td><td><input class="nq" data-n="${n}" type="number" inputmode="numeric" min="0" step="1"></td><td class="r" id="na_${n}">0</td></tr>`).join('')}
+       </tbody></table>
+       <div class="sum"><span>${t('handsum')}</span><span id="s_hand" class="num">৳ 0</span></div>
+     </div>
+   </div>
+   <div class="stats">
+     <div class="stat"><small>${t('handlab')}</small><b id="k_hand">৳ 0</b></div>
+     <div class="stat"><small>${t('ledlab')}</small><b id="k_led">৳ 0</b></div>
+     <div class="stat" id="k_box"><small id="k_lab">${t('match')}</small><b id="k_diff">৳ 0</b></div>
+   </div>`;
+  $('f_date').value=d;
+  $('fields').addEventListener('input',calc);
+  $('ptog').onclick=()=>{prevLocked=!prevLocked;const p=$('f_prev');p.classList.toggle('lk',prevLocked);p.readOnly=prevLocked;$('ptog').textContent=prevLocked?t('edit'):t('lockit');if(!prevLocked)p.focus()};
+  $('f_date').addEventListener('change',fetchPrev);
+  $('f_date').addEventListener('change',guardDate);
+  prevLocked=true;fetchPrev();calc();guardDate();
+}
+async function fetchPrev(){
+  const p=$('f_prev');if(!p)return;
+  try{const r=await call('prev',{date:$('f_date').value});if(r&&r.ok!==false&&r.prev!=null){p.value=r.prev;calc();}}catch(e){}
+}
+function calc(){
+  if(!$('f_prev'))return;
+  const v=id=>num($(id).value);
+  const total=v('f_prev')+v('f_sale')+v('f_recov')+v('f_cashin');
+  const led=total-v('f_exp')-v('f_out')-v('f_cod');
+  let hand=0;document.querySelectorAll('.nq').forEach(i=>{const a=num(i.value)*Number(i.dataset.n);$('na_'+i.dataset.n).textContent=nf(a);hand+=a});
   const diff=hand-led;
-  $('s_hand').textContent=$('s_hand2').textContent=fmt(hand);
-  $('s_led').textContent=$('s_led2').textContent=fmt(led);
-  $('s_tot').textContent=fmt(tot);
-  $('s_box').className='stat '+(diff>=0?'ok':'bad');
-  $('s_lab').textContent=diff===0?t('match'):diff>0?t('over'):t('short');
-  $('s_diff').textContent=fmt(Math.abs(diff));
+  $('s_led').textContent=fmt(led);$('s_hand').textContent=fmt(hand);
+  $('k_hand').textContent=fmt(hand);$('k_led').textContent=fmt(led);
+  $('k_diff').textContent=(diff>0?'+ ':diff<0?'− ':'')+fmt(Math.abs(diff));
+  $('k_box').className='stat '+(diff===0?'ok':'bad');
+  $('k_lab').textContent=diff===0?t('match'):diff>0?t('over'):t('short');
 }
-function form(){
-  say('');
-  if(F[cur].custom){cashView();lockDate();return}
-  const box=$('fields');box.innerHTML='';
-  F[cur].fields.forEach(([id,k,type,opts],i)=>{
-    const l=document.createElement('label');l.htmlFor='f_'+id;l.textContent=t(k);if(!i)l.style.marginTop='0';box.appendChild(l);
-    let el;
-    if(type==='select'){el=document.createElement('select');opts.forEach(([v,lk])=>{const o=document.createElement('option');o.value=v;o.textContent=t(lk);el.appendChild(o)})}
-    else if(type==='textarea'){el=document.createElement('textarea');el.rows=2}
-    else{el=document.createElement('input');el.type=type;if(type==='number'){el.inputMode='decimal';el.step='any'}}
-    el.id='f_'+id;if(type==='date')el.value=today();box.appendChild(el);
-  });
-  lockDate();
+function collect(){
+  const out={};
+  if(F[cur].custom){
+    out.date=$('f_date').value;
+    out.prev=num($('f_prev').value);out.sale=num($('f_sale').value);out.recov=num($('f_recov').value);out.cashin=num($('f_cashin').value);
+    out.exp=num($('f_exp').value);out.out=num($('f_out').value);out.cod=num($('f_cod').value);
+    out.notes={};let hand=0;document.querySelectorAll('.nq').forEach(i=>{out.notes[i.dataset.n]=num(i.value);hand+=num(i.value)*Number(i.dataset.n)});
+    out.total=out.prev+out.sale+out.recov+out.cashin;
+    out.ledger=out.total-out.exp-out.out-out.cod;out.hand=hand;out.diff=hand-out.ledger;
+  }else F[cur].fields.forEach(([k])=>out[k]=$('f_'+k).value);
+  return out;
 }
-function lockDate(){
-  const d=$('f_date');if(!d)return;
-  d.value=today();d.readOnly=true;d.classList.add('lk');d.tabIndex=-1;
-  const b=document.createElement('button');b.type='button';b.className='dtog';b.textContent=t('chg');
-  b.onclick=()=>{const was=d.readOnly;d.readOnly=!was;d.classList.toggle('lk',!was);d.tabIndex=was?0:-1;b.textContent=was?t('auto'):t('chg');if(!was)d.value=today()};
-  d.parentNode.insertBefore(b,d.nextSibling);
-}
-async function recent(){
-  $('recent').textContent=t('loading');$('recent').style.padding='12px';
+function setMsg(s,err){const m=$('msg');m.textContent=s;m.className=err?'err':''}
+async function saveEntry(){
+  const data=collect();
+  if(!data.date){setMsg(t('needdate'),true);return}
+  $('save').disabled=true;setMsg(t('saving'));
+  if(ONCE[cur]&&await dateTaken(cur,data.date)){setMsg(t('dup'),true);return}
   try{
-    const r=await call('recent',cur);
-    if(!r.rows.length){$('recent').textContent=t('none');return}
-    $('recent').style.padding='0';
-    const hd=h=>lang==='bn'&&HB[h]?HB[h]:h;
-    let h='<table><tr>'+r.head.map(x=>'<th>'+hd(x)+'</th>').join('')+'</tr>';
-    r.rows.forEach(row=>h+='<tr>'+row.map(x=>'<td>'+String(x).replace(/</g,'&lt;')+'</td>').join('')+'</tr>');
-    $('recent').innerHTML=h+'</table>';
-    if(cur==='daily'&&$('f_prev')&&!$('f_prev').value){const l=Number(String(r.rows[0][9]).replace(/,/g,''));if(l){$('f_prev').value=l;cashCalc()}}
-  }catch(e){$('recent').textContent=errText(e)}
-}
-function clearForm(){
-  $('fields').querySelectorAll('input,textarea').forEach(e=>{if(e.type!=='date')e.value=''});
-  if(cur==='daily')cashCalc();
-}
-$('clear').onclick=()=>{clearForm();say('')};
-$('save').onclick=async()=>{
-  const fd=$('f_date');if(fd&&fd.readOnly)fd.value=today();
-  const d={};F[cur].fields.forEach(([id])=>d[id]=$('f_'+id).value);
-  if(cur==='daily'){['prev','ibos','recov','cashin','expense','cashout','cod'].forEach(k=>d[k]=$('f_'+k).value);d.notes={};NOTES.forEach(v=>{d.notes[v]=nv('q_'+v)})}
-  if(!d.date){say(t('needdate'),1);return}
-  if(cur==='daily'){try{localStorage.setItem('lz_notes_'+d.date,JSON.stringify(d.notes))}catch(e){}}
-  $('save').disabled=true;say(t('saving'));
-  try{
-    await call('save',cur,d);
-    if(cur==='daily'){
-      const n={date:d.date};
-      NOTES.forEach(v=>n['note_'+v]=d.notes[v]);
-      n.pcs=NOTES.reduce((a,v)=>a+d.notes[v],0);
-      n.total=NOTES.reduce((a,v)=>a+v*d.notes[v],0);
-      await call('save','notes',n);
-    }
-    clearForm();
-    if(cur==='daily'){cur='report';tabs();view();$('d').value=d.date;await build()}
-    else{say(t('saved'));recent()}
-  }
-  catch(e){say(errText(e),1)}
+    const r=await call('add',{sheet:cur,data});
+    if(r&&r.duplicate){setMsg(t('dup'),true);return}
+    if(r&&r.ok===false){setMsg(r.error||t('net'),true)}
+    else{const dt=data.date;buildFields(false);$('f_date').value=dt;await guardDate();setMsg(t('saved'));loadRecent();$('save').disabled=!!(ONCE[cur]);return}
+  }catch(e){setMsg(t('net'),true)}
   $('save').disabled=false;
-};
-async function login(pin,remember){
-  PIN=pin;$('lmsg').textContent='';
+}
+async function loadRecent(){
+  const box=$('recent');box.innerHTML=`<div class="empty">${t('loading')}</div>`;
   try{
-    await call('recent','expense');
-    if(remember){try{localStorage.setItem('lz_pin',pin)}catch(e){}}
-    $('lock').hidden=true;$('app').hidden=false;$('logout').hidden=false;tabs();view();initRep();return true;
-  }catch(e){
-    if(/PIN/i.test(String(e.message||e))){try{localStorage.removeItem('lz_pin')}catch(x){}}
-    $('lmsg').textContent=errText(e);return false;
-  }
+    const r=await call('recent',{sheet:cur});
+    const rows=(r&&(r.rows||r.data))||[];
+    if(!rows.length){box.innerHTML=`<div class="empty">${t('none')}</div>`;return}
+    const keys=Object.keys(rows[0]);
+    const H=k=>lang==='bn'?(HB[k]||k):k;
+    box.innerHTML=`<table><thead><tr>${keys.map(k=>`<th>${esc(H(k))}</th>`).join('')}</tr></thead><tbody>${
+      rows.map(o=>`<tr>${keys.map(k=>`<td>${esc(o[k])}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  }catch(e){box.innerHTML=`<div class="empty">${t('net')}</div>`}
 }
-$('enter').onclick=()=>login($('pin').value,$('rem').checked);
-$('logout').onclick=()=>{try{localStorage.removeItem('lz_pin')}catch(e){}PIN='';$('app').hidden=true;$('lock').hidden=false;$('logout').hidden=true;$('pin').value=''};
-$('pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('enter').click()});
-document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{
-  lang=b.dataset.l;try{localStorage.setItem('lang',lang)}catch(e){}
-  const s=$('app').hidden?null:snapshot();applyLang();
-  if(s){tabs();view();if(cur==='report'){if(DATA)render()}else{form();restore(s);recent();$('msg').textContent=''}}
-});
 
-/* ===== Report (read-only, built from sheet data) ===== */
-const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const num=v=>{const n=Number(String(v).replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d)).replace(/[,৳\s]/g,''));return isNaN(n)?0:n};
-const money=v=>'৳ '+num(v).toLocaleString(loc());
-let DATA=null,DATE='';
-
-function normDate(x){
-  if(x instanceof Date&&!isNaN(x))return new Date(x-x.getTimezoneOffset()*6e4).toISOString().slice(0,10);
-  const s=String(x==null?'':x).replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d)).trim();let m;
-  const z=n=>String(n).padStart(2,'0');
-  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
-  if(/^\d{4}-\d{2}-\d{2}T/.test(s)){const d=new Date(s);if(!isNaN(d))return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);return m[1]+'-'+m[2]+'-'+m[3]}
-  m=s.match(/^(\d{4})[\/.\-](\d{1,2})[\/.\-](\d{1,2})/);if(m)return m[1]+'-'+z(m[2])+'-'+z(m[3]);
-  m=s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})/);if(m){const a=+m[1],b=+m[2];return a>12?m[3]+'-'+z(b)+'-'+z(a):m[3]+'-'+z(a)+'-'+z(b)}
-  const d=new Date(s);if(!isNaN(d))return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
-  return s;
+/* ---------- Tabs ---------- */
+function showTab(k){
+  cur=k;applyI18n();
+  const isRep=k==='report';
+  $('entry').hidden=isRep;$('repmain').hidden=!isRep;
+  if(isRep){if(!$('d').value)$('d').value=today();}
+  else{buildFields(true);setMsg('');loadRecent();}
 }
-const hn=x=>String(x==null?'':x).toLowerCase().replace(/\s+/g,' ').trim();
-const pick=(head,n)=>{const k=hn(n);return head.findIndex(h=>hn(h)===k)};
-const pickAny=(head,names,kw)=>{for(const n of names){const i=pick(head,n);if(i>=0)return i}
-  if(kw)return head.findIndex(h=>{const x=hn(h);return kw.every(w=>w[0]==='!'?!x.includes(w.slice(1)):x.includes(w))});return -1};
-function rowsFor(res,date){const di=Math.max(0,pick(res.head,'Date'));return res.rows.filter(r=>normDate(r[di])===date)}
 
-async function build(){
-  DATE=$('d').value;if(!DATE)return;
-  $('rmsg').textContent=t('loading');$('dl').disabled=true;
+/* ---------- Report ---------- */
+function shiftDate(n){const d=new Date($('d').value||today());d.setDate(d.getDate()+n);$('d').value=new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)}
+function longDate(s){try{return new Date(s+'T00:00:00').toLocaleDateString(loc(),{day:'numeric',month:'long',year:'numeric'})}catch(e){return s}}
+async function loadReport(){
+  const ds=$('d').value;$('rmsg').textContent='';
+  if(!ds){$('rmsg').textContent=t('needdate');return}
+  $('load').disabled=true;$('rmsg').textContent=t('loading');$('rmsg').style.color='var(--mut)';
   try{
-    const types=['daily','notes'];
-    const res=await Promise.all(types.map(k=>call('recent',k,{limit:1000,date:DATE})));
-    DATA={};types.forEach((k,i)=>DATA[k]={head:res[i].head,rows:rowsFor(res[i],DATE)});
-    latestOnly();
-    if(!DATA.daily.rows.length){$('rmsg').textContent=t('noDaily');$('holder').hidden=true;return}
-    $('rmsg').textContent='';$('holder').hidden=false;render();$('dl').disabled=false;
-  }catch(e){$('rmsg').textContent=errText(e)}
+    const r=await call('report',{date:ds});
+    const d=r&&(r.daily||r.data);
+    if(!d||r.ok===false){$('holder').hidden=true;$('dl').disabled=true;$('rmsg').style.color='var(--bad)';$('rmsg').textContent=t('noDaily');}
+    else{drawReport(ds,d);$('rmsg').textContent='';}
+  }catch(e){$('rmsg').style.color='var(--bad)';$('rmsg').textContent=t('net')}
+  $('load').disabled=false;
 }
-function latestOnly(){
-  ['daily','notes'].forEach(k=>{
-    const d=DATA[k];if(!d||d.rows.length<2)return;
-    const ei=pick(d.head,'Entered At');
-    if(ei>=0){
-      const ts=r=>{const v=Date.parse(String(r[ei]));return isNaN(v)?null:v};
-      if(d.rows.every(r=>ts(r)!==null))d.rows=d.rows.slice().sort((x,y)=>ts(y)-ts(x));
-    }
-    d.rows=[d.rows[0]];
-  });
+function pick(d,...ks){for(const k of ks)if(d[k]!=null&&d[k]!=='')return num(d[k]);return 0}
+function drawReport(ds,d){
+  const prev=pick(d,'prev','Previous Ledger'),sale=pick(d,'sale','Ajker Cash Sell'),rec=pick(d,'recov','Recovery Sell'),ci=pick(d,'cashin','Cash In');
+  const exp=pick(d,'exp','Expense'),out=pick(d,'out','Cash Out (Deposit)'),cod=pick(d,'cod','COD');
+  const total=(d.total!=null||d.Total!=null)?pick(d,'total','Total'):prev+sale+rec+ci;
+  const led=(d.ledger!=null||d['Ledger Amount']!=null)?pick(d,'ledger','Ledger Amount'):total-exp-out-cod;
+  const nt=d.notes||{};let hand=0;
+  const rows=NOTES.map(n=>{const q=num(nt[n]!=null?nt[n]:d['N'+n]!=null?d['N'+n]:d[n]);const a=q*n;hand+=a;return [n,q,a]});
+  if(d.hand!=null||d['Cash In Hand']!=null){const h=pick(d,'hand','Cash In Hand');if(h)hand=h}
+  const diff=hand-led;const ok=diff===0;
+  const label=ok?t('sOk'):diff>0?t('sOver'):t('sShort');
+  const icon=ok?'✓':diff>0?'▲':'▼';
+  const row=(l,v,c='')=>`<tr class="${c}"><td>${l}</td><td>${c==='neg'&&num(v)?'− ':''}${fmt(v)}</td></tr>`;
+  $('rep').innerHTML=`
+   <div class="hd"><div class="lg${window.__logoOK?' ok':''}">AB</div>
+     <div class="nm"><b>Liz Fashion – AponBazaar</b><span>${t('rpt')}</span></div>
+     <div class="dd"><b>${esc(longDate(ds))}</b><span>${t('no')}: LF-${ds.replace(/-/g,'')}</span></div></div>
+   <div class="bd">
+     <div class="hero ${ok?'ok':'bad'}"><div class="ic">${icon}</div>
+       <div class="tx"><small>${label}</small><b>${ok?'৳ 0':(diff>0?'+ ':'− ')+fmt(Math.abs(diff))}</b></div>
+       <div class="mini">${t('hand')}: <b>${fmt(hand)}</b><br>${t('led')}: <b>${fmt(led)}</b></div></div>
+     <div class="cl">
+       <div><div class="h">${t('secL')}</div><table><tbody>
+         ${row(t('prev'),prev)}${row(t('ibos'),sale)}${row(t('recov'),rec)}${row(t('cashin'),ci)}
+         ${row(t('total'),total,'tot')}${row(t('expense'),exp,'neg')}${row(t('cashout'),out,'neg')}${row(t('cod'),cod,'neg')}
+         ${row(t('ledger'),led,'fin')}</tbody></table></div>
+       <div><div class="h">${t('secN')}</div><table><thead><tr><th>${t('noteCol')}</th><th class="r">${t('qty')}</th><th class="r">${t('amount')}</th></tr></thead><tbody>
+         ${rows.map(([n,q,a])=>`<tr class="${q?'':'z'}"><td>৳ ${nf(n)}</td><td class="q r">× ${nf(q)}</td><td>${nf(a)}</td></tr>`).join('')}</tbody>
+         <tfoot><tr><td colspan="2">${t('handsum')}</td><td>${fmt(hand)}</td></tr></tfoot></table></div>
+     </div>
+   </div>
+   <div class="wm" style="background-image:${window.__logoOK?'url('+LOGO+')':'none'}"></div>
+   <div class="ft"><span><b>Liz Fashion – AponBazaar</b> · ${t('tag')}</span><span>${t('gen')}: ${new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'})}</span></div>`;
+  $('holder').hidden=false;$('dl').disabled=false;
 }
-function getNotes(){
-  const n=DATA.notes,r=n&&n.rows[0],o={};let f=0;
-  if(r)NOTES.forEach(v=>{const i=pickAny(n.head,['Note '+v,String(v)]);if(i>=0){o[v]=num(r[i]);f++}});
-  if(f>=3)return o;
-  try{const j=localStorage.getItem('lz_notes_'+DATE);if(j){const x=JSON.parse(j);NOTES.forEach(v=>o[v]=Number(x[v])||0);return o}}catch(e){}
-  return null;
-}
-function render(){
-  const dr=DATA.daily.rows[0],h=DATA.daily.head;
-  const g=(names,kw)=>{const i=pickAny(h,names,kw);return dr&&i>=0?num(dr[i]):0};
-  const prev=g(['Previous Ledger'],['previous']);
-  const sale=g(['IBOS Cash Sales','Ajker Cash Sell','Cash Sales','Cash Sell'],['sale','!recovery']);
-  const rec=g(['Recovery Sales','Recovery Sell','Recovery'],['recovery']);
-  const cin=g(['Cash In']),exp=g(['Expense','Expenses']);
-  const cout=g(['Cash Out (Deposit)','Cash Out','Deposit'],['cash out']),cod=g(['COD']);
-  const NT=getNotes();
-  const handSheet=g(['Cash In Hand','Cash on Hand'],['hand']);
-  const hand=NT?NOTES.reduce((a,v)=>a+v*(NT[v]||0),0):handSheet;
-  const tot=prev+sale+rec+cin,led=tot-exp-cout-cod,diff=hand-led,good=diff>=0;
-  const dateTxt=new Date(DATE+'T00:00:00').toLocaleDateString(loc(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const now=new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'});
-  const L=(a,v,c)=>'<tr'+(c?' class="'+c+'"':'')+'><td>'+a+'</td><td>'+money(v)+'</td></tr>';
-  const ledger='<table>'+L(t('prev'),prev)+L('(+) '+t('sale'),sale)+L('(+) '+t('rec'),rec)+L('(+) '+t('cin'),cin)+L(t('total'),tot,'tot')+
-    L('(−) '+t('exp'),exp,'neg')+L('(−) '+t('rcout'),cout,'neg')+L('(−) '+t('cod'),cod,'neg')+L(t('led'),led,'fin')+'</table>';
-  const nrows=NOTES.map(v=>{const q=NT?NT[v]||0:0;return '<tr'+(q?'':' class="z"')+'><td>৳ '+v+'</td><td class="r q">× '+q.toLocaleString(loc())+'</td><td>'+money(v*q)+'</td></tr>'}).join('');
-  const notes='<table><thead><tr><th>'+t('noteCol')+'</th><th class="r">'+t('qty')+'</th><th class="r">'+t('total')+'</th></tr></thead><tbody>'+nrows+'</tbody><tfoot><tr><td colspan="2">'+t('hand')+'</td><td>'+money(hand)+'</td></tr></tfoot></table>';
-  $('rep').innerHTML=
-   '<div class="hd"><div class="lg">LF</div><div class="nm"><b>Liz Fashion – AponBazaar</b><span>'+t('rpt')+'</span></div><div class="dd"><b>'+esc(dateTxt)+'</b><span>'+t('no')+' DR-'+DATE.replace(/-/g,'')+'</span></div></div>'+
-   '<div class="bd"><div class="hero '+(good?'ok':'bad')+'"><div class="ic">'+(diff===0?'✓':diff>0?'▲':'▼')+'</div><div class="tx"><small>'+(diff===0?t('sOk'):diff>0?t('sOver'):t('sShort'))+' · '+t('diff')+'</small><b>'+(diff>0?'+':diff<0?'−':'')+money(Math.abs(diff))+'</b></div>'+
-   '<div class="mini">'+t('hand')+': <b>'+money(hand)+'</b><br>'+t('led')+': <b>'+money(led)+'</b></div></div>'+
-   '<div class="cl"><div><div class="h">'+t('secL')+'</div>'+ledger+'</div><div><div class="h">'+t('secN')+'</div>'+notes+'</div></div></div>'+
-   '<div class="ft"><span><b>Liz Fashion</b> – AponBazaar</span><span>'+t('gen')+': '+esc(now)+'</span></div>';
-  fit();
-}
-function fit(){
-  const w=Math.min(1,(window.innerWidth-34)/600);
-  $('holder').style.zoom=w<1?w:'';
-}
-window.addEventListener('resize',()=>{if(DATA)fit()});
-
 async function download(){
-  const h=$('holder'),z=h.style.zoom;h.style.zoom='';$('dl').disabled=true;
+  $('dl').disabled=true;
   try{
     if(document.fonts&&document.fonts.ready)await document.fonts.ready;
-    const c=await html2canvas($('rep'),{scale:3,backgroundColor:'#ffffff',useCORS:true,windowWidth:600});
-    const a=document.createElement('a');a.href=c.toDataURL('image/jpeg',0.96);a.download='Liz-Fashion-Report-'+DATE+'.jpg';
-    document.body.appendChild(a);a.click();a.remove();
-  }catch(e){$('rmsg').textContent=String(e.message||e)}
-  h.style.zoom=z;$('dl').disabled=false;
+    const c=await html2canvas($('rep'),{scale:3,backgroundColor:'#ffffff',useCORS:true});
+    c.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='LizFashion-Report-'+$('d').value+'.jpg';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)},'image/jpeg',0.95);
+  }catch(e){$('rmsg').style.color='var(--bad)';$('rmsg').textContent='Download failed. Open the page via a web server (not file://) so the logo can be exported.'}
+  $('dl').disabled=false;
 }
-function shift(n){const d=new Date($('d').value+'T00:00:00');d.setDate(d.getDate()+n);$('d').value=new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);build()}
-$('pv').onclick=()=>shift(-1);$('nx').onclick=()=>shift(1);$('td').onclick=()=>{$('d').value=today();build()};
-$('load').onclick=build;$('d').onchange=build;$('dl').onclick=download;
-document.addEventListener('visibilitychange',()=>{const d=$('f_date');if(d&&d.readOnly)d.value=today()});
-applyLang();
-try{const sp=localStorage.getItem('lz_pin');if(sp){$('pin').value=sp;login(sp,false)}}catch(e){}
+
+/* ---------- Login ---------- */
+async function login(auto){
+  const pin=auto||$('pin').value.trim();if(!pin)return;
+  $('enter').disabled=true;$('lmsg').textContent='';
+  try{
+    PIN=pin;const r=await call('login');
+    if(r&&r.ok===false){PIN='';if(!auto)$('lmsg').textContent=t('wrongpin');try{localStorage.removeItem('pin')}catch(e){}}
+    else{
+      try{if($('rem').checked)localStorage.setItem('pin',pin);else localStorage.removeItem('pin')}catch(e){}
+      $('lock').hidden=true;$('app').hidden=false;$('logout').hidden=false;$('d').value=today();showTab(cur);
+    }
+  }catch(e){PIN='';if(!auto)$('lmsg').textContent=t('net')}
+  $('enter').disabled=false;
+}
+function logout(){PIN='';try{localStorage.removeItem('pin')}catch(e){}$('app').hidden=true;$('logout').hidden=true;$('lock').hidden=false;$('pin').value=''}
+
+/* ---------- Events ---------- */
+document.querySelector('.lang').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lang=b.dataset.l;try{localStorage.setItem('lang',lang)}catch(x){}
+  applyI18n();if(!$('app').hidden){if(cur==='report'){if(!$('holder').hidden)loadReport()}else{buildFields(true);loadRecent()}}});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)showTab(b.dataset.tab)});
+$('enter').onclick=()=>login();$('pin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+$('logout').onclick=logout;
+$('save').onclick=saveEntry;$('clear').onclick=()=>{buildFields(true);setMsg('')};
+$('pv').onclick=()=>{shiftDate(-1);loadReport()};$('nx').onclick=()=>{shiftDate(1);loadReport()};
+$('td').onclick=()=>{$('d').value=today();loadReport()};$('load').onclick=loadReport;$('dl').onclick=download;
+applyI18n();
+try{const s=localStorage.getItem('pin');if(s)login(s)}catch(e){}
 </script>
 </body>
 </html>
