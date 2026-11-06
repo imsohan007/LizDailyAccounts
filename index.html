@@ -9,9 +9,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
+[hidden]{display:none!important}
 :root{--n:#0f2742;--n2:#1b3f66;--gold:#c8a24a;--ink:#1c2733;--mut:#64748b;--line:#e2e8f0;--ok:#16803c;--bad:#b42318}
 *{box-sizing:border-box}
-body{margin:0;background:#e8ecf2;color:var(--ink);font:14px/1.5 Inter,"Hind Siliguri",system-ui,sans-serif;min-height:100vh}
+body{margin:0;background:linear-gradient(180deg,#d9e1ec,#eef1f6 360px);color:var(--ink);font:14px/1.5 Inter,"Hind Siliguri",system-ui,sans-serif;min-height:100vh}
 .top{background:linear-gradient(120deg,#0b1e34,#16385c);color:#fff;border-bottom:3px solid var(--gold)}
 .top .in{max-width:900px;margin:auto;padding:12px 16px;display:flex;align-items:center;gap:12px}
 .logo{width:40px;height:40px;border-radius:50%;background:var(--gold);color:var(--n);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:none}
@@ -61,13 +62,13 @@ body{margin:0;background:#e8ecf2;color:var(--ink);font:14px/1.5 Inter,"Hind Sili
 .hero .tx span{font-size:12px;color:#475569}
 .hero .mini{text-align:right;color:#1c2733;font-size:12px;line-height:1.7}.hero .mini b{font-variant-numeric:tabular-nums}
 .kp{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
-.k{border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;background:#fff;position:relative;overflow:hidden}
+.k{border:1px solid #e2e8f0;border-radius:12px;padding:13px 14px 13px 18px;background:linear-gradient(180deg,#fff,#f4f7fb);position:relative;overflow:hidden}
 .k:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c,#0f2742)}
 .k small{display:block;color:#64748b;font-size:11px;font-weight:600}
 .k b{display:block;font-size:18px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
 .two{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:20px}
 .sec{margin-top:22px}.two .sec{margin-top:0}
-.h{display:flex;align-items:center;gap:8px;margin:0 0 9px;font-size:12px;font-weight:800;color:#0f2742;text-transform:uppercase;letter-spacing:1px}
+.h{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding-bottom:7px;border-bottom:1px solid #e2e8f0;font-size:12px;font-weight:800;color:#0f2742;text-transform:uppercase;letter-spacing:1px}
 .h i{width:5px;height:16px;background:#c8a24a;border-radius:3px;display:block}
 .h em{margin-left:auto;font-style:normal;text-transform:none;letter-spacing:0;color:#1f7a6d;font-weight:700;font-size:13px}
 .lgt{width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden}
@@ -92,6 +93,18 @@ body{margin:0;background:#e8ecf2;color:var(--ink);font:14px/1.5 Inter,"Hind Sili
 .sig div{width:180px;border-top:1px solid #94a3b8;text-align:center;padding-top:5px;color:#64748b;font-size:11.5px}
 .rf{margin-top:22px;background:#0f2742;color:#a9bcd3;padding:12px 34px;display:flex;justify-content:space-between;font-size:11.5px;border-top:4px solid #c8a24a}
 .rf b{color:#c8a24a}
+.hint{font-size:12.5px;color:#5b4a14;background:#fff8e1;border:1px solid #f0dca0;border-radius:10px;padding:8px 12px;margin-top:8px}
+.ed{display:inline-block;min-width:16px;border-radius:3px;outline:none;cursor:text}
+.ed:hover{background:#fff6dc;box-shadow:0 0 0 1px #c8a24a}
+.ed:focus{background:#fff;color:#1c2733;box-shadow:0 0 0 2px #1f7a6d}
+.rh .ed:hover{background:rgba(255,255,255,.14)}.rh .ed:focus{background:rgba(255,255,255,.22);color:#fff;box-shadow:0 0 0 2px #c8a24a}
+.del{border:0;background:#fde8e6;color:#b42318;border-radius:6px;cursor:pointer;width:22px;height:22px;font-size:11px}
+.add{margin-top:8px;border:1.5px dashed #c8a24a;background:#fffaf0;color:#0f2742;border-radius:8px;padding:6px 12px;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.t td.dl,.t th.dl{width:30px;text-align:center}
+.nb{display:block;min-height:48px;padding:10px 12px;border:1px solid #e2e8f0;border-radius:10px;background:#fafbfc;white-space:pre-wrap}
+.nb:empty:before{content:attr(data-ph);color:#94a3b8}
+.exp .noexp{display:none!important}
+.exp .ed{box-shadow:none!important;background:none!important}
 </style>
 </head>
 <body>
@@ -112,12 +125,12 @@ body{margin:0;background:#e8ecf2;color:var(--ink);font:14px/1.5 Inter,"Hind Sili
     <div class="lang"><button data-l="bn">বাংলা</button><button data-l="en">English</button></div>
   </div></div>
   <div class="panel"><div class="ctl">
-    <div><label for="d" data-i="date"></label><input type="date" id="d"></div>
+    <div><label for="d" data-i="date"></label><div style="display:flex;gap:6px"><button class="btn" id="pv" title="Previous day">‹</button><input type="date" id="d"><button class="btn" id="nx" title="Next day">›</button><button class="btn" id="td" data-i="today"></button></div></div>
     <button class="btn pri" id="load" data-i="load"></button>
     <div class="sp"></div>
     <button class="btn gold" id="dl" data-i="dl" disabled></button>
   </div></div>
-  <div id="msg"></div>
+  <div id="msg"></div><div class="panel"><div class="hint" data-i="hint"></div></div>
   <div class="panel"><div class="stage"><div class="holder" id="holder"><div id="rep"></div></div></div></div>
 </div>
 
@@ -125,7 +138,7 @@ body{margin:0;background:#e8ecf2;color:var(--ink);font:14px/1.5 Inter,"Hind Sili
 const APP_URL = 'https://script.google.com/macros/s/AKfycbxd8zXJAlK0SV6vv5B05mQ3lxjJQ2Rkr0MT6Koxe9jbGbPVaEJjClcxV1BPGzxQpBS-FQ/exec';
 
 const T={
- en:{title:'Daily Accounts Report',signSub:'Enter your PIN to open reports',enter:'Sign in',date:'Date',load:'Show report',dl:'⬇ Download JPG',loading:'Loading…',wrong:'Incorrect PIN',net:'Could not reach the server.',
+ en:{title:'Daily Accounts Report',signSub:'Enter your PIN to open reports',enter:'Sign in',date:'Date',today:'Today',add:'Add row',notes:'Notes',notesPh:'Click to add notes…',hint:'✎ Click any value on the report to edit it. Totals, status and chart update automatically. Edits affect this report / JPG only (not the sheet). “Show report” reloads from the sheet.',load:'Show report',dl:'⬇ Download JPG',loading:'Loading…',wrong:'Incorrect PIN',net:'Could not reach the server.',
   rpt:'Daily Accounts Report',dateL:'Report date',no:'Report No.',
   sOver:'Cash over',sShort:'Cash short',sOk:'Books balanced',mOver:'Cash in hand is more than the ledger',mShort:'Cash in hand is less than the ledger',mOk:'Cash in hand matches the ledger exactly',
   hand:'Cash in hand',led:'Ledger amount',
@@ -136,7 +149,7 @@ const T={
   sExp:'Expenses',sCash:'Cash In / Out',sRec:'Recovery',sBaki:'Dues Receivable',none:'No entries for this day.',
   c_name:'Name',c_note:'Note / reason',c_amt:'Amount',c_code:'Code',c_status:'Status',c_type:'Type',c_id:'Cust. ID',c_cust:'Customer',c_exch:'Exchanged',c_rem:'Remarks',c_reason:'Reason',
   tot:'Total',gen:'Generated',s1:'Prepared by',s2:'Checked by'},
- bn:{title:'দৈনিক হিসাব রিপোর্ট',signSub:'রিপোর্ট দেখতে পিন দিন',enter:'প্রবেশ করুন',date:'তারিখ',load:'রিপোর্ট দেখুন',dl:'⬇ JPG ডাউনলোড',loading:'লোড হচ্ছে…',wrong:'পিন ভুল হয়েছে',net:'সার্ভারের সাথে যোগাযোগ হয়নি।',
+ bn:{title:'দৈনিক হিসাব রিপোর্ট',signSub:'রিপোর্ট দেখতে পিন দিন',enter:'প্রবেশ করুন',date:'তারিখ',today:'আজ',add:'সারি যোগ করুন',notes:'মন্তব্য',notesPh:'মন্তব্য লিখতে ক্লিক করুন…',hint:'✎ রিপোর্টের যেকোনো সংখ্যা বা লেখায় ক্লিক করে এডিট করুন। মোট, স্ট্যাটাস ও চার্ট নিজে থেকেই বদলাবে। এডিট শুধু এই রিপোর্ট/JPG-তে প্রযোজ্য, শিটে সেভ হয় না। “রিপোর্ট দেখুন” চাপলে শিট থেকে আবার লোড হবে।',load:'রিপোর্ট দেখুন',dl:'⬇ JPG ডাউনলোড',loading:'লোড হচ্ছে…',wrong:'পিন ভুল হয়েছে',net:'সার্ভারের সাথে যোগাযোগ হয়নি।',
   rpt:'দৈনিক হিসাব রিপোর্ট',dateL:'রিপোর্টের তারিখ',no:'রিপোর্ট নং',
   sOver:'ক্যাশ বেশি',sShort:'ক্যাশ কম',sOk:'হিসাব মিলেছে',mOver:'হাতের ক্যাশ লেজারের চেয়ে বেশি',mShort:'হাতের ক্যাশ লেজারের চেয়ে কম',mOk:'হাতের ক্যাশ ও লেজার হুবহু মিলেছে',
   hand:'হাতে থাকা ক্যাশ',led:'লেজার অ্যামাউন্ট',
@@ -153,7 +166,7 @@ const t=k=>T[lang][k]||k;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const loc=()=>lang==='bn'?'bn-BD':'en-IN';
-const num=v=>{const n=Number(String(v).replace(/[,৳\s]/g,''));return isNaN(n)?0:n};
+const num=v=>{const n=Number(String(v).replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d)).replace(/[,৳\s]/g,''));return isNaN(n)?0:n};
 const money=v=>'৳ '+num(v).toLocaleString(loc());
 const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
 let PIN='',DATA=null,DATE='';
@@ -181,55 +194,63 @@ async function build(){
     const types=['daily','expense','cash','recovery','baki'];
     const res=await Promise.all(types.map(k=>call('recent',k)));
     DATA={};types.forEach((k,i)=>DATA[k]={head:res[i].head,rows:rowsFor(res[i],DATE)});
-    $('msg').textContent='';render();$('dl').disabled=false;
+    $('msg').textContent='';initD();render();$('dl').disabled=false;
   }catch(e){$('msg').textContent=errText(e)}
 }
+let D={prev:0,sale:0,rec:0,cin:0,exp:0,cout:0,cod:0,hand:0},TXT={},busy=false;
+function initD(){
+  const dr=DATA.daily.rows[0],h=DATA.daily.head,g=n=>{const i=pick(h,n);return dr&&i>=0?num(dr[i]):0};
+  D={prev:g('Previous Ledger'),sale:g('Ajker Cash Sell'),rec:g('Recovery Sell'),cin:g('Cash In'),exp:g('Expense'),cout:g('Cash Out (Deposit)'),cod:g('COD'),hand:g('Cash In Hand')};
+  TXT={};
+}
+const edAttr=(id,extra,o)=>'class="ed" contenteditable="true" tabindex="0" data-id="'+id+'" '+extra+' data-o="'+esc(o)+'"';
+const dv=k=>{const s=money(D[k]);return '<span '+edAttr('d-'+k,'data-d="'+k+'"',s)+'>'+esc(s)+'</span>'};
+const tx=(k,def)=>{const s=TXT[k]!=null?TXT[k]:def;return '<span '+edAttr('t-'+k,'data-t="'+k+'"',s)+'>'+esc(s)+'</span>'};
 function table(key,cols){
   const {head,rows}=DATA[key];
-  if(!rows.length)return '<div class="empty">'+t('none')+'</div>';
   const idx=cols.map(c=>pick(head,c.h));let sum=0;
   const body=rows.map((r,n)=>'<tr><td class="x">'+(n+1)+'</td>'+cols.map((c,j)=>{
-    const v=idx[j]<0?'':r[idx[j]];
-    if(c.amt){sum+=num(v);return '<td class="r">'+money(v)+'</td>'}
-    return '<td'+(c.mut?' class="m"':'')+'>'+esc(v)+'</td>'}).join('')+'</tr>').join('');
-  const foot='<tfoot><tr><td></td>'+cols.map((c,j)=>j===0?'<td>'+t('tot')+' ('+rows.length+')</td>':c.amt?'<td class="r">'+money(sum)+'</td>':'<td></td>').join('')+'</tr></tfoot>';
-  return '<table class="t"><thead><tr><th>#</th>'+cols.map(c=>'<th'+(c.amt?' class="r"':'')+'>'+t(c.k)+'</th>').join('')+'</tr></thead><tbody>'+body+'</tbody>'+foot+'</table>';
+    const i=idx[j],v=i<0?'':r[i];if(c.amt)sum+=num(v);
+    const s=c.amt?money(v):String(v==null?'':v);
+    const inner=i<0?esc(s):'<span '+edAttr(key+'-'+n+'-'+i,'data-k="'+key+'" data-r="'+n+'" data-c="'+i+'"'+(c.amt?' data-a="1"':''),s)+'>'+esc(s)+'</span>';
+    return '<td'+(c.amt?' class="r"':c.mut?' class="m"':'')+'>'+inner+'</td>'}).join('')+'<td class="dl noexp"><button class="del" data-del="'+key+'" data-r="'+n+'">✕</button></td></tr>').join('');
+  const foot='<tfoot><tr><td></td>'+cols.map((c,j)=>j===0?'<td>'+t('tot')+' ('+rows.length+')</td>':c.amt?'<td class="r">'+money(sum)+'</td>':'<td></td>').join('')+'<td class="noexp"></td></tr></tfoot>';
+  const tbl=rows.length?'<table class="t"><thead><tr><th>#</th>'+cols.map(c=>'<th'+(c.amt?' class="r"':'')+'>'+t(c.k)+'</th>').join('')+'<th class="dl noexp"></th></tr></thead><tbody>'+body+'</tbody>'+foot+'</table>':'<div class="empty">'+t('none')+'</div>';
+  return tbl+'<button class="add noexp" data-add="'+key+'">+ '+t('add')+'</button>';
 }
 function sumOf(key,h,type){
   const {head,rows}=DATA[key],i=pick(head,h),ti=pick(head,'Type');
   if(i<0)return 0;
   return rows.reduce((s,r)=>(!type||String(r[ti]).toLowerCase()===type)?s+num(r[i]):s,0);
 }
-const sec=(title,em,inner)=>'<div class="sec"><div class="h"><i></i>'+title+(em?'<em>'+em+'</em>':'')+'</div>'+inner+'</div>';
+const sec=(title,em,inner,id)=>'<div class="sec"'+(id?' id="'+id+'"':'')+'><div class="h"><i></i>'+title+(em?'<em>'+em+'</em>':'')+'</div>'+inner+'</div>';
+function addRow(k){const d=DATA[k],r=new Array(d.head.length).fill('');const di=pick(d.head,'Date');if(di>=0)r[di]=DATE;if(k==='cash'){const ti=pick(d.head,'Type');if(ti>=0)r[ti]='Cash In'}d.rows.push(r)}
 
 function render(){
-  const h=DATA.daily.head,r=DATA.daily.rows[0];
-  const g=n=>{const i=pick(h,n);return r&&i>=0?num(r[i]):0};
-  const prev=g('Previous Ledger'),sale=g('Ajker Cash Sell'),rec=g('Recovery Sell'),cin=g('Cash In'),tot=g('Total')||(prev+sale+rec+cin),
-        exp=g('Expense'),cout=g('Cash Out (Deposit)'),cod=g('COD'),led=g('Ledger Amount')||(tot-exp-cout-cod),hand=g('Cash In Hand');
-  const diff=hand-led,good=diff>=0;
+  const {prev,sale,rec,cin,exp,cout,cod,hand}=D;
+  const tot=prev+sale+rec+cin,led=tot-exp-cout-cod,diff=hand-led,good=diff>=0;
   const dateTxt=new Date(DATE+'T00:00:00').toLocaleDateString(loc(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   const expTot=sumOf('expense','Amount'),cashIn=sumOf('cash','Amount','cash in'),cashOut=sumOf('cash','Amount','cash out');
   const recTot=sumOf('recovery','Amount'),bakiTot=sumOf('baki','Amount');
   const now=new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'});
-
-  let hero='',two='<div class="empty" style="margin-top:14px">'+t('noDaily')+'</div>';
-  if(r){
-    hero='<div class="hero '+(good?'ok':'bad')+'"><div class="ic">'+(diff===0?'✓':diff>0?'▲':'▼')+'</div><div class="tx"><small>'+(diff===0?t('sOk'):diff>0?t('sOver'):t('sShort'))+'</small><b>'+(diff===0?money(hand):money(Math.abs(diff)))+'</b><span>'+(diff===0?t('mOk'):diff>0?t('mOver'):t('mShort'))+'</span></div>'+
-      '<div class="mini">'+t('hand')+': <b>'+money(hand)+'</b><br>'+t('led')+': <b>'+money(led)+'</b></div></div>';
-    const L=(a,b,c)=>'<tr'+(c?' class="'+c+'"':'')+'><td>'+a+'</td><td>'+money(b)+'</td></tr>';
-    const ledger='<table class="lgt">'+L(t('prev'),prev)+L('(+) '+t('sale'),sale)+L('(+) '+t('rec'),rec)+L('(+) '+t('cin'),cin)+L(t('total'),tot,'tot')+L('(−) '+t('exp'),exp,'neg')+L('(−) '+t('cout'),cout,'neg')+L('(−) '+t('cod'),cod,'neg')+L(t('led'),led,'fin')+'</table>';
-    const recon='<div class="rec"><div class="row"><span>'+t('hand')+'</span><b>'+money(hand)+'</b></div><div class="row"><span>'+t('led')+'</span><b>'+money(led)+'</b></div><div class="row d '+(good?'ok':'bad')+'"><span>'+t('diff')+'</span><b>'+(diff>0?'+':diff<0?'−':'')+money(Math.abs(diff))+'</b></div></div>';
-    two='<div class="two">'+sec(t('secLed'),'',ledger)+sec(t('secRec'),'',recon)+'</div>';
-    if(tot>0){
-      const p=v=>Math.max(0,v/tot*100).toFixed(2)+'%',rem=Math.max(0,led);
-      const seg=[[exp,'#b42318',t('exp')],[cout,'#c8a24a',t('cout')],[cod,'#7c5cbf',t('cod')],[rem,'#1f7a6d',t('remain')]];
-      two+=sec(t('flow'),'','<div class="bar">'+seg.map(s=>'<div style="width:'+p(s[0])+';background:'+s[1]+'"></div>').join('')+'</div><div class="legend">'+seg.map(s=>'<span style="--c:'+s[1]+'">'+s[2]+' · '+money(s[0])+'</span>').join('')+'</div>');
-    }
+  const hero='<div class="hero '+(good?'ok':'bad')+'"><div class="ic">'+(diff===0?'✓':diff>0?'▲':'▼')+'</div><div class="tx"><small>'+(diff===0?t('sOk'):diff>0?t('sOver'):t('sShort'))+'</small><b>'+(diff===0?money(hand):money(Math.abs(diff)))+'</b><span>'+(diff===0?t('mOk'):diff>0?t('mOver'):t('mShort'))+'</span></div>'+
+    '<div class="mini">'+t('hand')+': <b>'+money(hand)+'</b><br>'+t('led')+': <b>'+money(led)+'</b></div></div>';
+  const L=(a,k,c)=>'<tr'+(c?' class="'+c+'"':'')+'><td>'+a+'</td><td>'+dv(k)+'</td></tr>';
+  const LR=(a,v,c)=>'<tr class="'+c+'"><td>'+a+'</td><td>'+money(v)+'</td></tr>';
+  const ledger='<table class="lgt">'+L(t('prev'),'prev')+L('(+) '+t('sale'),'sale')+L('(+) '+t('rec'),'rec')+L('(+) '+t('cin'),'cin')+LR(t('total'),tot,'tot')+L('(−) '+t('exp'),'exp','neg')+L('(−) '+t('cout'),'cout','neg')+L('(−) '+t('cod'),'cod','neg')+LR(t('led'),led,'fin')+'</table>';
+  const recon='<div class="rec"><div class="row"><span>'+t('hand')+'</span><b>'+dv('hand')+'</b></div><div class="row"><span>'+t('led')+'</span><b>'+money(led)+'</b></div><div class="row d '+(good?'ok':'bad')+'"><span>'+t('diff')+'</span><b>'+(diff>0?'+':diff<0?'−':'')+money(Math.abs(diff))+'</b></div></div>';
+  let two='<div class="two">'+sec(t('secLed'),'',ledger)+sec(t('secRec'),'',recon)+'</div>';
+  if(tot>0){
+    const p=v=>Math.max(0,v/tot*100).toFixed(2)+'%',rem=Math.max(0,led);
+    const seg=[[exp,'#b42318',t('exp')],[cout,'#c8a24a',t('cout')],[cod,'#7c5cbf',t('cod')],[rem,'#1f7a6d',t('remain')]];
+    two+=sec(t('flow'),'','<div class="bar">'+seg.map(x=>'<div style="width:'+p(x[0])+';background:'+x[1]+'"></div>').join('')+'</div><div class="legend">'+seg.map(x=>'<span style="--c:'+x[1]+'">'+x[2]+' · '+money(x[0])+'</span>').join('')+'</div>');
   }
   const kp=[[t('kSale'),sale,'#1f7a6d'],[t('kRec'),recTot||rec,'#0f2742'],[t('kExp'),expTot||exp,'#b42318'],[t('kDue'),bakiTot,'#c8a24a']];
+  const nv=TXT.notes||'';
+  const notes='<span class="ed nb" contenteditable="true" tabindex="0" data-id="t-notes" data-t="notes" data-m="1" data-ph="'+esc(t('notesPh'))+'" data-o="'+esc(nv)+'">'+esc(nv)+'</span>';
+  busy=true;
   $('rep').innerHTML=
-   '<div class="rh"><div class="c1"></div><div class="c2"></div><div class="row"><div class="br"><div class="lg">LF</div><div><h1>Liz Fashion – AponBazaar</h1><p>'+t('rpt')+'</p></div></div>'+
+   '<div class="rh"><div class="c1"></div><div class="c2"></div><div class="row"><div class="br"><div class="lg">LF</div><div><h1>'+tx('brand','Liz Fashion – AponBazaar')+'</h1><p>'+tx('rpt',t('rpt'))+'</p></div></div>'+
    '<div class="dt"><small>'+t('dateL')+'</small><b>'+esc(dateTxt)+'</b><span>'+t('no')+' DR-'+DATE.replace(/-/g,'')+'</span></div></div></div>'+
    '<div class="rb">'+hero+
    '<div class="kp">'+kp.map(k=>'<div class="k" style="--c:'+k[2]+'"><small>'+k[0]+'</small><b>'+money(k[1])+'</b></div>').join('')+'</div>'+
@@ -238,10 +259,38 @@ function render(){
    sec(t('sCash'),'+'+money(cashIn)+'  /  −'+money(cashOut),table('cash',[{h:'Type',k:'c_type'},{h:'Note',k:'c_note',mut:1},{h:'Amount',k:'c_amt',amt:1}]))+
    sec(t('sRec'),money(recTot),table('recovery',[{h:'Customer ID',k:'c_id'},{h:'Customer Name',k:'c_cust'},{h:'Amount',k:'c_amt',amt:1},{h:'Exchange With Cash',k:'c_exch'},{h:'Remarks',k:'c_rem',mut:1}]))+
    sec(t('sBaki'),money(bakiTot),table('baki',[{h:'Name',k:'c_cust'},{h:'Reason',k:'c_reason',mut:1},{h:'Amount',k:'c_amt',amt:1}]))+
-   '</div><div class="sig"><div>'+t('s1')+'</div><div>'+t('s2')+'</div></div>'+
+   sec(t('notes'),'',notes,'nsec')+
+   '</div><div class="sig"><div>'+tx('s1',t('s1'))+'</div><div>'+tx('s2',t('s2'))+'</div></div>'+
    '<div class="rf"><span><b>Liz Fashion</b> – AponBazaar</span><span>'+t('gen')+': '+esc(now)+'</span></div>';
+  busy=false;
   fit();
 }
+function commit(el){
+  if(!el||!el.classList||!el.classList.contains('ed'))return false;
+  const d=el.dataset,v=el.innerText.replace(/\u00a0/g,' ').trim();
+  if(v===d.o)return false;
+  if(d.d)D[d.d]=num(v);
+  else if(d.t)TXT[d.t]=v;
+  else DATA[d.k].rows[+d.r][+d.c]=d.a?num(v):v;
+  return true;
+}
+const R=$('rep');
+R.addEventListener('focusout',e=>{
+  if(busy||!commit(e.target))return;
+  const nx=e.relatedTarget&&e.relatedTarget.dataset?e.relatedTarget.dataset.id:null;
+  render();
+  if(nx){const n=R.querySelector('[data-id="'+nx+'"]');if(n)n.focus()}
+});
+R.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('ed')&&!e.target.dataset.m){e.preventDefault();e.target.blur()}});
+R.addEventListener('paste',e=>{if(e.target.classList.contains('ed')){e.preventDefault();document.execCommand('insertText',false,(e.clipboardData||window.clipboardData).getData('text'))}});
+R.addEventListener('mousedown',e=>{if(e.target.closest('button'))e.preventDefault()});
+R.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  commit(document.activeElement);
+  if(b.dataset.del)DATA[b.dataset.del].rows.splice(+b.dataset.r,1);
+  else if(b.dataset.add)addRow(b.dataset.add);
+  render();
+});
 function fit(){
   const h=$('holder'),w=Math.min(1,(window.innerWidth-24)/820);
   h.style.zoom=w<1?w:'';
@@ -249,14 +298,14 @@ function fit(){
 window.addEventListener('resize',()=>{if(DATA)fit()});
 
 async function download(){
-  const h=$('holder'),z=h.style.zoom;h.style.zoom='';$('dl').disabled=true;
+  if(document.activeElement)document.activeElement.blur();const h=$('holder'),z=h.style.zoom,rp=$('rep'),ns=$('nsec'),hn=ns&&!TXT.notes;h.style.zoom='';$('dl').disabled=true;rp.classList.add('exp');if(hn)ns.style.display='none';
   try{
     if(document.fonts&&document.fonts.ready)await document.fonts.ready;
     const c=await html2canvas($('rep'),{scale:2.5,backgroundColor:'#ffffff',useCORS:true,windowWidth:820});
     const a=document.createElement('a');a.href=c.toDataURL('image/jpeg',0.96);a.download='Liz-Fashion-Report-'+DATE+'.jpg';
     document.body.appendChild(a);a.click();a.remove();
   }catch(e){$('msg').textContent=String(e.message||e)}
-  h.style.zoom=z;$('dl').disabled=false;
+  h.style.zoom=z;$('dl').disabled=false;rp.classList.remove('exp');if(hn)ns.style.display='';
 }
 function applyLang(){
   document.documentElement.lang=lang;
@@ -273,6 +322,8 @@ $('enter').onclick=async()=>{
   catch(e){$('lmsg').textContent=errText(e)}
 };
 $('pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('enter').click()});
+function shift(n){const d=new Date($('d').value+'T00:00:00');d.setDate(d.getDate()+n);$('d').value=new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);build()}
+$('pv').onclick=()=>shift(-1);$('nx').onclick=()=>shift(1);$('td').onclick=()=>{$('d').value=today();build()};
 $('load').onclick=build;$('d').onchange=build;$('dl').onclick=download;
 applyLang();
 </script>
