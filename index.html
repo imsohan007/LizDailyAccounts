@@ -6,69 +6,152 @@
 <title>Liz Fashion – Daily Accounts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-:root{--navy:#14304d;--navy2:#1d4268;--bg:#f2f4f7;--card:#fff;--ink:#1c2733;--mut:#64748b;--line:#dde3ea;--acc:#1f7a6d;--accbg:#e7f3f1;--okbg:#e3f4ea;--ok:#1b7a43;--badbg:#fdeceb;--bad:#b42318}
+[hidden]{display:none!important}
+:root{--navy:#0f2742;--navy2:#1b3f66;--gold:#c8a24a;--ink:#1c2733;--mut:#64748b;--line:#dde3ea;--acc:#0f2742;--accbg:#f3e9cf;--okbg:#e3f4ea;--ok:#1b7a43;--badbg:#fdeceb;--bad:#b42318}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,"Hind Siliguri",system-ui,sans-serif}
-.top{background:var(--navy);color:#fff}
-.top .in{max-width:960px;margin:auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand b{display:block;font-size:19px;font-weight:700;letter-spacing:.2px}
-.brand span{font-size:13px;color:#b9c8da}
-.lang{display:flex;background:var(--navy2);border-radius:8px;padding:3px}
-.lang button{border:0;background:transparent;color:#c9d6e6;padding:6px 12px;border-radius:6px;font:inherit;font-size:13px;cursor:pointer}
+body{margin:0;background:linear-gradient(180deg,#d9e1ec,#eef1f6 360px);color:var(--ink);font:15px/1.55 Inter,"Hind Siliguri",system-ui,sans-serif;min-height:100vh}
+.top{background:linear-gradient(120deg,#0b1e34,#16385c);color:#fff;border-bottom:3px solid var(--gold)}
+.top .in{max-width:960px;margin:auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand b{display:block;font-size:17px;font-weight:700}
+.brand span{font-size:12.5px;color:#a9bcd3}
+.logo{width:40px;height:40px;border-radius:50%;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:none}
+.lang{display:flex;background:rgba(255,255,255,.12);border-radius:8px;padding:3px}
+.lang button{border:0;background:transparent;color:#d5e0ee;padding:6px 12px;border-radius:6px;font:inherit;font-size:13px;cursor:pointer}
 .lang button.on{background:#fff;color:var(--navy);font-weight:600}
-nav{background:var(--card);border-bottom:1px solid var(--line)}
+nav{background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(15,39,66,.06)}
 nav .in{max-width:960px;margin:auto;display:flex;overflow-x:auto;padding:0 8px}
 nav button{flex:none;border:0;background:none;padding:14px 16px;font:inherit;font-weight:500;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent}
-nav button.on{color:var(--navy);border-bottom-color:var(--acc);font-weight:600}
+nav button.on{color:var(--navy);border-bottom-color:var(--gold);font-weight:700}
 main{max-width:960px;margin:auto;padding:18px 16px 48px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 1px 2px rgba(20,48,77,.05)}
-h2{font-size:16px;margin:26px 0 10px;color:var(--navy)}
-h3{font-size:15px;margin:0 0 4px;color:var(--navy);padding-bottom:8px;border-bottom:1px solid var(--line)}
-label{display:block;font-size:13px;font-weight:500;color:var(--mut);margin:14px 0 5px}
-input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);background:#fff}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:0;border-color:var(--acc)}
-button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 4px 14px rgba(15,39,66,.07)}
+h2{font-size:15px;margin:26px 0 10px;color:var(--navy);text-transform:uppercase;letter-spacing:.8px}
+h3{font-size:14px;margin:0 0 4px;color:var(--navy);padding-bottom:8px;border-bottom:2px solid var(--gold);text-transform:uppercase;letter-spacing:.8px}
+label{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:14px 0 5px}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font:inherit;color:var(--ink);background:#fff}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:0;border-color:var(--gold)}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .btns{display:flex;gap:10px;margin-top:20px}
-.btn{padding:12px 18px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
-.btn.pri{flex:1;background:var(--acc);border-color:var(--acc);color:#fff}
-.btn:disabled{opacity:.6;cursor:default}
+.btn{padding:12px 18px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
+.btn.pri{flex:1;background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy);font-weight:700}
+.btn:disabled{opacity:.5;cursor:default}
 #msg{margin-top:12px;font-size:14px;min-height:20px;color:var(--ok);font-weight:500}
 #msg.err,#lmsg{color:var(--bad)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 4px}
-.stat{border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:10px;padding:12px 14px;background:#fff}
+.stat{border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:12px;padding:12px 14px;background:#fff}
 .stat small{display:block;color:var(--mut);font-size:13px}
 .stat b{display:block;font-size:26px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
 .stat.ok{background:var(--okbg);border-left-color:var(--ok)}.stat.ok b{color:var(--ok)}
 .stat.bad{background:var(--badbg);border-left-color:var(--bad)}.stat.bad b{color:var(--bad)}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:14px}
-.sum{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin-top:14px;border-radius:8px;background:var(--accbg);font-weight:600;color:var(--navy)}
+.sum{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin-top:14px;border-radius:9px;background:var(--accbg);font-weight:700;color:var(--navy)}
 table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{padding:8px 10px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line)}
-th{background:#f7f9fb;color:var(--mut);font-weight:600}
-.tbl{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
+th{background:var(--navy);color:#fff;font-weight:600}
+.tbl{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 4px 14px rgba(15,39,66,.05)}
 table.notes{margin-top:10px}
 table.notes td{padding:6px 8px}
 table.notes input{padding:7px 8px;text-align:right}
 table.notes td.r,table.notes th.r{text-align:right;font-variant-numeric:tabular-nums}
 table.notes td:first-child{font-weight:600;color:var(--navy)}
-#lock{max-width:360px;margin:56px auto;padding:0 16px}
+#lock{padding:16px;min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 20% 10%,#1d4268,#0b1e34 70%)}
+#lock .card{width:100%;max-width:360px;padding:30px 26px;text-align:center;border-top:5px solid var(--gold);border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+#lock .logo{margin:0 auto 12px;width:56px;height:56px;font-size:20px}
 #lock h1{font-size:20px;margin:0 0 4px;color:var(--navy)}
-#lock p{margin:0;color:var(--mut);font-size:14px}
+#lock p{margin:0 0 6px;color:var(--mut);font-size:14px}
+#lock input{text-align:center;letter-spacing:6px;font-size:18px}
+.ctl{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;box-shadow:0 4px 14px rgba(15,39,66,.07)}
+.ctl label{margin:0 0 4px}.dn{display:flex;gap:6px}.dn input{width:auto}.ctl .btn{padding:10px 16px}.ctl .btn.pri{flex:none}
+.sp{flex:1}
+#rmsg{color:var(--bad);font-size:13px;min-height:18px;margin:8px 2px 0}
+.stage{overflow-x:auto;padding:12px 0 30px}
+.holder{width:820px;margin:0 auto;box-shadow:0 10px 40px rgba(15,39,66,.18)}
+#rep th,#rep td{white-space:normal}
 @media(max-width:720px){.cols{grid-template-columns:1fr;gap:6px}.stats{grid-template-columns:1fr}.stat b{font-size:22px}}
+/* ===== REPORT ===== */
+#rep{width:820px;background:#fff;color:#1c2733;font:13px/1.5 Inter,"Hind Siliguri",sans-serif;position:relative}
+.rh{background:linear-gradient(120deg,#0b1e34,#1b3f66);color:#fff;padding:28px 34px 26px;position:relative;overflow:hidden;border-bottom:5px solid #c8a24a}
+.rh .c1{position:absolute;right:-60px;top:-80px;width:240px;height:240px;border-radius:50%;background:rgba(200,162,74,.14)}
+.rh .c2{position:absolute;right:120px;bottom:-110px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
+.rh .row{position:relative;display:flex;justify-content:space-between;align-items:center}
+.br{display:flex;align-items:center;gap:14px}
+.br .lg{width:54px;height:54px;border-radius:50%;background:#c8a24a;color:#0f2742;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;border:3px solid rgba(255,255,255,.35)}
+.br h1{margin:0;font-size:24px;font-weight:800;letter-spacing:.3px}
+.br p{margin:0;color:#c8a24a;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.dt{text-align:right}.dt small{display:block;color:#a9bcd3;font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase}
+.dt b{display:block;font-size:19px;font-weight:700}.dt span{font-size:11.5px;color:#a9bcd3}
+.rb{padding:22px 34px 6px}
+.hero{display:flex;align-items:center;gap:16px;border-radius:14px;padding:16px 20px;border:1.5px solid}
+.hero.ok{background:#e6f5ec;border-color:#16803c;color:#16803c}
+.hero.bad{background:#fdeceb;border-color:#b42318;color:#b42318}
+.hero .ic{width:48px;height:48px;border-radius:50%;color:#fff;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.hero.ok .ic{background:#16803c}.hero.bad .ic{background:#b42318}
+.hero .tx{flex:1}.hero small{display:block;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;opacity:.85}
+.hero .tx b{display:block;font-size:24px;font-weight:800;line-height:1.2}
+.hero .tx span{font-size:12px;color:#475569}
+.hero .mini{text-align:right;color:#1c2733;font-size:12px;line-height:1.7}.hero .mini b{font-variant-numeric:tabular-nums}
+.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.k{border:1px solid #e2e8f0;border-radius:12px;padding:13px 14px 13px 18px;background:linear-gradient(180deg,#fff,#f4f7fb);position:relative;overflow:hidden}
+.k:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c,#0f2742)}
+.k small{display:block;color:#64748b;font-size:11px;font-weight:600}
+.k b{display:block;font-size:18px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
+.two{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:20px}
+.sec{margin-top:22px}.two .sec{margin-top:0}
+.h{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding-bottom:7px;border-bottom:1px solid #e2e8f0;font-size:12px;font-weight:800;color:#0f2742;text-transform:uppercase;letter-spacing:1px}
+.h i{width:5px;height:16px;background:#c8a24a;border-radius:3px;display:block}
+.h em{margin-left:auto;font-style:normal;text-transform:none;letter-spacing:0;color:#1f7a6d;font-weight:700;font-size:13px}
+.lgt{width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden}
+.lgt td{padding:7px 12px;border-bottom:1px solid #eef2f6;font-size:12.5px}.lgt td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.lgt tr.tot td{background:#f1f5f9;font-weight:700}.lgt .neg td:last-child{color:#b42318}
+.lgt tr.fin td{background:#0f2742;color:#fff;font-weight:800;font-size:14px;border:0}
+.rec .row{display:flex;justify-content:space-between;padding:10px 14px;border-radius:10px;background:#f1f5f9;margin-bottom:8px;font-weight:600}
+.rec .row b{font-variant-numeric:tabular-nums;color:#0f2742}
+.rec .row.d{background:#fff;border:1.5px dashed}.rec .row.d.ok{color:#16803c;border-color:#16803c}.rec .row.d.bad{color:#b42318;border-color:#b42318}.rec .row.d b{color:inherit}
+.bar{display:flex;height:16px;border-radius:8px;overflow:hidden;background:#e2e8f0}
+.bar div{height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:11.5px;color:#475569}
+.legend span:before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--c);margin-right:5px}
+.t{width:100%;border-collapse:collapse;font-size:12.5px;border:1px solid #e2e8f0}
+.t th{background:#0f2742;color:#fff;font-weight:600;text-align:left;padding:8px 10px;font-size:11.5px}
+.t td{padding:7px 10px;border-bottom:1px solid #eef2f6;vertical-align:top}
+.t tr:nth-child(even) td{background:#f8fafc}
+.t .r{text-align:right;font-variant-numeric:tabular-nums}.t .m{color:#64748b}.t .x{color:#94a3b8;width:28px}
+.t tfoot td{background:#f3e9cf!important;color:#0f2742;font-weight:800;border-bottom:0}
+.empty{padding:12px;color:#94a3b8;font-style:italic;border:1px dashed #cbd5e1;border-radius:10px;text-align:center}
+.sig{display:flex;justify-content:space-between;padding:34px 34px 0}
+.sig div{width:180px;border-top:1px solid #94a3b8;text-align:center;padding-top:5px;color:#64748b;font-size:11.5px}
+.rf{margin-top:22px;background:#0f2742;color:#a9bcd3;padding:12px 34px;display:flex;justify-content:space-between;font-size:11.5px;border-top:4px solid #c8a24a}
+.rf b{color:#c8a24a}
+.hint{font-size:12.5px;color:#5b4a14;background:#fff8e1;border:1px solid #f0dca0;border-radius:10px;padding:8px 12px;margin-top:8px}
+.ed{display:inline-block;min-width:16px;border-radius:3px;outline:none;cursor:text}
+.ed:hover{background:#fff6dc;box-shadow:0 0 0 1px #c8a24a}
+.ed:focus{background:#fff;color:#1c2733;box-shadow:0 0 0 2px #1f7a6d}
+.rh .ed:hover{background:rgba(255,255,255,.14)}.rh .ed:focus{background:rgba(255,255,255,.22);color:#fff;box-shadow:0 0 0 2px #c8a24a}
+.del{border:0;background:#fde8e6;color:#b42318;border-radius:6px;cursor:pointer;width:22px;height:22px;font-size:11px}
+.add{margin-top:8px;border:1.5px dashed #c8a24a;background:#fffaf0;color:#0f2742;border-radius:8px;padding:6px 12px;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.t td.dl,.t th.dl{width:30px;text-align:center}
+.nb{display:block;min-height:48px;padding:10px 12px;border:1px solid #e2e8f0;border-radius:10px;background:#fafbfc;white-space:pre-wrap}
+.nb:empty:before{content:attr(data-ph);color:#94a3b8}
+.exp .noexp{display:none!important}
+.exp .ed{box-shadow:none!important;background:none!important}
+
 </style>
 </head>
 <body>
 
 <div class="top"><div class="in">
-  <div class="brand"><b>Liz Fashion – AponBazaar</b><span data-i="sub"></span></div>
+  <div class="brand"><div class="logo">LF</div><div><b>Liz Fashion – AponBazaar</b><span data-i="sub"></span></div></div>
   <div class="lang" role="group" aria-label="Language">
     <button data-l="bn">বাংলা</button><button data-l="en">English</button>
   </div>
 </div></div>
 
 <div id="lock"><div class="card">
+  <div class="logo">LF</div>
   <h1 data-i="signin"></h1><p data-i="signinSub"></p>
   <label for="pin" data-i="pin"></label>
   <input id="pin" type="password" inputmode="numeric" autocomplete="off">
@@ -78,7 +161,7 @@ table.notes td:first-child{font-weight:600;color:var(--navy)}
 
 <div id="app" hidden>
   <nav><div class="in" id="tabs"></div></nav>
-  <main>
+  <main id="entry">
     <div class="card">
       <div id="fields"></div>
       <div class="btns"><button class="btn pri" id="save"></button><button class="btn" id="clear"></button></div>
@@ -86,6 +169,17 @@ table.notes td:first-child{font-weight:600;color:var(--navy)}
     </div>
     <h2 data-i="recent"></h2>
     <div class="tbl" id="recent"></div>
+  </main>
+  <main id="repmain" hidden>
+    <div class="ctl">
+      <div><label for="d" data-i="date"></label><div class="dn"><button class="btn" id="pv">‹</button><input type="date" id="d"><button class="btn" id="nx">›</button><button class="btn" id="td" data-i="today"></button></div></div>
+      <button class="btn pri" id="load" data-i="load"></button>
+      <div class="sp"></div>
+      <button class="btn gold" id="dl" data-i="dl" disabled></button>
+    </div>
+    <div class="hint" data-i="hint"></div>
+    <div id="rmsg"></div>
+    <div class="stage"><div class="holder" id="holder"><div id="rep"></div></div></div>
   </main>
 </div>
 
@@ -116,6 +210,32 @@ const T={
   save:'এন্ট্রি সেভ করুন',clear:'মুছুন',saving:'সেভ হচ্ছে…',saved:'শিটে সেভ হয়েছে ✓',recent:'সর্বশেষ ১০টি এন্ট্রি',loading:'লোড হচ্ছে…',none:'এখনো কোনো এন্ট্রি নেই।',
   wrongpin:'পিন ভুল হয়েছে',net:'সার্ভারের সাথে যোগাযোগ হয়নি। Web App Deploy ঠিক আছে কিনা দেখুন।',needdate:'অনুগ্রহ করে তারিখ দিন।'}
 };
+const T2={
+ en:{title:'Daily Accounts Report',signSub:'Enter your PIN to open reports',enter:'Sign in',date:'Date',today:'Today',add:'Add row',notes:'Notes',notesPh:'Click to add notes…',hint:'✎ Click any value on the report to edit it. Totals, status and chart update automatically. Edits affect this report / JPG only (not the sheet). “Show report” reloads from the sheet.',load:'Show report',dl:'⬇ Download JPG',loading:'Loading…',wrong:'Incorrect PIN',net:'Could not reach the server.',
+  rpt:'Daily Accounts Report',dateL:'Report date',no:'Report No.',
+  sOver:'Cash over',sShort:'Cash short',sOk:'Books balanced',mOver:'Cash in hand is more than the ledger',mShort:'Cash in hand is less than the ledger',mOk:'Cash in hand matches the ledger exactly',
+  hand:'Cash in hand',led:'Ledger amount',
+  kSale:"Today's cash sales",kRec:'Recovery',kExp:'Total expense',kDue:'Dues receivable',
+  secLed:'Ledger calculation',prev:'Previous ledger',sale:"Today's cash sales",rec:'Recovery sales',cin:'Cash in',total:'Total',exp:'Expense',rcout:'Cash out (deposit)',cod:'COD',
+  secRec:'Cash reconciliation',diff:'Difference',flow:'Where the money went',remain:'Remaining ledger',
+  noDaily:'No cash summary entry found for this date.',
+  sExp:'Expenses',sCash:'Cash In / Out',sRec:'Recovery',sBaki:'Dues Receivable',rnone:'No entries for this day.',
+  c_name:'Name',c_note:'Note / reason',c_amt:'Amount',c_code:'Code',c_status:'Status',c_type:'Type',c_id:'Cust. ID',c_cust:'Customer',c_exch:'Exchanged',c_rem:'Remarks',c_reason:'Reason',
+  tot:'Total',gen:'Generated',s1:'Prepared by',s2:'Checked by'},
+ bn:{title:'দৈনিক হিসাব রিপোর্ট',signSub:'রিপোর্ট দেখতে পিন দিন',enter:'প্রবেশ করুন',date:'তারিখ',today:'আজ',add:'সারি যোগ করুন',notes:'মন্তব্য',notesPh:'মন্তব্য লিখতে ক্লিক করুন…',hint:'✎ রিপোর্টের যেকোনো সংখ্যা বা লেখায় ক্লিক করে এডিট করুন। মোট, স্ট্যাটাস ও চার্ট নিজে থেকেই বদলাবে। এডিট শুধু এই রিপোর্ট/JPG-তে প্রযোজ্য, শিটে সেভ হয় না। “রিপোর্ট দেখুন” চাপলে শিট থেকে আবার লোড হবে।',load:'রিপোর্ট দেখুন',dl:'⬇ JPG ডাউনলোড',loading:'লোড হচ্ছে…',wrong:'পিন ভুল হয়েছে',net:'সার্ভারের সাথে যোগাযোগ হয়নি।',
+  rpt:'দৈনিক হিসাব রিপোর্ট',dateL:'রিপোর্টের তারিখ',no:'রিপোর্ট নং',
+  sOver:'ক্যাশ বেশি',sShort:'ক্যাশ কম',sOk:'হিসাব মিলেছে',mOver:'হাতের ক্যাশ লেজারের চেয়ে বেশি',mShort:'হাতের ক্যাশ লেজারের চেয়ে কম',mOk:'হাতের ক্যাশ ও লেজার হুবহু মিলেছে',
+  hand:'হাতে থাকা ক্যাশ',led:'লেজার অ্যামাউন্ট',
+  kSale:'আজকের ক্যাশ বিক্রি',kRec:'আদায়',kExp:'মোট খরচ',kDue:'বাকি পাওনা',
+  secLed:'লেজার হিসাব',prev:'আগের লেজার',sale:'আজকের ক্যাশ বিক্রি',rec:'আদায় (রিকভারি) বিক্রি',cin:'ক্যাশ ইন',total:'মোট',exp:'খরচ',rcout:'ক্যাশ আউট (জমা)',cod:'সিওডি (COD)',
+  secRec:'ক্যাশ মিলানো',diff:'পার্থক্য',flow:'টাকা কোথায় গেছে',remain:'অবশিষ্ট লেজার',
+  noDaily:'এই তারিখে ক্যাশ হিসাবের কোনো এন্ট্রি পাওয়া যায়নি।',
+  sExp:'খরচ',sCash:'ক্যাশ ইন / আউট',sRec:'আদায়',sBaki:'বাকি পাওনা',rnone:'এই দিনে কোনো এন্ট্রি নেই।',
+  c_name:'নাম',c_note:'নোট / কারণ',c_amt:'পরিমাণ',c_code:'কোড',c_status:'অবস্থা',c_type:'ধরন',c_id:'আইডি',c_cust:'কাস্টমার',c_exch:'বিনিময়ে',c_rem:'মন্তব্য',c_reason:'কারণ',
+  tot:'মোট',gen:'তৈরির সময়',s1:'প্রস্তুতকারী',s2:'যাচাইকারী'}
+};
+for(const l in T2)for(const k in T2[l])if(!(k in T[l]))T[l][k]=T2[l][k];
+T.en.t_report='Report';T.bn.t_report='রিপোর্ট';
 const HB={'Date':'তারিখ','Expense Name':'খরচের নাম','Note':'নোট','Amount':'পরিমাণ','Status':'অবস্থা','Expense Code':'কোড','Entered At':'এন্ট্রির সময়','Type':'ধরন',
  'Customer ID':'কাস্টমার আইডি','Customer Name':'কাস্টমারের নাম','Exchange With Cash':'ক্যাশের বিনিময়ে','Remarks':'মন্তব্য','Name':'নাম','Reason':'কারণ',
  'Previous Ledger':'আগের লেজার','Ajker Cash Sell':'আজকের বিক্রি','Recovery Sell':'আদায়','Cash In':'ক্যাশ ইন','Total':'মোট','Expense':'খরচ','Cash Out (Deposit)':'ক্যাশ আউট (জমা)','COD':'সিওডি','Ledger Amount':'লেজার','Cash In Hand':'হাতের ক্যাশ','Partokkho (Hand - Ledger)':'পার্থক্য'};
@@ -132,7 +252,8 @@ const F={
    ['status','status','select',[['entry done','st_done'],['pending','st_pending'],['approved','st_approved']]]]},
  cash:{fields:[['date','date','date'],['kind','kind','select',[['Cash In','cin'],['Cash Out','cout']]],['note','noteF','text'],['amount','amount','number']]},
  recovery:{fields:[['date','date','date'],['custId','custId','text'],['custName','custName','text'],['amount','amount','number'],['exchange','exchange','number'],['remarks','remarks','text']]},
- baki:{fields:[['date','date','date'],['name','bname','text'],['amount','amount','number'],['reason','reason','textarea']]}
+ baki:{fields:[['date','date','date'],['name','bname','text'],['amount','amount','number'],['reason','reason','textarea']]},
+ report:{fields:[]}
 };
 let cur='daily',PIN='';
 
@@ -152,11 +273,13 @@ function applyLang(){
   document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===lang));
   $('save').textContent=t('save');$('clear').textContent=t('clear');
 }
+function view(){const r=cur==='report';$('entry').hidden=r;$('repmain').hidden=!r}
+function initRep(){if(!$('d').value)$('d').value=today();build()}
 function tabs(){
   $('tabs').innerHTML='';
   Object.keys(F).forEach(k=>{
     const b=document.createElement('button');b.textContent=t('t_'+k);if(k===cur)b.className='on';
-    b.onclick=()=>{cur=k;tabs();form();recent()};$('tabs').appendChild(b);
+    b.onclick=()=>{cur=k;tabs();view();if(k==='report')initRep();else{form();recent()}};$('tabs').appendChild(b);
   });
 }
 function snapshot(){const s={};$('fields').querySelectorAll('input,select,textarea').forEach(e=>s[e.id]=e.value);return s}
@@ -191,7 +314,7 @@ function cashCalc(){
   $('s_hand').textContent=$('s_hand2').textContent=fmt(hand);
   $('s_led').textContent=$('s_led2').textContent=fmt(led);
   $('s_tot').textContent=fmt(tot);
-  $('s_box').className='stat '+(diff===0?'ok':'bad');
+  $('s_box').className='stat '+(diff>=0?'ok':'bad');
   $('s_lab').textContent=diff===0?t('match'):diff>0?t('over'):t('short');
   $('s_diff').textContent=fmt(Math.abs(diff));
 }
@@ -244,8 +367,147 @@ $('pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('enter').click()});
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{
   lang=b.dataset.l;try{localStorage.setItem('lang',lang)}catch(e){}
   const s=$('app').hidden?null:snapshot();applyLang();
-  if(s){tabs();form();restore(s);recent();$('msg').textContent=''}
+  if(s){tabs();view();if(cur==='report'){if(DATA)render()}else{form();restore(s);recent();$('msg').textContent=''}}
 });
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const loc=()=>lang==='bn'?'bn-BD':'en-IN';
+const num=v=>{const n=Number(String(v).replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d)).replace(/[,৳\s]/g,''));return isNaN(n)?0:n};
+const money=v=>'৳ '+num(v).toLocaleString(loc());
+let DATA=null,DATE='';
+
+function normDate(x){
+  const s=String(x).trim();let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return m[1]+'-'+m[2]+'-'+m[3];
+  const d=new Date(s);if(!isNaN(d))return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+  m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);if(m)return m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
+  return s;
+}
+const pick=(head,n)=>head.indexOf(n);
+function rowsFor(res,date){const di=Math.max(0,pick(res.head,'Date'));return res.rows.filter(r=>normDate(r[di])===date)}
+
+async function build(){
+  DATE=$('d').value;if(!DATE)return;
+  $('rmsg').textContent=t('loading');$('dl').disabled=true;
+  try{
+    const types=['daily','expense','cash','recovery','baki'];
+    const res=await Promise.all(types.map(k=>call('recent',k)));
+    DATA={};types.forEach((k,i)=>DATA[k]={head:res[i].head,rows:rowsFor(res[i],DATE)});
+    $('rmsg').textContent='';initD();render();$('dl').disabled=false;
+  }catch(e){$('rmsg').textContent=errText(e)}
+}
+let D={prev:0,sale:0,rec:0,cin:0,exp:0,cout:0,cod:0,hand:0},TXT={},busy=false;
+function initD(){
+  const dr=DATA.daily.rows[0],h=DATA.daily.head,g=n=>{const i=pick(h,n);return dr&&i>=0?num(dr[i]):0};
+  D={prev:g('Previous Ledger'),sale:g('Ajker Cash Sell'),rec:g('Recovery Sell'),cin:g('Cash In'),exp:g('Expense'),cout:g('Cash Out (Deposit)'),cod:g('COD'),hand:g('Cash In Hand')};
+  TXT={};
+}
+const edAttr=(id,extra,o)=>'class="ed" contenteditable="true" tabindex="0" data-id="'+id+'" '+extra+' data-o="'+esc(o)+'"';
+const dv=k=>{const s=money(D[k]);return '<span '+edAttr('d-'+k,'data-d="'+k+'"',s)+'>'+esc(s)+'</span>'};
+const tx=(k,def)=>{const s=TXT[k]!=null?TXT[k]:def;return '<span '+edAttr('t-'+k,'data-t="'+k+'"',s)+'>'+esc(s)+'</span>'};
+function table(key,cols){
+  const {head,rows}=DATA[key];
+  const idx=cols.map(c=>pick(head,c.h));let sum=0;
+  const body=rows.map((r,n)=>'<tr><td class="x">'+(n+1)+'</td>'+cols.map((c,j)=>{
+    const i=idx[j],v=i<0?'':r[i];if(c.amt)sum+=num(v);
+    const s=c.amt?money(v):String(v==null?'':v);
+    const inner=i<0?esc(s):'<span '+edAttr(key+'-'+n+'-'+i,'data-k="'+key+'" data-r="'+n+'" data-c="'+i+'"'+(c.amt?' data-a="1"':''),s)+'>'+esc(s)+'</span>';
+    return '<td'+(c.amt?' class="r"':c.mut?' class="m"':'')+'>'+inner+'</td>'}).join('')+'<td class="dl noexp"><button class="del" data-del="'+key+'" data-r="'+n+'">✕</button></td></tr>').join('');
+  const foot='<tfoot><tr><td></td>'+cols.map((c,j)=>j===0?'<td>'+t('tot')+' ('+rows.length+')</td>':c.amt?'<td class="r">'+money(sum)+'</td>':'<td></td>').join('')+'<td class="noexp"></td></tr></tfoot>';
+  const tbl=rows.length?'<table class="t"><thead><tr><th>#</th>'+cols.map(c=>'<th'+(c.amt?' class="r"':'')+'>'+t(c.k)+'</th>').join('')+'<th class="dl noexp"></th></tr></thead><tbody>'+body+'</tbody>'+foot+'</table>':'<div class="empty">'+t('rnone')+'</div>';
+  return tbl+'<button class="add noexp" data-add="'+key+'">+ '+t('add')+'</button>';
+}
+function sumOf(key,h,type){
+  const {head,rows}=DATA[key],i=pick(head,h),ti=pick(head,'Type');
+  if(i<0)return 0;
+  return rows.reduce((s,r)=>(!type||String(r[ti]).toLowerCase()===type)?s+num(r[i]):s,0);
+}
+const sec=(title,em,inner,id)=>'<div class="sec"'+(id?' id="'+id+'"':'')+'><div class="h"><i></i>'+title+(em?'<em>'+em+'</em>':'')+'</div>'+inner+'</div>';
+function addRow(k){const d=DATA[k],r=new Array(d.head.length).fill('');const di=pick(d.head,'Date');if(di>=0)r[di]=DATE;if(k==='cash'){const ti=pick(d.head,'Type');if(ti>=0)r[ti]='Cash In'}d.rows.push(r)}
+
+function render(){
+  const {prev,sale,rec,cin,exp,cout,cod,hand}=D;
+  const tot=prev+sale+rec+cin,led=tot-exp-cout-cod,diff=hand-led,good=diff>=0;
+  const dateTxt=new Date(DATE+'T00:00:00').toLocaleDateString(loc(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const expTot=sumOf('expense','Amount'),cashIn=sumOf('cash','Amount','cash in'),cashOut=sumOf('cash','Amount','cash out');
+  const recTot=sumOf('recovery','Amount'),bakiTot=sumOf('baki','Amount');
+  const now=new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'});
+  const hero='<div class="hero '+(good?'ok':'bad')+'"><div class="ic">'+(diff===0?'✓':diff>0?'▲':'▼')+'</div><div class="tx"><small>'+(diff===0?t('sOk'):diff>0?t('sOver'):t('sShort'))+'</small><b>'+(diff===0?money(hand):money(Math.abs(diff)))+'</b><span>'+(diff===0?t('mOk'):diff>0?t('mOver'):t('mShort'))+'</span></div>'+
+    '<div class="mini">'+t('hand')+': <b>'+money(hand)+'</b><br>'+t('led')+': <b>'+money(led)+'</b></div></div>';
+  const L=(a,k,c)=>'<tr'+(c?' class="'+c+'"':'')+'><td>'+a+'</td><td>'+dv(k)+'</td></tr>';
+  const LR=(a,v,c)=>'<tr class="'+c+'"><td>'+a+'</td><td>'+money(v)+'</td></tr>';
+  const ledger='<table class="lgt">'+L(t('prev'),'prev')+L('(+) '+t('sale'),'sale')+L('(+) '+t('rec'),'rec')+L('(+) '+t('cin'),'cin')+LR(t('total'),tot,'tot')+L('(−) '+t('exp'),'exp','neg')+L('(−) '+t('rcout'),'cout','neg')+L('(−) '+t('cod'),'cod','neg')+LR(t('led'),led,'fin')+'</table>';
+  const recon='<div class="rec"><div class="row"><span>'+t('hand')+'</span><b>'+dv('hand')+'</b></div><div class="row"><span>'+t('led')+'</span><b>'+money(led)+'</b></div><div class="row d '+(good?'ok':'bad')+'"><span>'+t('diff')+'</span><b>'+(diff>0?'+':diff<0?'−':'')+money(Math.abs(diff))+'</b></div></div>';
+  let two='<div class="two">'+sec(t('secLed'),'',ledger)+sec(t('secRec'),'',recon)+'</div>';
+  if(tot>0){
+    const p=v=>Math.max(0,v/tot*100).toFixed(2)+'%',rem=Math.max(0,led);
+    const seg=[[exp,'#b42318',t('exp')],[cout,'#c8a24a',t('rcout')],[cod,'#7c5cbf',t('cod')],[rem,'#1f7a6d',t('remain')]];
+    two+=sec(t('flow'),'','<div class="bar">'+seg.map(x=>'<div style="width:'+p(x[0])+';background:'+x[1]+'"></div>').join('')+'</div><div class="legend">'+seg.map(x=>'<span style="--c:'+x[1]+'">'+x[2]+' · '+money(x[0])+'</span>').join('')+'</div>');
+  }
+  const kp=[[t('kSale'),sale,'#1f7a6d'],[t('kRec'),recTot||rec,'#0f2742'],[t('kExp'),expTot||exp,'#b42318'],[t('kDue'),bakiTot,'#c8a24a']];
+  const nv=TXT.notes||'';
+  const notes='<span class="ed nb" contenteditable="true" tabindex="0" data-id="t-notes" data-t="notes" data-m="1" data-ph="'+esc(t('notesPh'))+'" data-o="'+esc(nv)+'">'+esc(nv)+'</span>';
+  busy=true;
+  $('rep').innerHTML=
+   '<div class="rh"><div class="c1"></div><div class="c2"></div><div class="row"><div class="br"><div class="lg">LF</div><div><h1>'+tx('brand','Liz Fashion – AponBazaar')+'</h1><p>'+tx('rpt',t('rpt'))+'</p></div></div>'+
+   '<div class="dt"><small>'+t('dateL')+'</small><b>'+esc(dateTxt)+'</b><span>'+t('no')+' DR-'+DATE.replace(/-/g,'')+'</span></div></div></div>'+
+   '<div class="rb">'+hero+
+   '<div class="kp">'+kp.map(k=>'<div class="k" style="--c:'+k[2]+'"><small>'+k[0]+'</small><b>'+money(k[1])+'</b></div>').join('')+'</div>'+
+   two+
+   sec(t('sExp'),money(expTot),table('expense',[{h:'Expense Name',k:'c_name'},{h:'Note',k:'c_note',mut:1},{h:'Expense Code',k:'c_code'},{h:'Status',k:'c_status'},{h:'Amount',k:'c_amt',amt:1}]))+
+   sec(t('sCash'),'+'+money(cashIn)+'  /  −'+money(cashOut),table('cash',[{h:'Type',k:'c_type'},{h:'Note',k:'c_note',mut:1},{h:'Amount',k:'c_amt',amt:1}]))+
+   sec(t('sRec'),money(recTot),table('recovery',[{h:'Customer ID',k:'c_id'},{h:'Customer Name',k:'c_cust'},{h:'Amount',k:'c_amt',amt:1},{h:'Exchange With Cash',k:'c_exch'},{h:'Remarks',k:'c_rem',mut:1}]))+
+   sec(t('sBaki'),money(bakiTot),table('baki',[{h:'Name',k:'c_cust'},{h:'Reason',k:'c_reason',mut:1},{h:'Amount',k:'c_amt',amt:1}]))+
+   sec(t('notes'),'',notes,'nsec')+
+   '</div><div class="sig"><div>'+tx('s1',t('s1'))+'</div><div>'+tx('s2',t('s2'))+'</div></div>'+
+   '<div class="rf"><span><b>Liz Fashion</b> – AponBazaar</span><span>'+t('gen')+': '+esc(now)+'</span></div>';
+  busy=false;
+  fit();
+}
+function commit(el){
+  if(!el||!el.classList||!el.classList.contains('ed'))return false;
+  const d=el.dataset,v=el.innerText.replace(/\u00a0/g,' ').trim();
+  if(v===d.o)return false;
+  if(d.d)D[d.d]=num(v);
+  else if(d.t)TXT[d.t]=v;
+  else DATA[d.k].rows[+d.r][+d.c]=d.a?num(v):v;
+  return true;
+}
+const R=$('rep');
+R.addEventListener('focusout',e=>{
+  if(busy||!commit(e.target))return;
+  const nx=e.relatedTarget&&e.relatedTarget.dataset?e.relatedTarget.dataset.id:null;
+  render();
+  if(nx){const n=R.querySelector('[data-id="'+nx+'"]');if(n)n.focus()}
+});
+R.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('ed')&&!e.target.dataset.m){e.preventDefault();e.target.blur()}});
+R.addEventListener('paste',e=>{if(e.target.classList.contains('ed')){e.preventDefault();document.execCommand('insertText',false,(e.clipboardData||window.clipboardData).getData('text'))}});
+R.addEventListener('mousedown',e=>{if(e.target.closest('button'))e.preventDefault()});
+R.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  commit(document.activeElement);
+  if(b.dataset.del)DATA[b.dataset.del].rows.splice(+b.dataset.r,1);
+  else if(b.dataset.add)addRow(b.dataset.add);
+  render();
+});
+function fit(){
+  const h=$('holder'),w=Math.min(1,(window.innerWidth-34)/820);
+  h.style.zoom=w<1?w:'';
+}
+window.addEventListener('resize',()=>{if(DATA)fit()});
+
+async function download(){
+  if(document.activeElement)document.activeElement.blur();const h=$('holder'),z=h.style.zoom,rp=$('rep'),ns=$('nsec'),hn=ns&&!TXT.notes;h.style.zoom='';$('dl').disabled=true;rp.classList.add('exp');if(hn)ns.style.display='none';
+  try{
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    const c=await html2canvas($('rep'),{scale:2.5,backgroundColor:'#ffffff',useCORS:true,windowWidth:820});
+    const a=document.createElement('a');a.href=c.toDataURL('image/jpeg',0.96);a.download='Liz-Fashion-Report-'+DATE+'.jpg';
+    document.body.appendChild(a);a.click();a.remove();
+  }catch(e){$('rmsg').textContent=String(e.message||e)}
+  h.style.zoom=z;$('dl').disabled=false;rp.classList.remove('exp');if(hn)ns.style.display='';
+}
+
+function shift(n){const d=new Date($('d').value+'T00:00:00');d.setDate(d.getDate()+n);$('d').value=new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);build()}
+$('pv').onclick=()=>shift(-1);$('nx').onclick=()=>shift(1);$('td').onclick=()=>{$('d').value=today();build()};
+$('load').onclick=build;$('d').onchange=build;$('dl').onclick=download;
 applyLang();
 </script>
 </body>
