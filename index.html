@@ -70,10 +70,10 @@ table.notes td:first-child{font-weight:600;color:var(--navy)}
 #rmsg{color:var(--bad);font-size:13px;min-height:18px;margin:8px 2px 0}
 .stage{overflow-x:auto;padding:12px 0 30px}
 .holder{width:820px;margin:0 auto;box-shadow:0 10px 40px rgba(15,39,66,.18)}
-#rep th,#rep td{white-space:normal}
+#rep th,#rep td,#sumrep th,#sumrep td{white-space:normal}
 @media(max-width:720px){.cols{grid-template-columns:1fr;gap:6px}.stats{grid-template-columns:1fr}.stat b{font-size:22px}}
 /* ===== REPORT ===== */
-#rep{width:820px;background:#fff;color:#1c2733;font:13px/1.5 Inter,"Hind Siliguri",sans-serif;position:relative}
+#rep,#sumrep{width:820px;background:#fff;color:#1c2733;font:13px/1.5 Inter,"Hind Siliguri",sans-serif;position:relative}
 .rh{background:linear-gradient(120deg,#0b1e34,#1b3f66);color:#fff;padding:28px 34px 26px;position:relative;overflow:hidden;border-bottom:5px solid #c8a24a}
 .rh .c1{position:absolute;right:-60px;top:-80px;width:240px;height:240px;border-radius:50%;background:rgba(200,162,74,.14)}
 .rh .c2{position:absolute;right:120px;bottom:-110px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
@@ -139,6 +139,9 @@ table.notes td:first-child{font-weight:600;color:var(--navy)}
 .exp .noexp{display:none!important}
 .exp .ed{box-shadow:none!important;background:none!important}
 
+.sumhold{position:fixed;left:-12000px;top:0;pointer-events:none}
+input.lk{background:#f3f5f8;color:var(--mut);pointer-events:none}
+.dtog{display:block;margin-top:6px;background:none;border:0;color:var(--navy);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;text-decoration:underline;padding:0}
 </style>
 </head>
 <body>
@@ -164,7 +167,7 @@ table.notes td:first-child{font-weight:600;color:var(--navy)}
   <main id="entry">
     <div class="card">
       <div id="fields"></div>
-      <div class="btns"><button class="btn pri" id="save"></button><button class="btn" id="clear"></button></div>
+      <div class="btns"><button class="btn pri" id="save"></button><button class="btn" id="clear"></button><button class="btn gold" id="sumjpg" data-i="sumBtn"></button></div>
       <div id="msg" role="status"></div>
     </div>
     <h2 data-i="recent"></h2>
@@ -175,6 +178,7 @@ table.notes td:first-child{font-weight:600;color:var(--navy)}
       <div><label for="d" data-i="date"></label><div class="dn"><button class="btn" id="pv">‹</button><input type="date" id="d"><button class="btn" id="nx">›</button><button class="btn" id="td" data-i="today"></button></div></div>
       <button class="btn pri" id="load" data-i="load"></button>
       <div class="sp"></div>
+      <button class="btn" id="sumr" data-i="sumBtn2" disabled></button>
       <button class="btn gold" id="dl" data-i="dl" disabled></button>
     </div>
     <div class="hint" data-i="hint"></div>
@@ -183,6 +187,7 @@ table.notes td:first-child{font-weight:600;color:var(--navy)}
   </main>
 </div>
 
+<div class="sumhold"><div id="sumrep"></div></div>
 <script>
 // ===== Apps Script Web App URL =====
 const APP_URL = 'https://script.google.com/macros/s/AKfycbxd8zXJAlK0SV6vv5B05mQ3lxjJQ2Rkr0MT6Koxe9jbGbPVaEJjClcxV1BPGzxQpBS-FQ/exec';
@@ -236,6 +241,8 @@ const T2={
 };
 for(const l in T2)for(const k in T2[l])if(!(k in T[l]))T[l][k]=T2[l][k];
 T.en.t_report='Report';T.bn.t_report='রিপোর্ট';
+T.en.chg='Change date';T.bn.chg='তারিখ বদলান';T.en.auto='Use today';T.bn.auto='আজকের তারিখ';
+T.en.sumBtn='📷 Save summary JPG';T.bn.sumBtn='📷 সারসংক্ষেপ JPG সেভ';T.en.sumBtn2='📷 Summary JPG';T.bn.sumBtn2='📷 সারসংক্ষেপ JPG';T.en.sumRpt='Daily Cash Summary';T.bn.sumRpt='দৈনিক ক্যাশ সারসংক্ষেপ';T.en.pcs='Pieces';T.bn.pcs='মোট পিস';
 const HB={'Date':'তারিখ','Expense Name':'খরচের নাম','Note':'নোট','Amount':'পরিমাণ','Status':'অবস্থা','Expense Code':'কোড','Entered At':'এন্ট্রির সময়','Type':'ধরন',
  'Customer ID':'কাস্টমার আইডি','Customer Name':'কাস্টমারের নাম','Exchange With Cash':'ক্যাশের বিনিময়ে','Remarks':'মন্তব্য','Name':'নাম','Reason':'কারণ',
  'Previous Ledger':'আগের লেজার','Ajker Cash Sell':'আজকের বিক্রি','Recovery Sell':'আদায়','Cash In':'ক্যাশ ইন','Total':'মোট','Expense':'খরচ','Cash Out (Deposit)':'ক্যাশ আউট (জমা)','COD':'সিওডি','Ledger Amount':'লেজার','Cash In Hand':'হাতের ক্যাশ','Partokkho (Hand - Ledger)':'পার্থক্য'};
@@ -247,15 +254,15 @@ const fmt=v=>'৳ '+(Number(v)||0).toLocaleString(lang==='bn'?'bn-BD':'en-IN');
 const NOTES=[1000,500,200,100,50,20,10,5,2,1];
 
 const F={
+ report:{fields:[]},
  daily:{custom:true,fields:[['date','date','date']]},
  expense:{fields:[['date','date','date'],['name','name','text'],['note','noteF','textarea'],['amount','amount','number'],['code','code','text'],
    ['status','status','select',[['entry done','st_done'],['pending','st_pending'],['approved','st_approved']]]]},
  cash:{fields:[['date','date','date'],['kind','kind','select',[['Cash In','cin'],['Cash Out','cout']]],['note','noteF','text'],['amount','amount','number']]},
  recovery:{fields:[['date','date','date'],['custId','custId','text'],['custName','custName','text'],['amount','amount','number'],['exchange','exchange','number'],['remarks','remarks','text']]},
- baki:{fields:[['date','date','date'],['name','bname','text'],['amount','amount','number'],['reason','reason','textarea']]},
- report:{fields:[]}
+ baki:{fields:[['date','date','date'],['name','bname','text'],['amount','amount','number'],['reason','reason','textarea']]}
 };
-let cur='daily',PIN='';
+let cur='report',PIN='';
 
 async function call(action,type,d){
   const r=await fetch(APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,type,d,pin:PIN})});
@@ -274,7 +281,7 @@ function applyLang(){
   $('save').textContent=t('save');$('clear').textContent=t('clear');
 }
 function view(){const r=cur==='report';$('entry').hidden=r;$('repmain').hidden=!r}
-function initRep(){if(!$('d').value)$('d').value=today();build()}
+function initRep(){$('d').value=today();build()}
 function tabs(){
   $('tabs').innerHTML='';
   Object.keys(F).forEach(k=>{
@@ -319,8 +326,8 @@ function cashCalc(){
   $('s_diff').textContent=fmt(Math.abs(diff));
 }
 function form(){
-  say('');
-  if(F[cur].custom){cashView();return}
+  say('');$('sumjpg').hidden=cur!=='daily';
+  if(F[cur].custom){cashView();lockDate();return}
   const box=$('fields');box.innerHTML='';
   F[cur].fields.forEach(([id,k,type,opts],i)=>{
     const l=document.createElement('label');l.htmlFor='f_'+id;l.textContent=t(k);if(!i)l.style.marginTop='0';box.appendChild(l);
@@ -330,6 +337,14 @@ function form(){
     else{el=document.createElement('input');el.type=type;if(type==='number'){el.inputMode='decimal';el.step='any'}}
     el.id='f_'+id;if(type==='date')el.value=today();box.appendChild(el);
   });
+  lockDate();
+}
+function lockDate(){
+  const d=$('f_date');if(!d)return;
+  d.value=today();d.readOnly=true;d.classList.add('lk');d.tabIndex=-1;
+  const b=document.createElement('button');b.type='button';b.className='dtog';b.textContent=t('chg');
+  b.onclick=()=>{const was=d.readOnly;d.readOnly=!was;d.classList.toggle('lk',!was);d.tabIndex=was?0:-1;b.textContent=was?t('auto'):t('chg');if(!was)d.value=today()};
+  d.parentNode.insertBefore(b,d.nextSibling);
 }
 async function recent(){
   $('recent').textContent=t('loading');$('recent').style.padding='12px';
@@ -350,6 +365,7 @@ function clearForm(){
 }
 $('clear').onclick=()=>{clearForm();say('')};
 $('save').onclick=async()=>{
+  const fd=$('f_date');if(fd&&fd.readOnly)fd.value=today();
   const d={};F[cur].fields.forEach(([id])=>d[id]=$('f_'+id).value);
   if(cur==='daily'){['prev','ibos','recov','cashin','expense','cashout','cod'].forEach(k=>d[k]=$('f_'+k).value);d.notes={};NOTES.forEach(v=>d.notes[v]=nv('q_'+v))}
   if(!d.date){say(t('needdate'),1);return}
@@ -360,7 +376,7 @@ $('save').onclick=async()=>{
 };
 $('enter').onclick=async()=>{
   PIN=$('pin').value;$('lmsg').textContent='';
-  try{await call('recent','expense');$('lock').hidden=true;$('app').hidden=false;tabs();form();recent()}
+  try{await call('recent','expense');$('lock').hidden=true;$('app').hidden=false;tabs();view();initRep()}
   catch(e){$('lmsg').textContent=errText(e)}
 };
 $('pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('enter').click()});
@@ -391,7 +407,7 @@ async function build(){
     const types=['daily','expense','cash','recovery','baki'];
     const res=await Promise.all(types.map(k=>call('recent',k)));
     DATA={};types.forEach((k,i)=>DATA[k]={head:res[i].head,rows:rowsFor(res[i],DATE)});
-    $('rmsg').textContent='';initD();render();$('dl').disabled=false;
+    $('rmsg').textContent='';initD();render();$('dl').disabled=false;$('sumr').disabled=false;
   }catch(e){$('rmsg').textContent=errText(e)}
 }
 let D={prev:0,sale:0,rec:0,cin:0,exp:0,cout:0,cod:0,hand:0},TXT={},busy=false;
@@ -508,6 +524,51 @@ async function download(){
 function shift(n){const d=new Date($('d').value+'T00:00:00');d.setDate(d.getDate()+n);$('d').value=new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);build()}
 $('pv').onclick=()=>shift(-1);$('nx').onclick=()=>shift(1);$('td').onclick=()=>{$('d').value=today();build()};
 $('load').onclick=build;$('d').onchange=build;$('dl').onclick=download;
+function sumHTML(x){
+  const tot=x.prev+x.sale+x.rec+x.cin,led=tot-x.exp-x.cout-x.cod,hand=x.hand,diff=hand-led,good=diff>=0;
+  const dateTxt=new Date(x.date+'T00:00:00').toLocaleDateString(loc(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const now=new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'});
+  const hero='<div class="hero '+(good?'ok':'bad')+'"><div class="ic">'+(diff===0?'✓':diff>0?'▲':'▼')+'</div><div class="tx"><small>'+(diff===0?t('sOk'):diff>0?t('sOver'):t('sShort'))+'</small><b>'+(diff===0?money(hand):money(Math.abs(diff)))+'</b><span>'+(diff===0?t('mOk'):diff>0?t('mOver'):t('mShort'))+'</span></div><div class="mini">'+t('hand')+': <b>'+money(hand)+'</b><br>'+t('led')+': <b>'+money(led)+'</b></div></div>';
+  const L=(a,v,c)=>'<tr'+(c?' class="'+c+'"':'')+'><td>'+a+'</td><td>'+money(v)+'</td></tr>';
+  const ledger='<table class="lgt">'+L(t('prev'),x.prev)+L('(+) '+t('sale'),x.sale)+L('(+) '+t('rec'),x.rec)+L('(+) '+t('cin'),x.cin)+L(t('total'),tot,'tot')+L('(−) '+t('exp'),x.exp,'neg')+L('(−) '+t('rcout'),x.cout,'neg')+L('(−) '+t('cod'),x.cod,'neg')+L(t('led'),led,'fin')+'</table>';
+  const recon='<div class="rec"><div class="row"><span>'+t('hand')+'</span><b>'+money(hand)+'</b></div><div class="row"><span>'+t('led')+'</span><b>'+money(led)+'</b></div><div class="row d '+(good?'ok':'bad')+'"><span>'+t('diff')+'</span><b>'+(diff>0?'+':diff<0?'−':'')+money(Math.abs(diff))+'</b></div></div>';
+  let flow='<div class="empty">—</div>';
+  if(tot>0){
+    const p=v=>Math.max(0,v/tot*100).toFixed(2)+'%';
+    const seg=[[x.exp,'#b42318',t('exp')],[x.cout,'#c8a24a',t('rcout')],[x.cod,'#7c5cbf',t('cod')],[Math.max(0,led),'#1f7a6d',t('remain')]];
+    flow='<div class="bar">'+seg.map(g=>'<div style="width:'+p(g[0])+';background:'+g[1]+'"></div>').join('')+'</div><div class="legend">'+seg.map(g=>'<span style="--c:'+g[1]+'">'+g[2]+' · '+money(g[0])+'</span>').join('')+'</div>';
+  }
+  let mid=sec(t('flow'),'',flow);
+  if(x.notes){
+    let pcs=0;
+    const rows=NOTES.map(v=>{const q=x.notes[v]||0;pcs+=q;return '<tr'+(q?'':' style="color:#94a3b8"')+'><td>৳ '+v+'</td><td class="r">'+q.toLocaleString(loc())+'</td><td class="r">'+money(v*q)+'</td></tr>'}).join('');
+    const nt='<table class="t"><thead><tr><th>'+t('noteCol')+'</th><th class="r">'+t('qty')+'</th><th class="r">'+t('total')+'</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td>'+t('handsum')+'</td><td class="r">'+pcs.toLocaleString(loc())+'</td><td class="r">'+money(hand)+'</td></tr></tfoot></table>';
+    mid='<div class="two">'+sec(t('secN'),'',nt)+sec(t('flow'),'',flow)+'</div>';
+  }
+  return '<div class="rh"><div class="c1"></div><div class="c2"></div><div class="row"><div class="br"><div class="lg">LF</div><div><h1>Liz Fashion – AponBazaar</h1><p>'+t('sumRpt')+'</p></div></div><div class="dt"><small>'+t('dateL')+'</small><b>'+esc(dateTxt)+'</b><span>'+t('no')+' CS-'+x.date.replace(/-/g,'')+'</span></div></div></div>'+
+   '<div class="rb">'+hero+'<div class="two">'+sec(t('secLed'),'',ledger)+sec(t('secRec'),'',recon)+'</div>'+(x.notes?mid:sec(t('flow'),'',flow))+'</div>'+
+   '<div class="sig"><div>'+t('s1')+'</div><div>'+t('s2')+'</div></div><div class="rf"><span><b>Liz Fashion</b> – AponBazaar</span><span>'+t('gen')+': '+esc(now)+'</span></div>';
+}
+async function saveSummary(x,btn){
+  const out=cur==='report'?$('rmsg'):$('msg');
+  if(!x.date){if(cur==='report')out.textContent=t('needdate');else say(t('needdate'),1);return}
+  btn.disabled=true;
+  try{
+    const h=$('sumrep');h.innerHTML=sumHTML(x);
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    const c=await html2canvas(h,{scale:2.5,backgroundColor:'#ffffff',useCORS:true,windowWidth:820});
+    const a=document.createElement('a');a.href=c.toDataURL('image/jpeg',0.96);a.download='Liz-Fashion-Summary-'+x.date+'.jpg';
+    document.body.appendChild(a);a.click();a.remove();
+  }catch(e){if(cur==='report')out.textContent=String(e.message||e);else say(String(e.message||e),1)}
+  btn.disabled=false;
+}
+$('sumjpg').onclick=()=>{
+  const fd=$('f_date');if(fd&&fd.readOnly)fd.value=today();
+  let hand=0;const notes={};NOTES.forEach(v=>{notes[v]=nv('q_'+v);hand+=v*notes[v]});
+  saveSummary({date:$('f_date').value,prev:nv('f_prev'),sale:nv('f_ibos'),rec:nv('f_recov'),cin:nv('f_cashin'),exp:nv('f_expense'),cout:nv('f_cashout'),cod:nv('f_cod'),hand,notes},$('sumjpg'));
+};
+$('sumr').onclick=()=>saveSummary({date:DATE,...D,notes:null},$('sumr'));
+document.addEventListener('visibilitychange',()=>{const d=$('f_date');if(d&&d.readOnly)d.value=today()});
 applyLang();
 </script>
 </body>
