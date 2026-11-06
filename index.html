@@ -193,7 +193,7 @@ input.lk{background:#f3f5f8;color:var(--mut);pointer-events:none}
 
 <script>
 // ===== Apps Script Web App URL =====
-const APP_URL = 'https://script.google.com/macros/s/AKfycbxd8zXJAlK0SV6vv5B05mQ3lxjJQ2Rkr0MT6Koxe9jbGbPVaEJjClcxV1BPGzxQpBS-FQ/exec';
+const APP_URL = 'https://script.google.com/macros/s/AKfycbx9sC-pVZ9GVxtuXwqRB1cSeslbcKwFYz5Ff5u9BqgODIobZhqqoFjsAl3kXgr3rhb7tQ/exec';
 // ====================================
 
 const T={
@@ -371,12 +371,20 @@ $('clear').onclick=()=>{clearForm();say('')};
 $('save').onclick=async()=>{
   const fd=$('f_date');if(fd&&fd.readOnly)fd.value=today();
   const d={};F[cur].fields.forEach(([id])=>d[id]=$('f_'+id).value);
-  if(cur==='daily'){['prev','ibos','recov','cashin','expense','cashout','cod'].forEach(k=>d[k]=$('f_'+k).value);d.notes={};NOTES.forEach(v=>d.notes[v]=nv('q_'+v))}
+  if(cur==='daily'){['prev','ibos','recov','cashin','expense','cashout','cod'].forEach(k=>d[k]=$('f_'+k).value);d.notes={};NOTES.forEach(v=>{d.notes[v]=nv('q_'+v)})}
   if(!d.date){say(t('needdate'),1);return}
   if(cur==='daily'){try{localStorage.setItem('lz_notes_'+d.date,JSON.stringify(d.notes))}catch(e){}}
   $('save').disabled=true;say(t('saving'));
   try{
-    await call('save',cur,d);clearForm();
+    await call('save',cur,d);
+    if(cur==='daily'){
+      const n={date:d.date};
+      NOTES.forEach(v=>n['note_'+v]=d.notes[v]);
+      n.pcs=NOTES.reduce((a,v)=>a+d.notes[v],0);
+      n.total=NOTES.reduce((a,v)=>a+v*d.notes[v],0);
+      await call('save','notes',n);
+    }
+    clearForm();
     if(cur==='daily'){cur='report';tabs();view();$('d').value=d.date;await build()}
     else{say(t('saved'));recent()}
   }
@@ -429,7 +437,7 @@ async function build(){
   DATE=$('d').value;if(!DATE)return;
   $('rmsg').textContent=t('loading');$('dl').disabled=true;
   try{
-    const types=['daily','expense','cash','recovery','baki'];
+    const types=['daily','expense','cash','recovery','baki','notes'];
     const res=await Promise.all(types.map(k=>call('recent',k,{limit:1000,date:DATE})));
     DATA={};types.forEach((k,i)=>DATA[k]={head:res[i].head,rows:rowsFor(res[i],DATE)});
     latestDaily();
@@ -437,20 +445,21 @@ async function build(){
   }catch(e){$('rmsg').textContent=errText(e)}
 }
 function latestDaily(){
-  const d=DATA.daily;if(d.rows.length<2)return;
-  const ei=pick(d.head,'Entered At');
-  if(ei>=0){
-    const ts=r=>{const v=Date.parse(String(r[ei]));return isNaN(v)?null:v};
-    const ok=d.rows.every(r=>ts(r)!==null);
-    if(ok)d.rows=d.rows.slice().sort((x,y)=>ts(y)-ts(x));
-  }
-  d.rows=[d.rows[0]];
+  ['daily','notes'].forEach(k=>{
+    const d=DATA[k];if(!d||d.rows.length<2)return;
+    const ei=pick(d.head,'Entered At');
+    if(ei>=0){
+      const ts=r=>{const v=Date.parse(String(r[ei]));return isNaN(v)?null:v};
+      if(d.rows.every(r=>ts(r)!==null))d.rows=d.rows.slice().sort((x,y)=>ts(y)-ts(x));
+    }
+    d.rows=[d.rows[0]];
+  });
 }
 function getNotes(){
-  const h=DATA.daily.head,r=DATA.daily.rows[0],o={};let found=0;
-  if(r)NOTES.forEach(v=>{const i=h.findIndex(x=>new RegExp('^\\s*(৳\\s*)?(note\\s*)?'+v+'(\\s*(x|tk|taka|note))?\\s*$','i').test(String(x)));if(i>=0){o[v]=num(r[i]);found++}});
-  if(found>=3)return o;
-  try{const j=localStorage.getItem('lz_notes_'+DATE);if(j){const n=JSON.parse(j);NOTES.forEach(v=>o[v]=Number(n[v])||0);return o}}catch(e){}
+  const n=DATA.notes,r=n&&n.rows[0],o={};let f=0;
+  if(r)NOTES.forEach(v=>{const i=pickAny(n.head,['Note '+v,String(v)]);if(i>=0){o[v]=num(r[i]);f++}});
+  if(f>=3)return o;
+  try{const j=localStorage.getItem('lz_notes_'+DATE);if(j){const x=JSON.parse(j);NOTES.forEach(v=>o[v]=Number(x[v])||0);return o}}catch(e){}
   return null;
 }
 let D={prev:0,sale:0,rec:0,cin:0,exp:0,cout:0,cod:0,hand:0},TXT={},busy=false;
