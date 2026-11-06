@@ -149,6 +149,20 @@ input.lk{background:#f3f5f8;color:var(--mut);pointer-events:none}
 .nb:empty:before{content:attr(data-ph);color:#94a3b8}
 .exp .noexp{display:none!important}
 .exp .ed{box-shadow:none!important;background:none!important}
+
+/* ===== MOBILE EDIT MODAL ===== */
+#editmodal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;z-index:1000}
+#editmodal[hidden]{display:none!important}
+#editmodal .sheet{background:#fff;width:100%;border-radius:16px 16px 0 0;padding:18px;display:flex;flex-direction:column;gap:10px;max-height:80vh;animation:slideUp .2s ease}
+#editmodal .sheet-h{font-weight:600;color:var(--navy);font-size:14px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+#editmodal textarea{min-height:80px;font-size:16px;resize:vertical}
+#editmodal .sheet-btns{display:flex;gap:10px;justify-content:flex-end}
+#editmodal .sheet-btns .btn{flex:none}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@media(max-width:900px){
+  #rep .ed{cursor:pointer;border-bottom:1px dashed rgba(31,122,109,.45)}
+  #rep .ed:hover,#rep .ed:focus{background:none;box-shadow:none}
+}
 </style>
 </head>
 <body>
@@ -186,6 +200,7 @@ input.lk{background:#f3f5f8;color:var(--mut);pointer-events:none}
       <button class="btn pri" id="load" data-i="load"></button>
       <div class="sp"></div>
       <button class="btn" id="sumr" data-i="sumBtn2" disabled></button>
+      <button class="btn" id="csv" data-i="csv" disabled></button>
       <button class="btn gold" id="dl" data-i="dl" disabled></button>
     </div>
     <div class="hint" data-i="hint"></div>
@@ -195,8 +210,26 @@ input.lk{background:#f3f5f8;color:var(--mut);pointer-events:none}
 </div>
 <div class="sumhold"><div id="sumrep"></div></div>
 
+<div id="editmodal" hidden role="dialog" aria-modal="true">
+  <div class="sheet">
+    <div class="sheet-h" id="etitle"></div>
+    <textarea id="etext" rows="4" autocomplete="off"></textarea>
+    <div class="sheet-btns">
+      <button class="btn" id="ecancel" type="button" data-i="cancel"></button>
+      <button class="btn pri" id="eok" type="button" data-i="save2"></button>
+    </div>
+  </div>
+</div>
+
 <script>
 const APP_URL='https://script.google.com/macros/s/AKfycbxd8zXJAlK0SV6vv5B05mQ3lxjJQ2Rkr0MT6Koxe9jbGbPVaEJjClcxV1BPGzxQpBS-FQ/exec';
+
+const PIN_KEY='lz_pin';
+const LANG_KEY='lang';
+const IDLE_MS=10*60*1000;       // 10 minutes
+const MAX_FAILS=5;
+const LOCK_MS=30*1000;
+const MOBILE_W=900;
 
 const T={
 en:{sub:'Daily Accounts',signin:'Sign in',signinSub:'Enter your PIN to continue.',pin:'PIN',enter:'Sign in',remember:'Remember me on this device',out:'🔒 Lock',
@@ -219,7 +252,8 @@ en:{sub:'Daily Accounts',signin:'Sign in',signinSub:'Enter your PIN to continue.
  secRec:'Cash reconciliation',diff:'Difference',flow:'Where the money went',remain:'Remaining ledger',
  sExp:'Expenses',sCash:'Cash In / Out',sRec:'Recovery',sBaki:'Dues Receivable',rnone:'No entries for this day.',
  c_name:'Name',c_note:'Note / reason',c_amt:'Amount',c_code:'Code',c_status:'Status',c_type:'Type',c_id:'Cust. ID',c_cust:'Customer',c_exch:'Exchanged',c_rem:'Remarks',c_reason:'Reason',
- tot:'Total',gen:'Generated',s1:'Prepared by',s2:'Checked by',sumBtn2:'📷 Summary JPG',sumRpt:'Daily Cash Summary'},
+ tot:'Total',gen:'Generated',s1:'Prepared by',s2:'Checked by',sumBtn2:'📷 Summary JPG',sumRpt:'Daily Cash Summary',
+ csv:'⬇ CSV',cancel:'Cancel',edit:'Edit value',save2:'Save',confirmDel:'Delete this row?',idleLock:'Auto-locked due to inactivity'},
 bn:{sub:'দৈনিক হিসাব',signin:'প্রবেশ করুন',signinSub:'চালিয়ে যেতে আপনার পিন দিন।',pin:'পিন',enter:'প্রবেশ করুন',remember:'এই ডিভাইসে মনে রাখুন',out:'🔒 লক',
  t_daily:'ক্যাশ হিসাব',t_expense:'খরচ',t_cash:'ক্যাশ ইন / আউট',t_recovery:'আদায়',t_baki:'বাকি পাওনা',t_report:'রিপোর্ট',
  date:'তারিখ',name:'খরচের নাম',noteF:'নোট / কারণ',amount:'টাকার পরিমাণ (৳)',code:'খরচের কোড',status:'অবস্থা',
@@ -240,13 +274,14 @@ bn:{sub:'দৈনিক হিসাব',signin:'প্রবেশ করু�
  secRec:'ক্যাশ মিলানো',diff:'পার্থক্য',flow:'টাকা কোথায় গেছে',remain:'অবশিষ্ট লেজার',
  sExp:'খরচ',sCash:'ক্যাশ ইন / আউট',sRec:'আদায়',sBaki:'বাকি পাওনা',rnone:'এই দিনে কোনো এন্ট্রি নেই।',
  c_name:'নাম',c_note:'নোট / কারণ',c_amt:'পরিমাণ',c_code:'কোড',c_status:'অবস্থা',c_type:'ধরন',c_id:'আইডি',c_cust:'কাস্টমার',c_exch:'বিনিময়ে',c_rem:'মন্তব্য',c_reason:'কারণ',
- tot:'মোট',gen:'তৈরির সময়',s1:'প্রস্তুতকারী',s2:'যাচাইকারী',sumBtn2:'📷 সারসংক্ষেপ JPG',sumRpt:'দৈনিক ক্যাশ সারসংক্ষেপ'}
+ tot:'মোট',gen:'তৈরির সময়',s1:'প্রস্তুতকারী',s2:'যাচাইকারী',sumBtn2:'📷 সারসংক্ষেপ JPG',sumRpt:'দৈনিক ক্যাশ সারসংক্ষেপ',
+ csv:'⬇ CSV',cancel:'বাতিল',edit:'মান এডিট করুন',save2:'সেভ',confirmDel:'এই সারিটি মুছবেন?',idleLock:'অকার্যকলাপের কারণে স্বয়ংক্রিয় লক'}
 };
 const HB={'Date':'তারিখ','Expense Name':'খরচের নাম','Note':'নোট','Amount':'পরিমাণ','Status':'অবস্থা','Expense Code':'কোড','Entered At':'এন্ট্রির সময়','Type':'ধরন',
  'Customer ID':'কাস্টমার আইডি','Customer Name':'কাস্টমারের নাম','Exchange With Cash':'ক্যাশের বিনিময়ে','Remarks':'মন্তব্য','Name':'নাম','Reason':'কারণ',
  'Previous Ledger':'আগের লেজার','Ajker Cash Sell':'আজকের বিক্রি','Recovery Sell':'আদায়','Cash In':'ক্যাশ ইন','Total':'মোট','Expense':'খরচ','Cash Out (Deposit)':'ক্যাশ আউট (জমা)','COD':'সিওডি','Ledger Amount':'লেজার','Cash In Hand':'হাতের ক্যাশ','Partokkho (Hand - Ledger)':'পার্থক্য'};
 
-let lang='bn';try{lang=localStorage.getItem('lang')||'bn'}catch(e){}
+let lang='bn';try{lang=localStorage.getItem(LANG_KEY)||'bn'}catch(e){}
 if(!T[lang])lang='bn';
 const t=k=>T[lang][k]||k;
 const $=id=>document.getElementById(id);
@@ -256,7 +291,6 @@ const iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
 const today=()=>iso(new Date());
 const num=v=>{const n=Number(String(v==null?'':v).replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d)).replace(/[,৳\s]/g,''));return isNaN(n)?0:n};
 const money=v=>'৳ '+num(v).toLocaleString(loc());
-const fmt=money;
 const NOTES=[1000,500,200,100,50,20,10,5,2,1];
 const nv=id=>Number(($(id)||{}).value)||0;
 
@@ -271,6 +305,20 @@ const F={
 };
 let cur='report',PIN='',DATA=null,DATE='',seq=0,fails=0,lockUntil=0;
 let D={prev:0,sale:0,rec:0,cin:0,exp:0,cout:0,cod:0,hand:0},TXT={},busy=false;
+let editTarget=null,lastActivity=Date.now();
+
+/* ---------- storage helpers ---------- */
+function savePin(pin,remember){
+  try{
+    if(remember){localStorage.setItem(PIN_KEY,pin);try{sessionStorage.removeItem(PIN_KEY)}catch(e){}}
+    else{sessionStorage.setItem(PIN_KEY,pin);localStorage.removeItem(PIN_KEY)}
+  }catch(e){console.error('savePin',e)}
+}
+function loadPin(){
+  try{return sessionStorage.getItem(PIN_KEY)||localStorage.getItem(PIN_KEY)||null}
+  catch(e){return null}
+}
+function clearPin(){try{localStorage.removeItem(PIN_KEY);sessionStorage.removeItem(PIN_KEY)}catch(e){}}
 
 /* ---------- server ---------- */
 async function call(action,type,d){
@@ -279,7 +327,7 @@ async function call(action,type,d){
   try{
     const r=await fetch(APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,type,d,pin:PIN})});
     j=await r.json();
-  }catch(e){throw new Error('network')}
+  }catch(e){console.error('fetch',e);throw new Error('network')}
   if(!j||!j.ok){
     const m=String((j&&j.error)||'Error');
     if(/PIN/i.test(m)){if(!$('app').hidden)lockOut(t('wrongpin'));throw new Error('PIN')}
@@ -295,9 +343,10 @@ function showLock(msg){
   $('app').hidden=true;$('logout').hidden=true;$('lock').hidden=false;$('pin').value='';$('lmsg').textContent=msg||'';
 }
 function lockOut(msg){
-  try{localStorage.removeItem('lz_pin')}catch(e){}
+  clearPin();
   PIN='';DATA=null;seq++;
   $('rep').innerHTML='';$('sumrep').innerHTML='';$('fields').innerHTML='';$('recent').innerHTML='';
+  $('dl').disabled=true;$('sumr').disabled=true;$('csv').disabled=true;$('load').disabled=false;
   showLock(msg);
 }
 async function login(pin,remember,silent){
@@ -309,15 +358,16 @@ async function login(pin,remember,silent){
   try{
     await call('recent','expense');
     fails=0;
-    try{remember?localStorage.setItem('lz_pin',pin):localStorage.removeItem('lz_pin')}catch(e){}
+    savePin(pin,remember);
+    lastActivity=Date.now();
     $('lock').hidden=true;$('app').hidden=false;$('logout').hidden=false;$('pin').value='';
     cur='report';tabs();view();initRep();
     $('enter').disabled=false;return true;
   }catch(e){
     PIN='';$('enter').disabled=false;
     if(/PIN/i.test(String(e.message))){
-      try{localStorage.removeItem('lz_pin')}catch(x){}
-      if(!silent&&++fails>=5){lockUntil=Date.now()+30000;fails=0}
+      clearPin();
+      if(!silent&&++fails>=MAX_FAILS){lockUntil=Date.now()+LOCK_MS;fails=0}
     }
     $('lock').hidden=false;
     $('lmsg').textContent=silent&&/PIN/i.test(String(e.message))?'':errText(e);
@@ -338,7 +388,7 @@ function applyLang(){
 function snapshot(){const s={};$('fields').querySelectorAll('input,select,textarea').forEach(e=>s[e.id]=e.value);return s}
 function restore(s){Object.keys(s).forEach(id=>{const e=$(id);if(e&&s[id]!==''&&!e.classList.contains('lk'))e.value=s[id]});if(cur==='daily')cashCalc()}
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{
-  lang=b.dataset.l;try{localStorage.setItem('lang',lang)}catch(e){}
+  lang=b.dataset.l;try{localStorage.setItem(LANG_KEY,lang)}catch(e){}
   const authed=!$('app').hidden,s=authed&&cur!=='report'?snapshot():null;
   applyLang();
   if(!authed)return;
@@ -380,12 +430,12 @@ function cashCalc(){
   NOTES.forEach(v=>{const x=v*Math.max(0,nv('q_'+v));hand+=x;$('t_'+v).textContent=x.toLocaleString(loc())});
   const tot=nv('f_prev')+nv('f_ibos')+nv('f_recov')+nv('f_cashin');
   const led=tot-nv('f_expense')-nv('f_cashout')-nv('f_cod'),diff=hand-led;
-  $('s_hand').textContent=$('s_hand2').textContent=fmt(hand);
-  $('s_led').textContent=$('s_led2').textContent=fmt(led);
-  $('s_tot').textContent=fmt(tot);
+  $('s_hand').textContent=$('s_hand2').textContent=money(hand);
+  $('s_led').textContent=$('s_led2').textContent=money(led);
+  $('s_tot').textContent=money(tot);
   $('s_box').className='stat '+(diff>=0?'ok':'bad');
   $('s_lab').textContent=diff===0?t('match'):diff>0?t('over'):t('short');
-  $('s_diff').textContent=fmt(Math.abs(diff));
+  $('s_diff').textContent=money(Math.abs(diff));
 }
 function form(){
   say('');
@@ -424,13 +474,16 @@ async function recent(){
       const li=r.head.indexOf('Ledger Amount'),l=li>=0?num(r.rows[0][li]):0;
       if(l){$('f_prev').value=l;cashCalc()}
     }
-  }catch(e){if(my===cur&&!$('app').hidden)box.textContent=errText(e)}
+  }catch(e){if(my===cur&&!$('app').hidden)box.textContent=errText(e);console.error(e)}
 }
 function clearForm(){
   $('fields').querySelectorAll('input,textarea').forEach(e=>{if(e.type!=='date')e.value=''});
   if(cur==='daily')cashCalc();
 }
-$('clear').onclick=()=>{clearForm();say('')};
+$('clear').onclick=()=>{
+  clearForm();say('');
+  if(cur==='daily')recent();   // restore Previous Ledger
+};
 $('save').onclick=async()=>{
   const fd=$('f_date');if(fd&&fd.readOnly)fd.value=today();
   const d={};F[cur].fields.forEach(([id])=>d[id]=$('f_'+id).value);
@@ -438,7 +491,7 @@ $('save').onclick=async()=>{
   if(!d.date){say(t('needdate'),1);return}
   $('save').disabled=true;say(t('saving'));
   try{await call('save',cur,d);say(t('saved'));clearForm();recent()}
-  catch(e){if(!$('app').hidden)say(errText(e),1)}
+  catch(e){if(!$('app').hidden)say(errText(e),1);console.error(e)}
   $('save').disabled=false;
 };
 
@@ -455,15 +508,25 @@ function initRep(){$('d').value=today();build()}
 async function build(){
   DATE=$('d').value;if(!DATE)return;
   const my=++seq;
-  $('rmsg').textContent=t('loading');$('dl').disabled=true;$('sumr').disabled=true;
+  $('rmsg').textContent=t('loading');
+  $('dl').disabled=true;$('sumr').disabled=true;$('csv').disabled=true;$('load').disabled=true;
   try{
     const types=['daily','expense','cash','recovery','baki'];
     const res=await Promise.all(types.map(k=>call('recent',k,{date:DATE})));
     if(my!==seq)return;
     const nd={};types.forEach((k,i)=>nd[k]={head:res[i].head,rows:rowsFor(res[i],DATE)});
     DATA=nd;
-    $('rmsg').textContent='';initD();render();$('dl').disabled=false;$('sumr').disabled=false;
-  }catch(e){if(my===seq&&!$('app').hidden)$('rmsg').textContent=errText(e)}
+    $('rmsg').textContent='';initD();render();
+    $('dl').disabled=false;$('sumr').disabled=false;$('csv').disabled=false;
+  }catch(e){
+    if(my===seq){
+      DATA=null;D={prev:0,sale:0,rec:0,cin:0,exp:0,cout:0,cod:0,hand:0};TXT={};
+      $('rmsg').textContent=errText(e);
+      $('rep').innerHTML='<div style="padding:60px 40px;text-align:center;color:#b42318;font-size:14px">'+esc(errText(e))+'</div>';
+    }
+    console.error(e);
+  }
+  $('load').disabled=false;
 }
 function initD(){
   const dr=DATA.daily.rows[0],h=DATA.daily.head,g=n=>{const i=pick(h,n);return dr&&i>=0?num(dr[i]):0};
@@ -473,17 +536,17 @@ function initD(){
 const edAttr=(id,extra,o)=>'class="ed" contenteditable="true" tabindex="0" data-id="'+esc(id)+'" '+extra+' data-o="'+esc(o)+'"';
 const dv=k=>{const s=money(D[k]);return '<span '+edAttr('d-'+k,'data-d="'+k+'"',s)+'>'+esc(s)+'</span>'};
 const tx=(k,def)=>{const s=TXT[k]!=null?TXT[k]:def;return '<span '+edAttr('t-'+k,'data-t="'+k+'"',s)+'>'+esc(s)+'</span>'};
-function table(key,cols){
+function table(key,cols,readonly){
   const {head,rows}=DATA[key];
   const idx=cols.map(c=>pick(head,c.h));let sum=0;
   const body=rows.map((r,n)=>'<tr><td class="x">'+(n+1)+'</td>'+cols.map((c,j)=>{
     const i=idx[j],v=i<0?'':r[i];if(c.amt)sum+=num(v);
     const s=c.amt?money(v):String(v==null?'':v);
-    const inner=i<0?esc(s):'<span '+edAttr(key+'-'+n+'-'+i,'data-k="'+key+'" data-r="'+n+'" data-c="'+i+'"'+(c.amt?' data-a="1"':''),s)+'>'+esc(s)+'</span>';
-    return '<td'+(c.amt?' class="r"':c.mut?' class="m"':'')+'>'+inner+'</td>'}).join('')+'<td class="dl noexp"><button class="del" data-del="'+key+'" data-r="'+n+'">✕</button></td></tr>').join('');
-  const foot='<tfoot><tr><td></td>'+cols.map((c,j)=>j===0?'<td>'+t('tot')+' ('+rows.length+')</td>':c.amt?'<td class="r">'+money(sum)+'</td>':'<td></td>').join('')+'<td class="noexp"></td></tr></tfoot>';
-  const tbl=rows.length?'<table class="t"><thead><tr><th>#</th>'+cols.map(c=>'<th'+(c.amt?' class="r"':'')+'>'+t(c.k)+'</th>').join('')+'<th class="dl noexp"></th></tr></thead><tbody>'+body+'</tbody>'+foot+'</table>':'<div class="empty">'+t('rnone')+'</div>';
-  return tbl+'<button class="add noexp" data-add="'+key+'">+ '+t('add')+'</button>';
+    const inner=(i<0||readonly)?esc(s):'<span '+edAttr(key+'-'+n+'-'+i,'data-k="'+key+'" data-r="'+n+'" data-c="'+i+'"'+(c.amt?' data-a="1"':''),s)+'>'+esc(s)+'</span>';
+    return '<td'+(c.amt?' class="r"':c.mut?' class="m"':'')+'>'+inner+'</td>'}).join('')+(readonly?'':'<td class="dl noexp"><button class="del" data-del="'+key+'" data-r="'+n+'">✕</button></td>')+'</tr>').join('');
+  const foot='<tfoot><tr><td></td>'+cols.map((c,j)=>j===0?'<td>'+t('tot')+' ('+rows.length+')</td>':c.amt?'<td class="r">'+money(sum)+'</td>':'<td></td>').join('')+(readonly?'':'<td class="noexp"></td>')+'</tr></tfoot>';
+  const tbl=rows.length?'<table class="t"><thead><tr><th>#</th>'+cols.map(c=>'<th'+(c.amt?' class="r"':'')+'>'+t(c.k)+'</th>').join('')+(readonly?'':'<th class="dl noexp"></th>')+'</tr></thead><tbody>'+body+'</tbody>'+foot+'</table>':'<div class="empty">'+t('rnone')+'</div>';
+  return tbl+(readonly?'':'<button class="add noexp" data-add="'+key+'">+ '+t('add')+'</button>');
 }
 function sumOf(key,h,type){
   const {head,rows}=DATA[key],i=pick(head,h),ti=pick(head,'Type');
@@ -519,7 +582,7 @@ function render(){
   const L=(a,k,c)=>'<tr'+(c?' class="'+c+'"':'')+'><td>'+a+'</td><td>'+dv(k)+'</td></tr>';
   const LR=(a,v,c)=>'<tr class="'+c+'"><td>'+a+'</td><td>'+money(v)+'</td></tr>';
   const ledger='<table class="lgt">'+L(t('prev'),'prev')+L('(+) '+t('sale'),'sale')+L('(+) '+t('rec'),'rec')+L('(+) '+t('cin'),'cin')+LR(t('total'),tot,'tot')+L('(−) '+t('exp'),'exp','neg')+L('(−) '+t('rcout'),'cout','neg')+L('(−) '+t('cod'),'cod','neg')+LR(t('led'),led,'fin')+'</table>';
-  const recon='<div class="rec"><div class="row"><span>'+t('hand')+'</span><b>'+dv('hand')+'</b></div><div class="row"><span>'+t('led')+'</span><b>'+money(led)+'</b></div><div class="row d '+(diff>=0?'ok':'bad')+'"><span>'+t('diff')+'</span><b>'+(diff>0?'+':diff<0?'−':'')+money(Math.abs(diff))+'</b></div></div>';
+  const recon=reconH(hand,led,diff);
   let two='<div class="two">'+sec(t('secLed'),'',ledger)+sec(t('secRec'),'',recon)+'</div>';
   if(tot>0)two+=sec(t('flow'),'',flowH(D,tot,led));
   const kp=[[t('kSale'),sale,'#1f7a6d'],[t('kRec'),recTot||rec,'#0f2742'],[t('kExp'),expTot||exp,'#b42318'],[t('kDue'),bakiTot,'#c8a24a']];
@@ -558,18 +621,71 @@ R.addEventListener('focusout',e=>{
   if(nx){const n=R.querySelector('[data-id="'+nx+'"]');if(n)n.focus()}
 });
 R.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('ed')&&!e.target.dataset.m){e.preventDefault();e.target.blur()}});
-R.addEventListener('paste',e=>{if(e.target.classList.contains('ed')){e.preventDefault();const tx=(e.clipboardData||window.clipboardData).getData('text');document.execCommand('insertText',false,tx)}});
-R.addEventListener('mousedown',e=>{if(e.target.closest('button'))e.preventDefault()});
+R.addEventListener('paste',e=>{
+  if(!e.target.classList.contains('ed'))return;
+  e.preventDefault();
+  const txt=(e.clipboardData||window.clipboardData).getData('text');
+  const sel=window.getSelection();
+  if(!sel||!sel.rangeCount){return}
+  sel.deleteFromDocument();
+  sel.getRangeAt(0).insertNode(document.createTextNode(txt));
+  sel.collapseToEnd();
+});
+R.addEventListener('mousedown',e=>{
+  if(e.target.closest('button')){e.preventDefault();return}
+  if(window.innerWidth<MOBILE_W&&e.target.closest('.ed')){e.preventDefault()}
+});
 R.addEventListener('click',e=>{
-  const b=e.target.closest('button');if(!b||!DATA)return;
-  commit(document.activeElement);
-  if(b.dataset.del){DATA[b.dataset.del].rows.splice(+b.dataset.r,1)}
-  else if(b.dataset.add)addRow(b.dataset.add);
-  render();
+  const b=e.target.closest('button');
+  if(b&&DATA){
+    commit(document.activeElement);
+    if(b.dataset.del){
+      if(!confirm(t('confirmDel')))return;
+      DATA[b.dataset.del].rows.splice(+b.dataset.r,1);
+    }
+    else if(b.dataset.add)addRow(b.dataset.add);
+    render();
+    return;
+  }
+  const ed=e.target.closest('.ed');
+  if(ed&&window.innerWidth<MOBILE_W){e.preventDefault();openEditor(ed)}
 });
 function fit(){const h=$('holder'),w=Math.min(1,(window.innerWidth-34)/820);h.style.zoom=w<1?w:''}
 window.addEventListener('resize',()=>{if(DATA)fit()});
 
+/* ---------- mobile edit modal ---------- */
+function openEditor(ed){
+  const d=ed.dataset;
+  const val=ed.innerText.replace(/\u00a0/g,' ').trim();
+  editTarget={d:{...d},val};
+  $('etext').value=val;
+  $('etext').inputMode=(d.a==='1'||d.d)?'decimal':'text';
+  $('etitle').textContent=t('edit');
+  $('editmodal').hidden=false;
+  setTimeout(()=>$('etext').focus(),50);
+}
+function closeEditor(save){
+  const modal=$('editmodal');
+  modal.hidden=true;
+  const tg=editTarget;editTarget=null;
+  if(!save||!tg)return;
+  const v=$('etext').value.replace(/\u00a0/g,' ').trim();
+  if(v===tg.val)return;
+  const d=tg.d;
+  if(d.d)D[d.d]=num(v);
+  else if(d.t)TXT[d.t]=v;
+  else if(DATA&&DATA[d.k]&&DATA[d.k].rows[+d.r])DATA[d.k].rows[+d.r][+d.c]=(d.a==='1')?num(v):v;
+  render();
+}
+$('ecancel').onclick=()=>closeEditor(false);
+$('eok').onclick=()=>closeEditor(true);
+$('editmodal').addEventListener('click',e=>{if(e.target.id==='editmodal')closeEditor(false)});
+$('etext').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();closeEditor(true)}
+  if(e.key==='Escape'){e.preventDefault();closeEditor(false)}
+});
+
+/* ---------- image download ---------- */
 async function grab(node,name,btn,out){
   btn.disabled=true;
   try{
@@ -578,7 +694,7 @@ async function grab(node,name,btn,out){
     const c=await html2canvas(node,{scale:2.5,backgroundColor:'#ffffff',useCORS:true,windowWidth:820});
     const a=document.createElement('a');a.href=c.toDataURL('image/jpeg',0.96);a.download=name;
     document.body.appendChild(a);a.click();a.remove();
-  }catch(e){out.textContent=String(e.message||e)}
+  }catch(e){out.textContent=String(e.message||e);console.error(e)}
   btn.disabled=false;
 }
 async function download(){
@@ -590,19 +706,63 @@ async function download(){
   h.style.zoom=z;rp.classList.remove('exp');if(hn)ns.style.display='';
 }
 function sumHTML(x){
-  const tot=x.prev+x.sale+x.rec+x.cin,led=tot-x.exp-x.cout-x.cod,hand=x.hand,diff=hand-led;
+  const {prev,sale,rec,cin,exp,cout,cod,hand}=x;
+  const tot=prev+sale+rec+cin,led=tot-exp-cout-cod,diff=hand-led;
+  const expTot=sumOf('expense','Amount'),cashIn=sumOf('cash','Amount','cash in'),cashOut=sumOf('cash','Amount','cash out');
+  const recTot=sumOf('recovery','Amount'),bakiTot=sumOf('baki','Amount');
   const now=new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'});
   const L=(a,v,c)=>'<tr'+(c?' class="'+c+'"':'')+'><td>'+a+'</td><td>'+money(v)+'</td></tr>';
-  const ledger='<table class="lgt">'+L(t('prev'),x.prev)+L('(+) '+t('sale'),x.sale)+L('(+) '+t('rec'),x.rec)+L('(+) '+t('cin'),x.cin)+L(t('total'),tot,'tot')+L('(−) '+t('exp'),x.exp,'neg')+L('(−) '+t('rcout'),x.cout,'neg')+L('(−) '+t('cod'),x.cod,'neg')+L(t('led'),led,'fin')+'</table>';
+  const ledger='<table class="lgt">'+L(t('prev'),prev)+L('(+) '+t('sale'),sale)+L('(+) '+t('rec'),rec)+L('(+) '+t('cin'),cin)+L(t('total'),tot,'tot')+L('(−) '+t('exp'),exp,'neg')+L('(−) '+t('rcout'),cout,'neg')+L('(−) '+t('cod'),cod,'neg')+L(t('led'),led,'fin')+'</table>';
+  const kp=[[t('kSale'),sale,'#1f7a6d'],[t('kRec'),recTot,'#0f2742'],[t('kExp'),expTot,'#b42318'],[t('kDue'),bakiTot,'#c8a24a']];
   return '<div class="rh"><div class="c1"></div><div class="c2"></div><div class="row"><div class="br"><div class="lg">LF</div><div><h1>Liz Fashion – AponBazaar</h1><p>'+t('sumRpt')+'</p></div></div><div class="dt"><small>'+t('dateL')+'</small><b>'+esc(dateTxt(x.date))+'</b><span>'+t('no')+' CS-'+x.date.replace(/-/g,'')+'</span></div></div></div>'+
-   '<div class="rb">'+heroH(hand,led,diff)+'<div class="two">'+sec(t('secLed'),'',ledger)+sec(t('secRec'),'',reconH(hand,led,diff))+'</div>'+sec(t('flow'),'',flowH(x,tot,led))+'</div>'+
-   '<div class="sig"><div>'+t('s1')+'</div><div>'+t('s2')+'</div></div><div class="rf"><span><b>Liz Fashion</b> – AponBazaar</span><span>'+t('gen')+': '+esc(now)+'</span></div>';
+   '<div class="rb">'+heroH(hand,led,diff)+
+   '<div class="kp">'+kp.map(k=>'<div class="k" style="--c:'+k[2]+'"><small>'+k[0]+'</small><b>'+money(k[1])+'</b></div>').join('')+'</div>'+
+   '<div class="two">'+sec(t('secLed'),'',ledger)+sec(t('secRec'),'',reconH(hand,led,diff))+'</div>'+
+   sec(t('flow'),'',flowH(x,tot,led))+
+   sec(t('sExp'),money(expTot),table('expense',[{h:'Expense Name',k:'c_name'},{h:'Note',k:'c_note',mut:1},{h:'Expense Code',k:'c_code'},{h:'Status',k:'c_status'},{h:'Amount',k:'c_amt',amt:1}],true))+
+   sec(t('sCash'),'+'+money(cashIn)+' / −'+money(cashOut),table('cash',[{h:'Type',k:'c_type'},{h:'Note',k:'c_note',mut:1},{h:'Amount',k:'c_amt',amt:1}],true))+
+   sec(t('sRec'),money(recTot),table('recovery',[{h:'Customer ID',k:'c_id'},{h:'Customer Name',k:'c_cust'},{h:'Amount',k:'c_amt',amt:1},{h:'Exchange With Cash',k:'c_exch'},{h:'Remarks',k:'c_rem',mut:1}],true))+
+   sec(t('sBaki'),money(bakiTot),table('baki',[{h:'Name',k:'c_cust'},{h:'Reason',k:'c_reason',mut:1},{h:'Amount',k:'c_amt',amt:1}],true))+
+   '</div><div class="sig"><div>'+t('s1')+'</div><div>'+t('s2')+'</div></div><div class="rf"><span><b>Liz Fashion</b> – AponBazaar</span><span>'+t('gen')+': '+esc(now)+'</span></div>';
 }
 $('sumr').onclick=async()=>{
   if(!DATA)return;
   const h=$('sumrep');h.innerHTML=sumHTML({date:DATE,...D});
   await grab(h,'Liz-Fashion-Summary-'+DATE+'.jpg',$('sumr'),$('rmsg'));
 };
+
+/* ---------- CSV export ---------- */
+function csvExport(){
+  if(!DATA)return;
+  const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const lines=[];
+  const sect=(title,headers,rows)=>{
+    lines.push('');lines.push(q(title));
+    lines.push(headers.map(q).join(','));
+    rows.forEach(r=>lines.push(r.map(q).join(',')));
+  };
+  sect(t('sExp'),['#','Name','Note','Code','Status','Amount'],
+    DATA.expense.rows.map((r,i)=>{const h=DATA.expense.head;return [i+1,r[pick(h,'Expense Name')],r[pick(h,'Note')],r[pick(h,'Expense Code')],r[pick(h,'Status')],r[pick(h,'Amount')]]}));
+  sect(t('sCash'),['#','Type','Note','Amount'],
+    DATA.cash.rows.map((r,i)=>{const h=DATA.cash.head;return [i+1,r[pick(h,'Type')],r[pick(h,'Note')],r[pick(h,'Amount')]]}));
+  sect(t('sRec'),['#','Customer ID','Customer Name','Amount','Exchange','Remarks'],
+    DATA.recovery.rows.map((r,i)=>{const h=DATA.recovery.head;return [i+1,r[pick(h,'Customer ID')],r[pick(h,'Customer Name')],r[pick(h,'Amount')],r[pick(h,'Exchange With Cash')],r[pick(h,'Remarks')]]}));
+  sect(t('sBaki'),['#','Name','Reason','Amount'],
+    DATA.baki.rows.map((r,i)=>{const h=DATA.baki.head;return [i+1,r[pick(h,'Name')],r[pick(h,'Reason')],r[pick(h,'Amount')]]}));
+  const tot=D.prev+D.sale+D.rec+D.cin,led=tot-D.exp-D.cout-D.cod;
+  sect(t('secLed'),['Item','Amount'],[
+    [t('prev'),D.prev],[t('sale'),D.sale],[t('rec'),D.rec],[t('cin'),D.cin],[t('total'),tot],
+    ['- '+t('exp'),D.exp],['- '+t('rcout'),D.cout],['- '+t('cod'),D.cod],
+    [t('led'),led],[t('hand'),D.hand],[t('diff'),D.hand-led]
+  ]);
+  if(TXT.notes)sect(t('notes'),['Note'],[[TXT.notes]]);
+  const csv='\uFEFF'+lines.join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Liz-Fashion-'+DATE+'.csv';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+$('csv').onclick=csvExport;
 
 function shift(n){
   const v=$('d').value;if(!v)return;
@@ -611,12 +771,28 @@ function shift(n){
 $('pv').onclick=()=>shift(-1);$('nx').onclick=()=>shift(1);
 $('td').onclick=()=>{$('d').value=today();build()};
 $('load').onclick=build;$('d').onchange=build;$('dl').onclick=download;
-document.addEventListener('visibilitychange',()=>{const d=$('f_date');if(d&&d.readOnly)d.value=today()});
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState!=='visible')return;
+  const d=$('f_date');
+  if(d&&d.readOnly)d.value=today();
+  if(cur==='daily'&&$('s_hand'))cashCalc();
+  if(cur==='report'&&DATA&&$('d').value!==DATE)build();
+});
 
-/* ---------- start: nothing visible until PIN is verified ---------- */
+/* ---------- idle auto-lock ---------- */
+['mousemove','keydown','click','touchstart','scroll'].forEach(ev=>
+  document.addEventListener(ev,()=>{lastActivity=Date.now()},{passive:true})
+);
+setInterval(()=>{
+  if(PIN&&!$('app').hidden&&Date.now()-lastActivity>IDLE_MS){
+    lockOut(t('idleLock'));
+  }
+},60000);
+
+/* ---------- start ---------- */
 applyLang();
 (function(){
-  let sp=null;try{sp=localStorage.getItem('lz_pin')}catch(e){}
+  const sp=loadPin();
   if(sp){login(sp,true,true)}else{showLock('')}
 })();
 </script>
