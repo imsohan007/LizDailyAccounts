@@ -9,127 +9,144 @@
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-:root{--navy:#14304d;--navy2:#1d4268;--bg:#e9edf2;--ink:#1c2733;--mut:#64748b;--line:#dde3ea;--acc:#1f7a6d;--accbg:#e7f3f1;--ok:#1b7a43;--okbg:#e3f4ea;--bad:#b42318;--badbg:#fdeceb;--amb:#b45309;--ambbg:#fef3e2}
+:root{--n:#0f2742;--n2:#1b3f66;--gold:#c8a24a;--ink:#1c2733;--mut:#64748b;--line:#e2e8f0;--ok:#16803c;--bad:#b42318}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,"Hind Siliguri",system-ui,sans-serif}
-.bar{background:var(--navy);color:#fff}
-.bar .in{max-width:900px;margin:auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.bar b{font-size:17px}
-.lang{display:flex;background:var(--navy2);border-radius:8px;padding:3px}
-.lang button{border:0;background:transparent;color:#c9d6e6;padding:6px 12px;border-radius:6px;font:inherit;font-size:13px;cursor:pointer}
-.lang button.on{background:#fff;color:var(--navy);font-weight:600}
-.panel{max-width:900px;margin:14px auto;padding:0 12px}
-.ctl{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
-.ctl label{display:block;font-size:12px;color:var(--mut);font-weight:500;margin-bottom:4px}
-.ctl input{padding:9px 11px;border:1px solid var(--line);border-radius:8px;font:inherit}
-.btn{padding:10px 16px;border-radius:8px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:600;cursor:pointer;color:var(--ink)}
-.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
-.btn.dl{background:var(--navy);border-color:var(--navy);color:#fff}
-.btn:disabled{opacity:.5;cursor:default}
+body{margin:0;background:#e8ecf2;color:var(--ink);font:14px/1.5 Inter,"Hind Siliguri",system-ui,sans-serif;min-height:100vh}
+.top{background:linear-gradient(120deg,#0b1e34,#16385c);color:#fff;border-bottom:3px solid var(--gold)}
+.top .in{max-width:900px;margin:auto;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:50%;background:var(--gold);color:var(--n);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:none}
+.top b{display:block;font-size:16px;font-weight:700}.top small{color:#a9bcd3;font-size:12px}
 .sp{flex:1}
-#msg{max-width:900px;margin:8px auto;padding:0 14px;color:var(--bad);font-size:13px;min-height:18px}
-#lock{max-width:340px;margin:56px auto;padding:0 16px}
-#lock .c{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}
-#lock h1{margin:0 0 12px;font-size:19px;color:var(--navy)}
-#lock input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;margin-bottom:12px}
-.stage{overflow-x:auto;padding:6px 0 40px}
-.holder{width:820px;margin:0 auto;transform-origin:top center}
+.lang{display:flex;background:rgba(255,255,255,.12);border-radius:8px;padding:3px}
+.lang button{border:0;background:transparent;color:#d5e0ee;padding:6px 12px;border-radius:6px;font:inherit;font-size:13px;cursor:pointer}
+.lang button.on{background:#fff;color:var(--n);font-weight:600}
+.btn{padding:10px 18px;border-radius:9px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:600;cursor:pointer;color:var(--ink)}
+.btn.pri{background:var(--n);border-color:var(--n);color:#fff}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--n);font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.panel{max-width:900px;margin:14px auto 0;padding:0 12px}
+.ctl{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;box-shadow:0 4px 14px rgba(15,39,66,.07)}
+.ctl label{display:block;font-size:12px;color:var(--mut);font-weight:600;margin-bottom:4px}
+.ctl input{padding:9px 11px;border:1px solid var(--line);border-radius:8px;font:inherit}
+#msg{max-width:900px;margin:8px auto 0;padding:0 16px;color:var(--bad);font-size:13px;min-height:18px}
+#lock{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 20% 10%,#1d4268,#0b1e34 70%)}
+#lock .c{width:100%;max-width:360px;background:#fff;border-radius:18px;padding:30px 26px;text-align:center;border-top:5px solid var(--gold);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+#lock .logo{margin:0 auto 12px;width:56px;height:56px;font-size:20px}
+#lock h1{margin:0;font-size:20px;color:var(--n)}#lock p{margin:2px 0 18px;color:var(--mut);font-size:13px}
+#lock input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:inherit;text-align:center;letter-spacing:6px;font-size:18px;margin-bottom:12px}
+#lock .btn{width:100%;padding:12px}
+.stage{overflow-x:auto;padding:14px 0 50px}
+.holder{width:820px;margin:0 auto;box-shadow:0 10px 40px rgba(15,39,66,.18)}
 
 /* ===== REPORT ===== */
-#rep{width:820px;background:#fff;color:#1c2733;font-family:Inter,"Hind Siliguri",sans-serif;font-size:13px;line-height:1.5}
-.rh{background:linear-gradient(135deg,#14304d,#1d4268);color:#fff;padding:26px 32px;display:flex;justify-content:space-between;align-items:center}
-.rh h1{margin:0;font-size:25px;font-weight:800;letter-spacing:.3px}
-.rh p{margin:2px 0 0;color:#b9c8da;font-size:13px}
-.rh .dt{text-align:right}
-.rh .dt small{display:block;color:#b9c8da;font-size:11px;letter-spacing:1.2px;text-transform:uppercase}
-.rh .dt b{font-size:20px;font-weight:700}
-.rb{padding:24px 32px 8px}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.k{border:1px solid #dde3ea;border-top:4px solid #14304d;border-radius:10px;padding:11px 13px;background:#fafbfc}
-.k small{display:block;color:#64748b;font-size:11.5px;font-weight:500}
-.k b{display:block;font-size:19px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
-.k.g{border-top-color:#1f7a6d}.k.r{border-top-color:#b42318}.k.a{border-top-color:#b45309}
-.two{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;margin-top:20px}
-.sec{margin-top:22px}
-.two .sec{margin-top:0}
-.sec h3{margin:0 0 8px;font-size:13px;font-weight:700;color:#14304d;text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:8px}
-.sec h3:before{content:"";width:4px;height:15px;background:#1f7a6d;border-radius:2px}
-.sec h3 em{margin-left:auto;font-style:normal;text-transform:none;letter-spacing:0;font-weight:600;color:#1f7a6d;font-size:13px}
-table.t{width:100%;border-collapse:collapse;font-size:12.5px}
-.t th{background:#f1f4f8;color:#64748b;font-weight:600;text-align:left;padding:7px 10px;font-size:11.5px}
-.t td{padding:7px 10px;border-bottom:1px solid #e8edf2;vertical-align:top}
-.t tr:nth-child(even) td{background:#fbfcfd}
-.t .r{text-align:right;font-variant-numeric:tabular-nums}
-.t tfoot td{font-weight:700;background:#e7f3f1!important;color:#14304d;border-bottom:0}
-.t td.m{color:#64748b}
-.lg td{padding:8px 12px;border-bottom:1px dashed #dde3ea}
-.lg tr.tot td{font-weight:700;background:#f1f4f8;border-bottom:1px solid #dde3ea}
-.lg tr.fin td{font-weight:800;background:#14304d;color:#fff;font-size:14px;border:0}
-.lg tr.neg td:last-child{color:#b42318}
-.lg td:last-child{text-align:right;font-variant-numeric:tabular-nums}
-.stat{border-radius:12px;padding:16px;text-align:center;border:2px solid}
-.stat.ok{background:#e3f4ea;border-color:#1b7a43;color:#1b7a43}
-.stat.bad{background:#fdeceb;border-color:#b42318;color:#b42318}
-.stat small{display:block;font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
-.stat b{display:block;font-size:30px;font-weight:800;margin:4px 0;font-variant-numeric:tabular-nums}
-.stat span{font-size:12.5px;font-weight:600}
-.hl{display:flex;justify-content:space-between;padding:9px 12px;margin-top:8px;background:#f1f4f8;border-radius:8px;font-weight:600}
-.hl span:last-child{font-variant-numeric:tabular-nums;color:#14304d}
-.empty{padding:12px;color:#94a3b8;font-style:italic;border:1px dashed #dde3ea;border-radius:8px;text-align:center}
-.rf{margin-top:26px;border-top:1px solid #dde3ea;padding:12px 32px 16px;display:flex;justify-content:space-between;color:#94a3b8;font-size:11.5px}
-.sig{display:flex;justify-content:space-between;padding:30px 32px 0}
+#rep{width:820px;background:#fff;color:#1c2733;font:13px/1.5 Inter,"Hind Siliguri",sans-serif;position:relative}
+.rh{background:linear-gradient(120deg,#0b1e34,#1b3f66);color:#fff;padding:28px 34px 26px;position:relative;overflow:hidden;border-bottom:5px solid #c8a24a}
+.rh .c1{position:absolute;right:-60px;top:-80px;width:240px;height:240px;border-radius:50%;background:rgba(200,162,74,.14)}
+.rh .c2{position:absolute;right:120px;bottom:-110px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
+.rh .row{position:relative;display:flex;justify-content:space-between;align-items:center}
+.br{display:flex;align-items:center;gap:14px}
+.br .lg{width:54px;height:54px;border-radius:50%;background:#c8a24a;color:#0f2742;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;border:3px solid rgba(255,255,255,.35)}
+.br h1{margin:0;font-size:24px;font-weight:800;letter-spacing:.3px}
+.br p{margin:0;color:#c8a24a;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.dt{text-align:right}.dt small{display:block;color:#a9bcd3;font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase}
+.dt b{display:block;font-size:19px;font-weight:700}.dt span{font-size:11.5px;color:#a9bcd3}
+.rb{padding:22px 34px 6px}
+.hero{display:flex;align-items:center;gap:16px;border-radius:14px;padding:16px 20px;border:1.5px solid}
+.hero.ok{background:#e6f5ec;border-color:#16803c;color:#16803c}
+.hero.bad{background:#fdeceb;border-color:#b42318;color:#b42318}
+.hero .ic{width:48px;height:48px;border-radius:50%;color:#fff;font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.hero.ok .ic{background:#16803c}.hero.bad .ic{background:#b42318}
+.hero .tx{flex:1}.hero small{display:block;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;opacity:.85}
+.hero .tx b{display:block;font-size:24px;font-weight:800;line-height:1.2}
+.hero .tx span{font-size:12px;color:#475569}
+.hero .mini{text-align:right;color:#1c2733;font-size:12px;line-height:1.7}.hero .mini b{font-variant-numeric:tabular-nums}
+.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.k{border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;background:#fff;position:relative;overflow:hidden}
+.k:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c,#0f2742)}
+.k small{display:block;color:#64748b;font-size:11px;font-weight:600}
+.k b{display:block;font-size:18px;font-weight:800;margin-top:3px;font-variant-numeric:tabular-nums}
+.two{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:20px}
+.sec{margin-top:22px}.two .sec{margin-top:0}
+.h{display:flex;align-items:center;gap:8px;margin:0 0 9px;font-size:12px;font-weight:800;color:#0f2742;text-transform:uppercase;letter-spacing:1px}
+.h i{width:5px;height:16px;background:#c8a24a;border-radius:3px;display:block}
+.h em{margin-left:auto;font-style:normal;text-transform:none;letter-spacing:0;color:#1f7a6d;font-weight:700;font-size:13px}
+.lgt{width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden}
+.lgt td{padding:7px 12px;border-bottom:1px solid #eef2f6;font-size:12.5px}.lgt td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.lgt tr.tot td{background:#f1f5f9;font-weight:700}.lgt .neg td:last-child{color:#b42318}
+.lgt tr.fin td{background:#0f2742;color:#fff;font-weight:800;font-size:14px;border:0}
+.rec .row{display:flex;justify-content:space-between;padding:10px 14px;border-radius:10px;background:#f1f5f9;margin-bottom:8px;font-weight:600}
+.rec .row b{font-variant-numeric:tabular-nums;color:#0f2742}
+.rec .row.d{background:#fff;border:1.5px dashed}.rec .row.d.ok{color:#16803c;border-color:#16803c}.rec .row.d.bad{color:#b42318;border-color:#b42318}.rec .row.d b{color:inherit}
+.bar{display:flex;height:16px;border-radius:8px;overflow:hidden;background:#e2e8f0}
+.bar div{height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:11.5px;color:#475569}
+.legend span:before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--c);margin-right:5px}
+.t{width:100%;border-collapse:collapse;font-size:12.5px;border:1px solid #e2e8f0}
+.t th{background:#0f2742;color:#fff;font-weight:600;text-align:left;padding:8px 10px;font-size:11.5px}
+.t td{padding:7px 10px;border-bottom:1px solid #eef2f6;vertical-align:top}
+.t tr:nth-child(even) td{background:#f8fafc}
+.t .r{text-align:right;font-variant-numeric:tabular-nums}.t .m{color:#64748b}.t .x{color:#94a3b8;width:28px}
+.t tfoot td{background:#f3e9cf!important;color:#0f2742;font-weight:800;border-bottom:0}
+.empty{padding:12px;color:#94a3b8;font-style:italic;border:1px dashed #cbd5e1;border-radius:10px;text-align:center}
+.sig{display:flex;justify-content:space-between;padding:34px 34px 0}
 .sig div{width:180px;border-top:1px solid #94a3b8;text-align:center;padding-top:5px;color:#64748b;font-size:11.5px}
+.rf{margin-top:22px;background:#0f2742;color:#a9bcd3;padding:12px 34px;display:flex;justify-content:space-between;font-size:11.5px;border-top:4px solid #c8a24a}
+.rf b{color:#c8a24a}
 </style>
 </head>
 <body>
 
-<div class="bar"><div class="in">
-  <b>Liz Fashion – AponBazaar · <span data-i="title"></span></b>
-  <div class="lang"><button data-l="bn">বাংলা</button><button data-l="en">English</button></div>
-</div></div>
-
 <div id="lock"><div class="c">
-  <h1 data-i="signin"></h1>
-  <input id="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="PIN">
-  <button class="btn pri" id="enter" style="width:100%" data-i="enter"></button>
+  <div class="logo">LF</div>
+  <h1>Liz Fashion – AponBazaar</h1><p data-i="signSub"></p>
+  <input id="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="••••">
+  <button class="btn pri" id="enter" data-i="enter"></button>
   <div id="lmsg" style="color:var(--bad);margin-top:10px;font-size:13px"></div>
 </div></div>
 
 <div id="app" hidden>
+  <div class="top"><div class="in">
+    <div class="logo">LF</div>
+    <div><b>Liz Fashion – AponBazaar</b><small data-i="title"></small></div>
+    <div class="sp"></div>
+    <div class="lang"><button data-l="bn">বাংলা</button><button data-l="en">English</button></div>
+  </div></div>
   <div class="panel"><div class="ctl">
     <div><label for="d" data-i="date"></label><input type="date" id="d"></div>
     <button class="btn pri" id="load" data-i="load"></button>
     <div class="sp"></div>
-    <button class="btn dl" id="dl" data-i="dl" disabled></button>
+    <button class="btn gold" id="dl" data-i="dl" disabled></button>
   </div></div>
   <div id="msg"></div>
-  <div class="panel"><div class="stage" id="stage"><div class="holder" id="holder"><div id="rep"></div></div></div></div>
+  <div class="panel"><div class="stage"><div class="holder" id="holder"><div id="rep"></div></div></div></div>
 </div>
 
 <script>
 const APP_URL = 'https://script.google.com/macros/s/AKfycbxd8zXJAlK0SV6vv5B05mQ3lxjJQ2Rkr0MT6Koxe9jbGbPVaEJjClcxV1BPGzxQpBS-FQ/exec';
 
 const T={
- en:{title:'Daily Report',signin:'Sign in',enter:'Sign in',date:'Date',load:'Show report',dl:'⬇ Download JPG',loading:'Loading…',
-  wrong:'Incorrect PIN',net:'Could not reach the server.',
-  rpt:'Daily Accounts Report',dateL:'Report date',
-  kSale:"Today's cash sales",kRec:'Recovery',kExp:'Total expense',kHand:'Cash in hand',
-  secLed:'Ledger calculation',prev:'Previous ledger',sale:"Today's cash sales",rec:'Recovery sales',cin:'Cash in',total:'Total',exp:'Expense',cout:'Cash out (deposit)',cod:'COD',led:'Ledger amount',
-  hand:'Cash in hand',ledA:'Ledger amount',match:'Balanced',over:'Cash over',short:'Cash short',okMsg:'Cash matches the ledger',diffMsg:'Difference between hand cash and ledger',
+ en:{title:'Daily Accounts Report',signSub:'Enter your PIN to open reports',enter:'Sign in',date:'Date',load:'Show report',dl:'⬇ Download JPG',loading:'Loading…',wrong:'Incorrect PIN',net:'Could not reach the server.',
+  rpt:'Daily Accounts Report',dateL:'Report date',no:'Report No.',
+  sOver:'Cash over',sShort:'Cash short',sOk:'Books balanced',mOver:'Cash in hand is more than the ledger',mShort:'Cash in hand is less than the ledger',mOk:'Cash in hand matches the ledger exactly',
+  hand:'Cash in hand',led:'Ledger amount',
+  kSale:"Today's cash sales",kRec:'Recovery',kExp:'Total expense',kDue:'Dues receivable',
+  secLed:'Ledger calculation',prev:'Previous ledger',sale:"Today's cash sales",rec:'Recovery sales',cin:'Cash in',total:'Total',exp:'Expense',cout:'Cash out (deposit)',cod:'COD',
+  secRec:'Cash reconciliation',diff:'Difference',flow:'Where the money went',remain:'Remaining ledger',
   noDaily:'No cash summary entry found for this date.',
   sExp:'Expenses',sCash:'Cash In / Out',sRec:'Recovery',sBaki:'Dues Receivable',none:'No entries for this day.',
   c_name:'Name',c_note:'Note / reason',c_amt:'Amount',c_code:'Code',c_status:'Status',c_type:'Type',c_id:'Cust. ID',c_cust:'Customer',c_exch:'Exchanged',c_rem:'Remarks',c_reason:'Reason',
-  tot:'Total',gen:'Generated',by:'Liz Fashion – AponBazaar',s1:'Prepared by',s2:'Checked by',cap:'Only the last 10 entries per section are fetched by the server.'},
- bn:{title:'দৈনিক রিপোর্ট',signin:'প্রবেশ করুন',enter:'প্রবেশ করুন',date:'তারিখ',load:'রিপোর্ট দেখুন',dl:'⬇ JPG ডাউনলোড',loading:'লোড হচ্ছে…',
-  wrong:'পিন ভুল হয়েছে',net:'সার্ভারের সাথে যোগাযোগ হয়নি।',
-  rpt:'দৈনিক হিসাব রিপোর্ট',dateL:'রিপোর্টের তারিখ',
-  kSale:'আজকের ক্যাশ বিক্রি',kRec:'আদায়',kExp:'মোট খরচ',kHand:'হাতে ক্যাশ',
-  secLed:'লেজার হিসাব',prev:'আগের লেজার',sale:'আজকের ক্যাশ বিক্রি',rec:'আদায় (রিকভারি) বিক্রি',cin:'ক্যাশ ইন',total:'মোট',exp:'খরচ',cout:'ক্যাশ আউট (জমা)',cod:'সিওডি (COD)',led:'লেজার অ্যামাউন্ট',
-  hand:'হাতে থাকা ক্যাশ',ledA:'লেজার অ্যামাউন্ট',match:'হিসাব মিলেছে',over:'ক্যাশ বেশি',short:'ক্যাশ কম',okMsg:'হাতের ক্যাশ ও লেজার মিলেছে',diffMsg:'হাতের ক্যাশ ও লেজারের পার্থক্য',
+  tot:'Total',gen:'Generated',s1:'Prepared by',s2:'Checked by'},
+ bn:{title:'দৈনিক হিসাব রিপোর্ট',signSub:'রিপোর্ট দেখতে পিন দিন',enter:'প্রবেশ করুন',date:'তারিখ',load:'রিপোর্ট দেখুন',dl:'⬇ JPG ডাউনলোড',loading:'লোড হচ্ছে…',wrong:'পিন ভুল হয়েছে',net:'সার্ভারের সাথে যোগাযোগ হয়নি।',
+  rpt:'দৈনিক হিসাব রিপোর্ট',dateL:'রিপোর্টের তারিখ',no:'রিপোর্ট নং',
+  sOver:'ক্যাশ বেশি',sShort:'ক্যাশ কম',sOk:'হিসাব মিলেছে',mOver:'হাতের ক্যাশ লেজারের চেয়ে বেশি',mShort:'হাতের ক্যাশ লেজারের চেয়ে কম',mOk:'হাতের ক্যাশ ও লেজার হুবহু মিলেছে',
+  hand:'হাতে থাকা ক্যাশ',led:'লেজার অ্যামাউন্ট',
+  kSale:'আজকের ক্যাশ বিক্রি',kRec:'আদায়',kExp:'মোট খরচ',kDue:'বাকি পাওনা',
+  secLed:'লেজার হিসাব',prev:'আগের লেজার',sale:'আজকের ক্যাশ বিক্রি',rec:'আদায় (রিকভারি) বিক্রি',cin:'ক্যাশ ইন',total:'মোট',exp:'খরচ',cout:'ক্যাশ আউট (জমা)',cod:'সিওডি (COD)',
+  secRec:'ক্যাশ মিলানো',diff:'পার্থক্য',flow:'টাকা কোথায় গেছে',remain:'অবশিষ্ট লেজার',
   noDaily:'এই তারিখে ক্যাশ হিসাবের কোনো এন্ট্রি পাওয়া যায়নি।',
   sExp:'খরচ',sCash:'ক্যাশ ইন / আউট',sRec:'আদায়',sBaki:'বাকি পাওনা',none:'এই দিনে কোনো এন্ট্রি নেই।',
   c_name:'নাম',c_note:'নোট / কারণ',c_amt:'পরিমাণ',c_code:'কোড',c_status:'অবস্থা',c_type:'ধরন',c_id:'আইডি',c_cust:'কাস্টমার',c_exch:'বিনিময়ে',c_rem:'মন্তব্য',c_reason:'কারণ',
-  tot:'মোট',gen:'তৈরির সময়',by:'Liz Fashion – AponBazaar',s1:'প্রস্তুতকারী',s2:'যাচাইকারী',cap:'সার্ভার প্রতিটি অংশের সর্বশেষ ১০টি এন্ট্রি দেয়।'}
+  tot:'মোট',gen:'তৈরির সময়',s1:'প্রস্তুতকারী',s2:'যাচাইকারী'}
 };
 let lang='bn';try{lang=localStorage.getItem('lang')||'bn'}catch(e){}
 const t=k=>T[lang][k]||k;
@@ -148,19 +165,14 @@ async function call(action,type,d){
   return j.data;
 }
 const errText=e=>{const m=String(e.message||e);if(/PIN/i.test(m))return t('wrong');if(/fetch|network|JSON/i.test(m))return t('net');return m};
-
 function normDate(x){
-  const s=String(x).trim();
-  let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return m[1]+'-'+m[2]+'-'+m[3];
-  const d=new Date(s);if(!isNaN(d)){return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)}
+  const s=String(x).trim();let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return m[1]+'-'+m[2]+'-'+m[3];
+  const d=new Date(s);if(!isNaN(d))return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
   m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);if(m)return m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
   return s;
 }
-function pick(head,names){for(const n of names){const i=head.indexOf(n);if(i>=0)return i}return -1}
-function rowsFor(res,date){
-  const di=pick(res.head,['Date']);
-  return res.rows.filter(r=>normDate(r[di<0?0:di])===date);
-}
+const pick=(head,n)=>head.indexOf(n);
+function rowsFor(res,date){const di=Math.max(0,pick(res.head,'Date'));return res.rows.filter(r=>normDate(r[di])===date)}
 
 async function build(){
   DATE=$('d').value;if(!DATE)return;
@@ -172,101 +184,80 @@ async function build(){
     $('msg').textContent='';render();$('dl').disabled=false;
   }catch(e){$('msg').textContent=errText(e)}
 }
-
 function table(key,cols){
   const {head,rows}=DATA[key];
   if(!rows.length)return '<div class="empty">'+t('none')+'</div>';
-  const idx=cols.map(c=>pick(head,c.h));
-  let sum=0;
-  const body=rows.map(r=>'<tr>'+cols.map((c,j)=>{
+  const idx=cols.map(c=>pick(head,c.h));let sum=0;
+  const body=rows.map((r,n)=>'<tr><td class="x">'+(n+1)+'</td>'+cols.map((c,j)=>{
     const v=idx[j]<0?'':r[idx[j]];
     if(c.amt){sum+=num(v);return '<td class="r">'+money(v)+'</td>'}
-    return '<td'+(c.mut?' class="m"':'')+'>'+esc(v)+'</td>';
-  }).join('')+'</tr>').join('');
-  const ai=cols.findIndex(c=>c.amt);
-  const foot='<tfoot><tr>'+cols.map((c,j)=>j===0?'<td'+(ai===0?'':'')+'>'+t('tot')+' ('+rows.length+')</td>':c.amt?'<td class="r">'+money(sum)+'</td>':'<td></td>').join('')+'</tr></tfoot>';
-  return '<table class="t"><thead><tr>'+cols.map(c=>'<th'+(c.amt?' class="r"':'')+'>'+t(c.k)+'</th>').join('')+'</tr></thead><tbody>'+body+'</tbody>'+foot+'</table>';
+    return '<td'+(c.mut?' class="m"':'')+'>'+esc(v)+'</td>'}).join('')+'</tr>').join('');
+  const foot='<tfoot><tr><td></td>'+cols.map((c,j)=>j===0?'<td>'+t('tot')+' ('+rows.length+')</td>':c.amt?'<td class="r">'+money(sum)+'</td>':'<td></td>').join('')+'</tr></tfoot>';
+  return '<table class="t"><thead><tr><th>#</th>'+cols.map(c=>'<th'+(c.amt?' class="r"':'')+'>'+t(c.k)+'</th>').join('')+'</tr></thead><tbody>'+body+'</tbody>'+foot+'</table>';
 }
-function sumOf(key,h,filter){
-  const {head,rows}=DATA[key];const i=pick(head,[h]);if(i<0)return 0;
-  const ti=pick(head,['Type']);
-  return rows.reduce((s,r)=>(!filter||String(r[ti]).toLowerCase()===filter)?s+num(r[i]):s,0);
+function sumOf(key,h,type){
+  const {head,rows}=DATA[key],i=pick(head,h),ti=pick(head,'Type');
+  if(i<0)return 0;
+  return rows.reduce((s,r)=>(!type||String(r[ti]).toLowerCase()===type)?s+num(r[i]):s,0);
 }
+const sec=(title,em,inner)=>'<div class="sec"><div class="h"><i></i>'+title+(em?'<em>'+em+'</em>':'')+'</div>'+inner+'</div>';
 
 function render(){
-  const dd=DATA.daily,h=dd.head,r=dd.rows[0];
-  const g=n=>{const i=pick(h,[n]);return r&&i>=0?num(r[i]):0};
+  const h=DATA.daily.head,r=DATA.daily.rows[0];
+  const g=n=>{const i=pick(h,n);return r&&i>=0?num(r[i]):0};
   const prev=g('Previous Ledger'),sale=g('Ajker Cash Sell'),rec=g('Recovery Sell'),cin=g('Cash In'),tot=g('Total')||(prev+sale+rec+cin),
         exp=g('Expense'),cout=g('Cash Out (Deposit)'),cod=g('COD'),led=g('Ledger Amount')||(tot-exp-cout-cod),hand=g('Cash In Hand');
-  const diff=hand-led, ok=diff===0;
+  const diff=hand-led,good=diff>=0;
   const dateTxt=new Date(DATE+'T00:00:00').toLocaleDateString(loc(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const expTot=sumOf('expense','Amount'), cashIn=sumOf('cash','Amount','cash in'), cashOut=sumOf('cash','Amount','cash out');
-  const recTot=sumOf('recovery','Amount'), bakiTot=sumOf('baki','Amount');
-
-  const ledger=r?
-   '<table class="lg" style="width:100%;border-collapse:collapse">'+
-   '<tr><td>'+t('prev')+'</td><td>'+money(prev)+'</td></tr>'+
-   '<tr><td>(+) '+t('sale')+'</td><td>'+money(sale)+'</td></tr>'+
-   '<tr><td>(+) '+t('rec')+'</td><td>'+money(rec)+'</td></tr>'+
-   '<tr><td>(+) '+t('cin')+'</td><td>'+money(cin)+'</td></tr>'+
-   '<tr class="tot"><td>'+t('total')+'</td><td>'+money(tot)+'</td></tr>'+
-   '<tr class="neg"><td>(−) '+t('exp')+'</td><td>'+money(exp)+'</td></tr>'+
-   '<tr class="neg"><td>(−) '+t('cout')+'</td><td>'+money(cout)+'</td></tr>'+
-   '<tr class="neg"><td>(−) '+t('cod')+'</td><td>'+money(cod)+'</td></tr>'+
-   '<tr class="fin"><td>'+t('led')+'</td><td>'+money(led)+'</td></tr></table>'
-   :'<div class="empty">'+t('noDaily')+'</div>';
-
-  const status=r?
-   '<div class="stat '+(diff>=0?'ok':'bad')+'"><small>'+(ok?t('match'):diff>0?t('over'):t('short'))+'</small><b>'+(ok?'✓':money(Math.abs(diff)))+'</b><span>'+(ok?t('okMsg'):t('diffMsg'))+'</span></div>'+
-   '<div class="hl"><span>'+t('hand')+'</span><span>'+money(hand)+'</span></div>'+
-   '<div class="hl"><span>'+t('ledA')+'</span><span>'+money(led)+'</span></div>':'';
-
+  const expTot=sumOf('expense','Amount'),cashIn=sumOf('cash','Amount','cash in'),cashOut=sumOf('cash','Amount','cash out');
+  const recTot=sumOf('recovery','Amount'),bakiTot=sumOf('baki','Amount');
   const now=new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'});
+
+  let hero='',two='<div class="empty" style="margin-top:14px">'+t('noDaily')+'</div>';
+  if(r){
+    hero='<div class="hero '+(good?'ok':'bad')+'"><div class="ic">'+(diff===0?'✓':diff>0?'▲':'▼')+'</div><div class="tx"><small>'+(diff===0?t('sOk'):diff>0?t('sOver'):t('sShort'))+'</small><b>'+(diff===0?money(hand):money(Math.abs(diff)))+'</b><span>'+(diff===0?t('mOk'):diff>0?t('mOver'):t('mShort'))+'</span></div>'+
+      '<div class="mini">'+t('hand')+': <b>'+money(hand)+'</b><br>'+t('led')+': <b>'+money(led)+'</b></div></div>';
+    const L=(a,b,c)=>'<tr'+(c?' class="'+c+'"':'')+'><td>'+a+'</td><td>'+money(b)+'</td></tr>';
+    const ledger='<table class="lgt">'+L(t('prev'),prev)+L('(+) '+t('sale'),sale)+L('(+) '+t('rec'),rec)+L('(+) '+t('cin'),cin)+L(t('total'),tot,'tot')+L('(−) '+t('exp'),exp,'neg')+L('(−) '+t('cout'),cout,'neg')+L('(−) '+t('cod'),cod,'neg')+L(t('led'),led,'fin')+'</table>';
+    const recon='<div class="rec"><div class="row"><span>'+t('hand')+'</span><b>'+money(hand)+'</b></div><div class="row"><span>'+t('led')+'</span><b>'+money(led)+'</b></div><div class="row d '+(good?'ok':'bad')+'"><span>'+t('diff')+'</span><b>'+(diff>0?'+':diff<0?'−':'')+money(Math.abs(diff))+'</b></div></div>';
+    two='<div class="two">'+sec(t('secLed'),'',ledger)+sec(t('secRec'),'',recon)+'</div>';
+    if(tot>0){
+      const p=v=>Math.max(0,v/tot*100).toFixed(2)+'%',rem=Math.max(0,led);
+      const seg=[[exp,'#b42318',t('exp')],[cout,'#c8a24a',t('cout')],[cod,'#7c5cbf',t('cod')],[rem,'#1f7a6d',t('remain')]];
+      two+=sec(t('flow'),'','<div class="bar">'+seg.map(s=>'<div style="width:'+p(s[0])+';background:'+s[1]+'"></div>').join('')+'</div><div class="legend">'+seg.map(s=>'<span style="--c:'+s[1]+'">'+s[2]+' · '+money(s[0])+'</span>').join('')+'</div>');
+    }
+  }
+  const kp=[[t('kSale'),sale,'#1f7a6d'],[t('kRec'),recTot||rec,'#0f2742'],[t('kExp'),expTot||exp,'#b42318'],[t('kDue'),bakiTot,'#c8a24a']];
   $('rep').innerHTML=
-   '<div class="rh"><div><h1>Liz Fashion – AponBazaar</h1><p>'+t('rpt')+'</p></div><div class="dt"><small>'+t('dateL')+'</small><b>'+esc(dateTxt)+'</b></div></div>'+
-   '<div class="rb">'+
-    '<div class="kpis">'+
-     '<div class="k g"><small>'+t('kSale')+'</small><b>'+money(sale)+'</b></div>'+
-     '<div class="k"><small>'+t('kRec')+'</small><b>'+money(recTot||rec)+'</b></div>'+
-     '<div class="k r"><small>'+t('kExp')+'</small><b>'+money(expTot||exp)+'</b></div>'+
-     '<div class="k a"><small>'+t('kHand')+'</small><b>'+money(hand)+'</b></div>'+
-    '</div>'+
-    '<div class="two"><div class="sec"><h3>'+t('secLed')+'</h3>'+ledger+'</div><div class="sec"><h3>'+t('hand')+'</h3>'+status+'</div></div>'+
-    '<div class="sec"><h3>'+t('sExp')+'<em>'+money(expTot)+'</em></h3>'+table('expense',[{h:['Expense Name'],k:'c_name'},{h:['Note'],k:'c_note',mut:1},{h:['Expense Code'],k:'c_code'},{h:['Status'],k:'c_status'},{h:['Amount'],k:'c_amt',amt:1}].map(c=>({...c,h:c.h[0]})))+'</div>'+
-    '<div class="sec"><h3>'+t('sCash')+'<em>+'+money(cashIn)+' / −'+money(cashOut)+'</em></h3>'+table('cash',[{h:'Type',k:'c_type'},{h:'Note',k:'c_note',mut:1},{h:'Amount',k:'c_amt',amt:1}])+'</div>'+
-    '<div class="sec"><h3>'+t('sRec')+'<em>'+money(recTot)+'</em></h3>'+table('recovery',[{h:'Customer ID',k:'c_id'},{h:'Customer Name',k:'c_cust'},{h:'Amount',k:'c_amt',amt:1},{h:'Exchange With Cash',k:'c_exch'},{h:'Remarks',k:'c_rem',mut:1}])+'</div>'+
-    '<div class="sec"><h3>'+t('sBaki')+'<em>'+money(bakiTot)+'</em></h3>'+table('baki',[{h:'Name',k:'c_cust'},{h:'Reason',k:'c_reason',mut:1},{h:'Amount',k:'c_amt',amt:1}])+'</div>'+
-   '</div>'+
-   '<div class="sig"><div>'+t('s1')+'</div><div>'+t('s2')+'</div></div>'+
-   '<div class="rf"><span>'+t('by')+'</span><span>'+t('gen')+': '+esc(now)+'</span></div>';
+   '<div class="rh"><div class="c1"></div><div class="c2"></div><div class="row"><div class="br"><div class="lg">LF</div><div><h1>Liz Fashion – AponBazaar</h1><p>'+t('rpt')+'</p></div></div>'+
+   '<div class="dt"><small>'+t('dateL')+'</small><b>'+esc(dateTxt)+'</b><span>'+t('no')+' DR-'+DATE.replace(/-/g,'')+'</span></div></div></div>'+
+   '<div class="rb">'+hero+
+   '<div class="kp">'+kp.map(k=>'<div class="k" style="--c:'+k[2]+'"><small>'+k[0]+'</small><b>'+money(k[1])+'</b></div>').join('')+'</div>'+
+   two+
+   sec(t('sExp'),money(expTot),table('expense',[{h:'Expense Name',k:'c_name'},{h:'Note',k:'c_note',mut:1},{h:'Expense Code',k:'c_code'},{h:'Status',k:'c_status'},{h:'Amount',k:'c_amt',amt:1}]))+
+   sec(t('sCash'),'+'+money(cashIn)+'  /  −'+money(cashOut),table('cash',[{h:'Type',k:'c_type'},{h:'Note',k:'c_note',mut:1},{h:'Amount',k:'c_amt',amt:1}]))+
+   sec(t('sRec'),money(recTot),table('recovery',[{h:'Customer ID',k:'c_id'},{h:'Customer Name',k:'c_cust'},{h:'Amount',k:'c_amt',amt:1},{h:'Exchange With Cash',k:'c_exch'},{h:'Remarks',k:'c_rem',mut:1}]))+
+   sec(t('sBaki'),money(bakiTot),table('baki',[{h:'Name',k:'c_cust'},{h:'Reason',k:'c_reason',mut:1},{h:'Amount',k:'c_amt',amt:1}]))+
+   '</div><div class="sig"><div>'+t('s1')+'</div><div>'+t('s2')+'</div></div>'+
+   '<div class="rf"><span><b>Liz Fashion</b> – AponBazaar</span><span>'+t('gen')+': '+esc(now)+'</span></div>';
   fit();
 }
-
-/* preview scaling for small screens */
 function fit(){
   const h=$('holder'),w=Math.min(1,(window.innerWidth-24)/820);
-  h.style.transform=w<1?'scale('+w+')':'';
-  h.style.height=w<1?($('rep').offsetHeight*w)+'px':'';
-  h.style.transformOrigin='top left';
-  h.style.marginLeft=w<1?'0':'auto';
+  h.style.zoom=w<1?w:'';
 }
 window.addEventListener('resize',()=>{if(DATA)fit()});
 
 async function download(){
-  const h=$('holder'),old={t:h.style.transform,h:h.style.height};
-  h.style.transform='';h.style.height='';
-  $('dl').disabled=true;
+  const h=$('holder'),z=h.style.zoom;h.style.zoom='';$('dl').disabled=true;
   try{
     if(document.fonts&&document.fonts.ready)await document.fonts.ready;
-    const c=await html2canvas($('rep'),{scale:2,backgroundColor:'#ffffff',useCORS:true,windowWidth:820});
-    const a=document.createElement('a');
-    a.href=c.toDataURL('image/jpeg',0.95);
-    a.download='Liz-Fashion-Report-'+DATE+'.jpg';
+    const c=await html2canvas($('rep'),{scale:2.5,backgroundColor:'#ffffff',useCORS:true,windowWidth:820});
+    const a=document.createElement('a');a.href=c.toDataURL('image/jpeg',0.96);a.download='Liz-Fashion-Report-'+DATE+'.jpg';
     document.body.appendChild(a);a.click();a.remove();
   }catch(e){$('msg').textContent=String(e.message||e)}
-  h.style.transform=old.t;h.style.height=old.h;$('dl').disabled=false;
+  h.style.zoom=z;$('dl').disabled=false;
 }
-
 function applyLang(){
   document.documentElement.lang=lang;
   document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
@@ -282,9 +273,7 @@ $('enter').onclick=async()=>{
   catch(e){$('lmsg').textContent=errText(e)}
 };
 $('pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('enter').click()});
-$('load').onclick=build;
-$('d').onchange=build;
-$('dl').onclick=download;
+$('load').onclick=build;$('d').onchange=build;$('dl').onclick=download;
 applyLang();
 </script>
 </body>
