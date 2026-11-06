@@ -142,12 +142,16 @@ table.notes td:first-child{font-weight:600;color:var(--navy)}
 .sumhold{position:fixed;left:-12000px;top:0;pointer-events:none}
 input.lk{background:#f3f5f8;color:var(--mut);pointer-events:none}
 .dtog{display:block;margin-top:6px;background:none;border:0;color:var(--navy);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;text-decoration:underline;padding:0}
+.top .in{justify-content:flex-start}.top .in .brand{margin-right:auto}
+.lockb{background:rgba(255,255,255,.12);border:0;color:#fff;padding:7px 12px;border-radius:8px;font:inherit;font-size:13px;cursor:pointer;margin-right:8px}
+.rem{display:flex;align-items:center;justify-content:center;gap:8px;margin:14px 0 0;font-weight:500;cursor:pointer}.rem input{width:auto}
 </style>
 </head>
 <body>
 
 <div class="top"><div class="in">
   <div class="brand"><div class="logo">LF</div><div><b>Liz Fashion – AponBazaar</b><span data-i="sub"></span></div></div>
+  <button class="lockb" id="logout" data-i="out" hidden></button>
   <div class="lang" role="group" aria-label="Language">
     <button data-l="bn">বাংলা</button><button data-l="en">English</button>
   </div>
@@ -158,6 +162,7 @@ input.lk{background:#f3f5f8;color:var(--mut);pointer-events:none}
   <h1 data-i="signin"></h1><p data-i="signinSub"></p>
   <label for="pin" data-i="pin"></label>
   <input id="pin" type="password" inputmode="numeric" autocomplete="off">
+  <label class="rem"><input type="checkbox" id="rem" checked><span data-i="remember"></span></label>
   <div class="btns"><button class="btn pri" id="enter" data-i="enter"></button></div>
   <div id="lmsg" style="margin-top:10px;font-size:14px"></div>
 </div></div>
@@ -241,6 +246,7 @@ const T2={
 };
 for(const l in T2)for(const k in T2[l])if(!(k in T[l]))T[l][k]=T2[l][k];
 T.en.t_report='Report';T.bn.t_report='রিপোর্ট';
+T.en.remember='Remember me on this device';T.bn.remember='এই ডিভাইসে মনে রাখুন';T.en.out='🔒 Lock';T.bn.out='🔒 লক';
 T.en.chg='Change date';T.bn.chg='তারিখ বদলান';T.en.auto='Use today';T.bn.auto='আজকের তারিখ';
 T.en.sumBtn='📷 Save summary JPG';T.bn.sumBtn='📷 সারসংক্ষেপ JPG সেভ';T.en.sumBtn2='📷 Summary JPG';T.bn.sumBtn2='📷 সারসংক্ষেপ JPG';T.en.sumRpt='Daily Cash Summary';T.bn.sumRpt='দৈনিক ক্যাশ সারসংক্ষেপ';T.en.pcs='Pieces';T.bn.pcs='মোট পিস';
 const HB={'Date':'তারিখ','Expense Name':'খরচের নাম','Note':'নোট','Amount':'পরিমাণ','Status':'অবস্থা','Expense Code':'কোড','Entered At':'এন্ট্রির সময়','Type':'ধরন',
@@ -374,11 +380,19 @@ $('save').onclick=async()=>{
   catch(e){say(errText(e),1)}
   $('save').disabled=false;
 };
-$('enter').onclick=async()=>{
-  PIN=$('pin').value;$('lmsg').textContent='';
-  try{await call('recent','expense');$('lock').hidden=true;$('app').hidden=false;tabs();view();initRep()}
-  catch(e){$('lmsg').textContent=errText(e)}
-};
+async function login(pin,remember){
+  PIN=pin;$('lmsg').textContent='';
+  try{
+    await call('recent','expense');
+    if(remember){try{localStorage.setItem('lz_pin',pin)}catch(e){}}
+    $('lock').hidden=true;$('app').hidden=false;$('logout').hidden=false;tabs();view();initRep();return true;
+  }catch(e){
+    if(/PIN/i.test(String(e.message||e))){try{localStorage.removeItem('lz_pin')}catch(x){}}
+    $('lmsg').textContent=errText(e);return false;
+  }
+}
+$('enter').onclick=()=>login($('pin').value,$('rem').checked);
+$('logout').onclick=()=>{try{localStorage.removeItem('lz_pin')}catch(e){}PIN='';$('app').hidden=true;$('lock').hidden=false;$('logout').hidden=true;$('pin').value=''};
 $('pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('enter').click()});
 document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{
   lang=b.dataset.l;try{localStorage.setItem('lang',lang)}catch(e){}
@@ -570,6 +584,7 @@ $('sumjpg').onclick=()=>{
 $('sumr').onclick=()=>saveSummary({date:DATE,...D,notes:null},$('sumr'));
 document.addEventListener('visibilitychange',()=>{const d=$('f_date');if(d&&d.readOnly)d.value=today()});
 applyLang();
+try{const sp=localStorage.getItem('lz_pin');if(sp){$('pin').value=sp;login(sp,false)}}catch(e){}
 </script>
 </body>
 </html>
