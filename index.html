@@ -3,138 +3,143 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Liz Fashion – Daily Accounts</title>
+<title>Liz Fashion – Daily Report</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-:root{--navy:#14304d;--navy2:#1d4268;--bg:#f2f4f7;--card:#fff;--ink:#1c2733;--mut:#64748b;--line:#dde3ea;--acc:#1f7a6d;--accbg:#e7f3f1;--okbg:#e3f4ea;--ok:#1b7a43;--badbg:#fdeceb;--bad:#b42318}
+:root{--navy:#14304d;--navy2:#1d4268;--bg:#e9edf2;--ink:#1c2733;--mut:#64748b;--line:#dde3ea;--acc:#1f7a6d;--accbg:#e7f3f1;--ok:#1b7a43;--okbg:#e3f4ea;--bad:#b42318;--badbg:#fdeceb;--amb:#b45309;--ambbg:#fef3e2}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,"Hind Siliguri",system-ui,sans-serif}
-.top{background:var(--navy);color:#fff}
-.top .in{max-width:960px;margin:auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand b{display:block;font-size:19px;font-weight:700;letter-spacing:.2px}
-.brand span{font-size:13px;color:#b9c8da}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,"Hind Siliguri",system-ui,sans-serif}
+.bar{background:var(--navy);color:#fff}
+.bar .in{max-width:900px;margin:auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.bar b{font-size:17px}
 .lang{display:flex;background:var(--navy2);border-radius:8px;padding:3px}
 .lang button{border:0;background:transparent;color:#c9d6e6;padding:6px 12px;border-radius:6px;font:inherit;font-size:13px;cursor:pointer}
 .lang button.on{background:#fff;color:var(--navy);font-weight:600}
-nav{background:var(--card);border-bottom:1px solid var(--line)}
-nav .in{max-width:960px;margin:auto;display:flex;overflow-x:auto;padding:0 8px}
-nav button{flex:none;border:0;background:none;padding:14px 16px;font:inherit;font-weight:500;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent}
-nav button.on{color:var(--navy);border-bottom-color:var(--acc);font-weight:600}
-main{max-width:960px;margin:auto;padding:18px 16px 48px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 1px 2px rgba(20,48,77,.05)}
-h2{font-size:16px;margin:26px 0 10px;color:var(--navy)}
-h3{font-size:15px;margin:0 0 4px;color:var(--navy);padding-bottom:8px;border-bottom:1px solid var(--line)}
-label{display:block;font-size:13px;font-weight:500;color:var(--mut);margin:14px 0 5px}
-input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;color:var(--ink);background:#fff}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:0;border-color:var(--acc)}
-button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-.btns{display:flex;gap:10px;margin-top:20px}
-.btn{padding:12px 18px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
-.btn.pri{flex:1;background:var(--acc);border-color:var(--acc);color:#fff}
-.btn:disabled{opacity:.6;cursor:default}
-#msg{margin-top:12px;font-size:14px;min-height:20px;color:var(--ok);font-weight:500}
-#msg.err,#lmsg{color:var(--bad)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 4px}
-.stat{border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:10px;padding:12px 14px;background:#fff}
-.stat small{display:block;color:var(--mut);font-size:13px}
-.stat b{display:block;font-size:26px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
-.stat.ok{background:var(--okbg);border-left-color:var(--ok)}.stat.ok b{color:var(--ok)}
-.stat.bad{background:var(--badbg);border-left-color:var(--bad)}.stat.bad b{color:var(--bad)}
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:14px}
-.sum{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;margin-top:14px;border-radius:8px;background:var(--accbg);font-weight:600;color:var(--navy)}
-table{border-collapse:collapse;width:100%;font-size:13px}
-th,td{padding:8px 10px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--line)}
-th{background:#f7f9fb;color:var(--mut);font-weight:600}
-.tbl{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
-table.notes{margin-top:10px}
-table.notes td{padding:6px 8px}
-table.notes input{padding:7px 8px;text-align:right}
-table.notes td.r,table.notes th.r{text-align:right;font-variant-numeric:tabular-nums}
-table.notes td:first-child{font-weight:600;color:var(--navy)}
-#lock{max-width:360px;margin:56px auto;padding:0 16px}
-#lock h1{font-size:20px;margin:0 0 4px;color:var(--navy)}
-#lock p{margin:0;color:var(--mut);font-size:14px}
-@media(max-width:720px){.cols{grid-template-columns:1fr;gap:6px}.stats{grid-template-columns:1fr}.stat b{font-size:22px}}
+.panel{max-width:900px;margin:14px auto;padding:0 12px}
+.ctl{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.ctl label{display:block;font-size:12px;color:var(--mut);font-weight:500;margin-bottom:4px}
+.ctl input{padding:9px 11px;border:1px solid var(--line);border-radius:8px;font:inherit}
+.btn{padding:10px 16px;border-radius:8px;border:1px solid var(--line);background:#fff;font:inherit;font-weight:600;cursor:pointer;color:var(--ink)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.dl{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+.sp{flex:1}
+#msg{max-width:900px;margin:8px auto;padding:0 14px;color:var(--bad);font-size:13px;min-height:18px}
+#lock{max-width:340px;margin:56px auto;padding:0 16px}
+#lock .c{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px}
+#lock h1{margin:0 0 12px;font-size:19px;color:var(--navy)}
+#lock input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;margin-bottom:12px}
+.stage{overflow-x:auto;padding:6px 0 40px}
+.holder{width:820px;margin:0 auto;transform-origin:top center}
+
+/* ===== REPORT ===== */
+#rep{width:820px;background:#fff;color:#1c2733;font-family:Inter,"Hind Siliguri",sans-serif;font-size:13px;line-height:1.5}
+.rh{background:linear-gradient(135deg,#14304d,#1d4268);color:#fff;padding:26px 32px;display:flex;justify-content:space-between;align-items:center}
+.rh h1{margin:0;font-size:25px;font-weight:800;letter-spacing:.3px}
+.rh p{margin:2px 0 0;color:#b9c8da;font-size:13px}
+.rh .dt{text-align:right}
+.rh .dt small{display:block;color:#b9c8da;font-size:11px;letter-spacing:1.2px;text-transform:uppercase}
+.rh .dt b{font-size:20px;font-weight:700}
+.rb{padding:24px 32px 8px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.k{border:1px solid #dde3ea;border-top:4px solid #14304d;border-radius:10px;padding:11px 13px;background:#fafbfc}
+.k small{display:block;color:#64748b;font-size:11.5px;font-weight:500}
+.k b{display:block;font-size:19px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+.k.g{border-top-color:#1f7a6d}.k.r{border-top-color:#b42318}.k.a{border-top-color:#b45309}
+.two{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;margin-top:20px}
+.sec{margin-top:22px}
+.two .sec{margin-top:0}
+.sec h3{margin:0 0 8px;font-size:13px;font-weight:700;color:#14304d;text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:8px}
+.sec h3:before{content:"";width:4px;height:15px;background:#1f7a6d;border-radius:2px}
+.sec h3 em{margin-left:auto;font-style:normal;text-transform:none;letter-spacing:0;font-weight:600;color:#1f7a6d;font-size:13px}
+table.t{width:100%;border-collapse:collapse;font-size:12.5px}
+.t th{background:#f1f4f8;color:#64748b;font-weight:600;text-align:left;padding:7px 10px;font-size:11.5px}
+.t td{padding:7px 10px;border-bottom:1px solid #e8edf2;vertical-align:top}
+.t tr:nth-child(even) td{background:#fbfcfd}
+.t .r{text-align:right;font-variant-numeric:tabular-nums}
+.t tfoot td{font-weight:700;background:#e7f3f1!important;color:#14304d;border-bottom:0}
+.t td.m{color:#64748b}
+.lg td{padding:8px 12px;border-bottom:1px dashed #dde3ea}
+.lg tr.tot td{font-weight:700;background:#f1f4f8;border-bottom:1px solid #dde3ea}
+.lg tr.fin td{font-weight:800;background:#14304d;color:#fff;font-size:14px;border:0}
+.lg tr.neg td:last-child{color:#b42318}
+.lg td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.stat{border-radius:12px;padding:16px;text-align:center;border:2px solid}
+.stat.ok{background:#e3f4ea;border-color:#1b7a43;color:#1b7a43}
+.stat.bad{background:#fdeceb;border-color:#b42318;color:#b42318}
+.stat small{display:block;font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.stat b{display:block;font-size:30px;font-weight:800;margin:4px 0;font-variant-numeric:tabular-nums}
+.stat span{font-size:12.5px;font-weight:600}
+.hl{display:flex;justify-content:space-between;padding:9px 12px;margin-top:8px;background:#f1f4f8;border-radius:8px;font-weight:600}
+.hl span:last-child{font-variant-numeric:tabular-nums;color:#14304d}
+.empty{padding:12px;color:#94a3b8;font-style:italic;border:1px dashed #dde3ea;border-radius:8px;text-align:center}
+.rf{margin-top:26px;border-top:1px solid #dde3ea;padding:12px 32px 16px;display:flex;justify-content:space-between;color:#94a3b8;font-size:11.5px}
+.sig{display:flex;justify-content:space-between;padding:30px 32px 0}
+.sig div{width:180px;border-top:1px solid #94a3b8;text-align:center;padding-top:5px;color:#64748b;font-size:11.5px}
 </style>
 </head>
 <body>
 
-<div class="top"><div class="in">
-  <div class="brand"><b>Liz Fashion – AponBazaar</b><span data-i="sub"></span></div>
-  <div class="lang" role="group" aria-label="Language">
-    <button data-l="bn">বাংলা</button><button data-l="en">English</button>
-  </div>
+<div class="bar"><div class="in">
+  <b>Liz Fashion – AponBazaar · <span data-i="title"></span></b>
+  <div class="lang"><button data-l="bn">বাংলা</button><button data-l="en">English</button></div>
 </div></div>
 
-<div id="lock"><div class="card">
-  <h1 data-i="signin"></h1><p data-i="signinSub"></p>
-  <label for="pin" data-i="pin"></label>
-  <input id="pin" type="password" inputmode="numeric" autocomplete="off">
-  <div class="btns"><button class="btn pri" id="enter" data-i="enter"></button></div>
-  <div id="lmsg" style="margin-top:10px;font-size:14px"></div>
+<div id="lock"><div class="c">
+  <h1 data-i="signin"></h1>
+  <input id="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="PIN">
+  <button class="btn pri" id="enter" style="width:100%" data-i="enter"></button>
+  <div id="lmsg" style="color:var(--bad);margin-top:10px;font-size:13px"></div>
 </div></div>
 
 <div id="app" hidden>
-  <nav><div class="in" id="tabs"></div></nav>
-  <main>
-    <div class="card">
-      <div id="fields"></div>
-      <div class="btns"><button class="btn pri" id="save"></button><button class="btn" id="clear"></button></div>
-      <div id="msg" role="status"></div>
-    </div>
-    <h2 data-i="recent"></h2>
-    <div class="tbl" id="recent"></div>
-  </main>
+  <div class="panel"><div class="ctl">
+    <div><label for="d" data-i="date"></label><input type="date" id="d"></div>
+    <button class="btn pri" id="load" data-i="load"></button>
+    <div class="sp"></div>
+    <button class="btn dl" id="dl" data-i="dl" disabled></button>
+  </div></div>
+  <div id="msg"></div>
+  <div class="panel"><div class="stage" id="stage"><div class="holder" id="holder"><div id="rep"></div></div></div></div>
 </div>
 
 <script>
-// ===== Apps Script Web App URL =====
 const APP_URL = 'https://script.google.com/macros/s/AKfycbxd8zXJAlK0SV6vv5B05mQ3lxjJQ2Rkr0MT6Koxe9jbGbPVaEJjClcxV1BPGzxQpBS-FQ/exec';
-// ====================================
 
 const T={
- en:{sub:'Daily Accounts',signin:'Sign in',signinSub:'Enter your PIN to continue.',pin:'PIN',enter:'Sign in',
-  t_daily:'Cash Summary',t_expense:'Expenses',t_cash:'Cash In / Out',t_recovery:'Recovery',t_baki:'Dues Receivable',
-  date:'Date',name:'Expense name',noteF:'Note / reason',amount:'Amount (৳)',code:'Expense code',status:'Status',
-  st_done:'Entry done',st_pending:'Pending',st_approved:'Approved',kind:'Type',cin:'Cash In',cout:'Cash Out',
-  custId:'Customer ID',custName:'Customer name',exchange:'Exchanged with cash (৳)',remarks:'Remarks',bname:'Customer name & ID',reason:'Reason',
-  handlab:'Cash in hand',ledlab:'Ledger amount',match:'Balanced',over:'Cash over',short:'Cash short',
-  secL:'Ledger calculation',prev:'Previous ledger',ibos:"Today's cash sales",recov:'Recovery sales',cashin:'Cash in',total:'Total',
-  expense:'Expense',cashout:'Cash out (deposit)',cod:'COD',ledger:'Ledger amount',secN:'Note counting',noteCol:'Note',qty:'Qty',handsum:'Total cash in hand',
-  save:'Save entry',clear:'Clear',saving:'Saving…',saved:'Saved to sheet ✓',recent:'Last 10 entries',loading:'Loading…',none:'No entries yet.',
-  wrongpin:'Incorrect PIN',net:'Could not reach the server. Check the Web App deployment.',needdate:'Please select a date.'},
- bn:{sub:'দৈনিক হিসাব',signin:'প্রবেশ করুন',signinSub:'চালিয়ে যেতে আপনার পিন দিন।',pin:'পিন',enter:'প্রবেশ করুন',
-  t_daily:'ক্যাশ হিসাব',t_expense:'খরচ',t_cash:'ক্যাশ ইন / আউট',t_recovery:'আদায়',t_baki:'বাকি পাওনা',
-  date:'তারিখ',name:'খরচের নাম',noteF:'নোট / কারণ',amount:'টাকার পরিমাণ (৳)',code:'খরচের কোড',status:'অবস্থা',
-  st_done:'এন্ট্রি সম্পন্ন',st_pending:'অপেক্ষমাণ',st_approved:'অনুমোদিত',kind:'ধরন',cin:'ক্যাশ ইন',cout:'ক্যাশ আউট',
-  custId:'কাস্টমার আইডি',custName:'কাস্টমারের নাম',exchange:'ক্যাশের বিনিময়ে (৳)',remarks:'মন্তব্য',bname:'কাস্টমারের নাম ও আইডি',reason:'কারণ',
-  handlab:'হাতে থাকা ক্যাশ',ledlab:'লেজার অ্যামাউন্ট',match:'হিসাব মিলেছে',over:'ক্যাশ বেশি',short:'ক্যাশ কম',
-  secL:'লেজার হিসাব',prev:'আগের লেজার',ibos:'আজকের ক্যাশ বিক্রি',recov:'আদায় (রিকভারি) বিক্রি',cashin:'ক্যাশ ইন',total:'মোট',
-  expense:'খরচ',cashout:'ক্যাশ আউট (জমা)',cod:'সিওডি (COD)',ledger:'লেজার অ্যামাউন্ট',secN:'নোট গণনা',noteCol:'নোট',qty:'সংখ্যা',handsum:'হাতে মোট ক্যাশ',
-  save:'এন্ট্রি সেভ করুন',clear:'মুছুন',saving:'সেভ হচ্ছে…',saved:'শিটে সেভ হয়েছে ✓',recent:'সর্বশেষ ১০টি এন্ট্রি',loading:'লোড হচ্ছে…',none:'এখনো কোনো এন্ট্রি নেই।',
-  wrongpin:'পিন ভুল হয়েছে',net:'সার্ভারের সাথে যোগাযোগ হয়নি। Web App Deploy ঠিক আছে কিনা দেখুন।',needdate:'অনুগ্রহ করে তারিখ দিন।'}
+ en:{title:'Daily Report',signin:'Sign in',enter:'Sign in',date:'Date',load:'Show report',dl:'⬇ Download JPG',loading:'Loading…',
+  wrong:'Incorrect PIN',net:'Could not reach the server.',
+  rpt:'Daily Accounts Report',dateL:'Report date',
+  kSale:"Today's cash sales",kRec:'Recovery',kExp:'Total expense',kHand:'Cash in hand',
+  secLed:'Ledger calculation',prev:'Previous ledger',sale:"Today's cash sales",rec:'Recovery sales',cin:'Cash in',total:'Total',exp:'Expense',cout:'Cash out (deposit)',cod:'COD',led:'Ledger amount',
+  hand:'Cash in hand',ledA:'Ledger amount',match:'Balanced',over:'Cash over',short:'Cash short',okMsg:'Cash matches the ledger',diffMsg:'Difference between hand cash and ledger',
+  noDaily:'No cash summary entry found for this date.',
+  sExp:'Expenses',sCash:'Cash In / Out',sRec:'Recovery',sBaki:'Dues Receivable',none:'No entries for this day.',
+  c_name:'Name',c_note:'Note / reason',c_amt:'Amount',c_code:'Code',c_status:'Status',c_type:'Type',c_id:'Cust. ID',c_cust:'Customer',c_exch:'Exchanged',c_rem:'Remarks',c_reason:'Reason',
+  tot:'Total',gen:'Generated',by:'Liz Fashion – AponBazaar',s1:'Prepared by',s2:'Checked by',cap:'Only the last 10 entries per section are fetched by the server.'},
+ bn:{title:'দৈনিক রিপোর্ট',signin:'প্রবেশ করুন',enter:'প্রবেশ করুন',date:'তারিখ',load:'রিপোর্ট দেখুন',dl:'⬇ JPG ডাউনলোড',loading:'লোড হচ্ছে…',
+  wrong:'পিন ভুল হয়েছে',net:'সার্ভারের সাথে যোগাযোগ হয়নি।',
+  rpt:'দৈনিক হিসাব রিপোর্ট',dateL:'রিপোর্টের তারিখ',
+  kSale:'আজকের ক্যাশ বিক্রি',kRec:'আদায়',kExp:'মোট খরচ',kHand:'হাতে ক্যাশ',
+  secLed:'লেজার হিসাব',prev:'আগের লেজার',sale:'আজকের ক্যাশ বিক্রি',rec:'আদায় (রিকভারি) বিক্রি',cin:'ক্যাশ ইন',total:'মোট',exp:'খরচ',cout:'ক্যাশ আউট (জমা)',cod:'সিওডি (COD)',led:'লেজার অ্যামাউন্ট',
+  hand:'হাতে থাকা ক্যাশ',ledA:'লেজার অ্যামাউন্ট',match:'হিসাব মিলেছে',over:'ক্যাশ বেশি',short:'ক্যাশ কম',okMsg:'হাতের ক্যাশ ও লেজার মিলেছে',diffMsg:'হাতের ক্যাশ ও লেজারের পার্থক্য',
+  noDaily:'এই তারিখে ক্যাশ হিসাবের কোনো এন্ট্রি পাওয়া যায়নি।',
+  sExp:'খরচ',sCash:'ক্যাশ ইন / আউট',sRec:'আদায়',sBaki:'বাকি পাওনা',none:'এই দিনে কোনো এন্ট্রি নেই।',
+  c_name:'নাম',c_note:'নোট / কারণ',c_amt:'পরিমাণ',c_code:'কোড',c_status:'অবস্থা',c_type:'ধরন',c_id:'আইডি',c_cust:'কাস্টমার',c_exch:'বিনিময়ে',c_rem:'মন্তব্য',c_reason:'কারণ',
+  tot:'মোট',gen:'তৈরির সময়',by:'Liz Fashion – AponBazaar',s1:'প্রস্তুতকারী',s2:'যাচাইকারী',cap:'সার্ভার প্রতিটি অংশের সর্বশেষ ১০টি এন্ট্রি দেয়।'}
 };
-const HB={'Date':'তারিখ','Expense Name':'খরচের নাম','Note':'নোট','Amount':'পরিমাণ','Status':'অবস্থা','Expense Code':'কোড','Entered At':'এন্ট্রির সময়','Type':'ধরন',
- 'Customer ID':'কাস্টমার আইডি','Customer Name':'কাস্টমারের নাম','Exchange With Cash':'ক্যাশের বিনিময়ে','Remarks':'মন্তব্য','Name':'নাম','Reason':'কারণ',
- 'Previous Ledger':'আগের লেজার','Ajker Cash Sell':'আজকের বিক্রি','Recovery Sell':'আদায়','Cash In':'ক্যাশ ইন','Total':'মোট','Expense':'খরচ','Cash Out (Deposit)':'ক্যাশ আউট (জমা)','COD':'সিওডি','Ledger Amount':'লেজার','Cash In Hand':'হাতের ক্যাশ','Partokkho (Hand - Ledger)':'পার্থক্য'};
 let lang='bn';try{lang=localStorage.getItem('lang')||'bn'}catch(e){}
 const t=k=>T[lang][k]||k;
 const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const loc=()=>lang==='bn'?'bn-BD':'en-IN';
+const num=v=>{const n=Number(String(v).replace(/[,৳\s]/g,''));return isNaN(n)?0:n};
+const money=v=>'৳ '+num(v).toLocaleString(loc());
 const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
-const fmt=v=>'৳ '+(Number(v)||0).toLocaleString(lang==='bn'?'bn-BD':'en-IN');
-const NOTES=[1000,500,200,100,50,20,10,5,2,1];
-
-const F={
- daily:{custom:true,fields:[['date','date','date']]},
- expense:{fields:[['date','date','date'],['name','name','text'],['note','noteF','textarea'],['amount','amount','number'],['code','code','text'],
-   ['status','status','select',[['entry done','st_done'],['pending','st_pending'],['approved','st_approved']]]]},
- cash:{fields:[['date','date','date'],['kind','kind','select',[['Cash In','cin'],['Cash Out','cout']]],['note','noteF','text'],['amount','amount','number']]},
- recovery:{fields:[['date','date','date'],['custId','custId','text'],['custName','custName','text'],['amount','amount','number'],['exchange','exchange','number'],['remarks','remarks','text']]},
- baki:{fields:[['date','date','date'],['name','bname','text'],['amount','amount','number'],['reason','reason','textarea']]}
-};
-let cur='daily',PIN='';
+let PIN='',DATA=null,DATE='';
 
 async function call(action,type,d){
   const r=await fetch(APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,type,d,pin:PIN})});
@@ -142,110 +147,144 @@ async function call(action,type,d){
   if(!j.ok)throw new Error(j.error||'Error');
   return j.data;
 }
-function errText(e){const m=String(e.message||e);if(/PIN/i.test(m))return t('wrongpin');if(/fetch|network|JSON/i.test(m))return t('net');return m}
-function say(m,err){const x=$('msg');x.textContent=m;x.className=err?'err':''}
-const nv=id=>Number(($(id)||{}).value)||0;
+const errText=e=>{const m=String(e.message||e);if(/PIN/i.test(m))return t('wrong');if(/fetch|network|JSON/i.test(m))return t('net');return m};
+
+function normDate(x){
+  const s=String(x).trim();
+  let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return m[1]+'-'+m[2]+'-'+m[3];
+  const d=new Date(s);if(!isNaN(d)){return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)}
+  m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);if(m)return m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
+  return s;
+}
+function pick(head,names){for(const n of names){const i=head.indexOf(n);if(i>=0)return i}return -1}
+function rowsFor(res,date){
+  const di=pick(res.head,['Date']);
+  return res.rows.filter(r=>normDate(r[di<0?0:di])===date);
+}
+
+async function build(){
+  DATE=$('d').value;if(!DATE)return;
+  $('msg').textContent=t('loading');$('dl').disabled=true;
+  try{
+    const types=['daily','expense','cash','recovery','baki'];
+    const res=await Promise.all(types.map(k=>call('recent',k)));
+    DATA={};types.forEach((k,i)=>DATA[k]={head:res[i].head,rows:rowsFor(res[i],DATE)});
+    $('msg').textContent='';render();$('dl').disabled=false;
+  }catch(e){$('msg').textContent=errText(e)}
+}
+
+function table(key,cols){
+  const {head,rows}=DATA[key];
+  if(!rows.length)return '<div class="empty">'+t('none')+'</div>';
+  const idx=cols.map(c=>pick(head,c.h));
+  let sum=0;
+  const body=rows.map(r=>'<tr>'+cols.map((c,j)=>{
+    const v=idx[j]<0?'':r[idx[j]];
+    if(c.amt){sum+=num(v);return '<td class="r">'+money(v)+'</td>'}
+    return '<td'+(c.mut?' class="m"':'')+'>'+esc(v)+'</td>';
+  }).join('')+'</tr>').join('');
+  const ai=cols.findIndex(c=>c.amt);
+  const foot='<tfoot><tr>'+cols.map((c,j)=>j===0?'<td'+(ai===0?'':'')+'>'+t('tot')+' ('+rows.length+')</td>':c.amt?'<td class="r">'+money(sum)+'</td>':'<td></td>').join('')+'</tr></tfoot>';
+  return '<table class="t"><thead><tr>'+cols.map(c=>'<th'+(c.amt?' class="r"':'')+'>'+t(c.k)+'</th>').join('')+'</tr></thead><tbody>'+body+'</tbody>'+foot+'</table>';
+}
+function sumOf(key,h,filter){
+  const {head,rows}=DATA[key];const i=pick(head,[h]);if(i<0)return 0;
+  const ti=pick(head,['Type']);
+  return rows.reduce((s,r)=>(!filter||String(r[ti]).toLowerCase()===filter)?s+num(r[i]):s,0);
+}
+
+function render(){
+  const dd=DATA.daily,h=dd.head,r=dd.rows[0];
+  const g=n=>{const i=pick(h,[n]);return r&&i>=0?num(r[i]):0};
+  const prev=g('Previous Ledger'),sale=g('Ajker Cash Sell'),rec=g('Recovery Sell'),cin=g('Cash In'),tot=g('Total')||(prev+sale+rec+cin),
+        exp=g('Expense'),cout=g('Cash Out (Deposit)'),cod=g('COD'),led=g('Ledger Amount')||(tot-exp-cout-cod),hand=g('Cash In Hand');
+  const diff=hand-led, ok=diff===0;
+  const dateTxt=new Date(DATE+'T00:00:00').toLocaleDateString(loc(),{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const expTot=sumOf('expense','Amount'), cashIn=sumOf('cash','Amount','cash in'), cashOut=sumOf('cash','Amount','cash out');
+  const recTot=sumOf('recovery','Amount'), bakiTot=sumOf('baki','Amount');
+
+  const ledger=r?
+   '<table class="lg" style="width:100%;border-collapse:collapse">'+
+   '<tr><td>'+t('prev')+'</td><td>'+money(prev)+'</td></tr>'+
+   '<tr><td>(+) '+t('sale')+'</td><td>'+money(sale)+'</td></tr>'+
+   '<tr><td>(+) '+t('rec')+'</td><td>'+money(rec)+'</td></tr>'+
+   '<tr><td>(+) '+t('cin')+'</td><td>'+money(cin)+'</td></tr>'+
+   '<tr class="tot"><td>'+t('total')+'</td><td>'+money(tot)+'</td></tr>'+
+   '<tr class="neg"><td>(−) '+t('exp')+'</td><td>'+money(exp)+'</td></tr>'+
+   '<tr class="neg"><td>(−) '+t('cout')+'</td><td>'+money(cout)+'</td></tr>'+
+   '<tr class="neg"><td>(−) '+t('cod')+'</td><td>'+money(cod)+'</td></tr>'+
+   '<tr class="fin"><td>'+t('led')+'</td><td>'+money(led)+'</td></tr></table>'
+   :'<div class="empty">'+t('noDaily')+'</div>';
+
+  const status=r?
+   '<div class="stat '+(diff>=0?'ok':'bad')+'"><small>'+(ok?t('match'):diff>0?t('over'):t('short'))+'</small><b>'+(ok?'✓':money(Math.abs(diff)))+'</b><span>'+(ok?t('okMsg'):t('diffMsg'))+'</span></div>'+
+   '<div class="hl"><span>'+t('hand')+'</span><span>'+money(hand)+'</span></div>'+
+   '<div class="hl"><span>'+t('ledA')+'</span><span>'+money(led)+'</span></div>':'';
+
+  const now=new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'});
+  $('rep').innerHTML=
+   '<div class="rh"><div><h1>Liz Fashion – AponBazaar</h1><p>'+t('rpt')+'</p></div><div class="dt"><small>'+t('dateL')+'</small><b>'+esc(dateTxt)+'</b></div></div>'+
+   '<div class="rb">'+
+    '<div class="kpis">'+
+     '<div class="k g"><small>'+t('kSale')+'</small><b>'+money(sale)+'</b></div>'+
+     '<div class="k"><small>'+t('kRec')+'</small><b>'+money(recTot||rec)+'</b></div>'+
+     '<div class="k r"><small>'+t('kExp')+'</small><b>'+money(expTot||exp)+'</b></div>'+
+     '<div class="k a"><small>'+t('kHand')+'</small><b>'+money(hand)+'</b></div>'+
+    '</div>'+
+    '<div class="two"><div class="sec"><h3>'+t('secLed')+'</h3>'+ledger+'</div><div class="sec"><h3>'+t('hand')+'</h3>'+status+'</div></div>'+
+    '<div class="sec"><h3>'+t('sExp')+'<em>'+money(expTot)+'</em></h3>'+table('expense',[{h:['Expense Name'],k:'c_name'},{h:['Note'],k:'c_note',mut:1},{h:['Expense Code'],k:'c_code'},{h:['Status'],k:'c_status'},{h:['Amount'],k:'c_amt',amt:1}].map(c=>({...c,h:c.h[0]})))+'</div>'+
+    '<div class="sec"><h3>'+t('sCash')+'<em>+'+money(cashIn)+' / −'+money(cashOut)+'</em></h3>'+table('cash',[{h:'Type',k:'c_type'},{h:'Note',k:'c_note',mut:1},{h:'Amount',k:'c_amt',amt:1}])+'</div>'+
+    '<div class="sec"><h3>'+t('sRec')+'<em>'+money(recTot)+'</em></h3>'+table('recovery',[{h:'Customer ID',k:'c_id'},{h:'Customer Name',k:'c_cust'},{h:'Amount',k:'c_amt',amt:1},{h:'Exchange With Cash',k:'c_exch'},{h:'Remarks',k:'c_rem',mut:1}])+'</div>'+
+    '<div class="sec"><h3>'+t('sBaki')+'<em>'+money(bakiTot)+'</em></h3>'+table('baki',[{h:'Name',k:'c_cust'},{h:'Reason',k:'c_reason',mut:1},{h:'Amount',k:'c_amt',amt:1}])+'</div>'+
+   '</div>'+
+   '<div class="sig"><div>'+t('s1')+'</div><div>'+t('s2')+'</div></div>'+
+   '<div class="rf"><span>'+t('by')+'</span><span>'+t('gen')+': '+esc(now)+'</span></div>';
+  fit();
+}
+
+/* preview scaling for small screens */
+function fit(){
+  const h=$('holder'),w=Math.min(1,(window.innerWidth-24)/820);
+  h.style.transform=w<1?'scale('+w+')':'';
+  h.style.height=w<1?($('rep').offsetHeight*w)+'px':'';
+  h.style.transformOrigin='top left';
+  h.style.marginLeft=w<1?'0':'auto';
+}
+window.addEventListener('resize',()=>{if(DATA)fit()});
+
+async function download(){
+  const h=$('holder'),old={t:h.style.transform,h:h.style.height};
+  h.style.transform='';h.style.height='';
+  $('dl').disabled=true;
+  try{
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    const c=await html2canvas($('rep'),{scale:2,backgroundColor:'#ffffff',useCORS:true,windowWidth:820});
+    const a=document.createElement('a');
+    a.href=c.toDataURL('image/jpeg',0.95);
+    a.download='Liz-Fashion-Report-'+DATE+'.jpg';
+    document.body.appendChild(a);a.click();a.remove();
+  }catch(e){$('msg').textContent=String(e.message||e)}
+  h.style.transform=old.t;h.style.height=old.h;$('dl').disabled=false;
+}
 
 function applyLang(){
   document.documentElement.lang=lang;
   document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
   document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===lang));
-  $('save').textContent=t('save');$('clear').textContent=t('clear');
 }
-function tabs(){
-  $('tabs').innerHTML='';
-  Object.keys(F).forEach(k=>{
-    const b=document.createElement('button');b.textContent=t('t_'+k);if(k===cur)b.className='on';
-    b.onclick=()=>{cur=k;tabs();form();recent()};$('tabs').appendChild(b);
-  });
-}
-function snapshot(){const s={};$('fields').querySelectorAll('input,select,textarea').forEach(e=>s[e.id]=e.value);return s}
-function restore(s){Object.keys(s).forEach(id=>{const e=$(id);if(e&&s[id]!=='')e.value=s[id]});if(cur==='daily')cashCalc()}
-
-function cashView(){
-  const inp=(id,k)=>'<label for="f_'+id+'">'+t(k)+'</label><input id="f_'+id+'" type="number" inputmode="decimal" step="any">';
-  $('fields').innerHTML=
-   '<div style="max-width:220px"><label for="f_date" style="margin-top:0">'+t('date')+'</label><input id="f_date" type="date" value="'+today()+'"></div>'+
-   '<div class="stats">'+
-    '<div class="stat"><small>'+t('handlab')+'</small><b id="s_hand"></b></div>'+
-    '<div class="stat"><small>'+t('ledlab')+'</small><b id="s_led"></b></div>'+
-    '<div class="stat" id="s_box"><small id="s_lab"></small><b id="s_diff"></b></div></div>'+
-   '<div class="cols"><div><h3>'+t('secL')+'</h3>'+
-    inp('prev','prev')+inp('ibos','ibos')+inp('recov','recov')+inp('cashin','cashin')+
-    '<div class="sum"><span>'+t('total')+'</span><span id="s_tot"></span></div>'+
-    inp('expense','expense')+inp('cashout','cashout')+inp('cod','cod')+
-    '<div class="sum"><span>'+t('ledger')+'</span><span id="s_led2"></span></div></div>'+
-   '<div><h3>'+t('secN')+'</h3><table class="notes"><tr><th>'+t('noteCol')+'</th><th>'+t('qty')+'</th><th class="r">'+t('total')+'</th></tr>'+
-    NOTES.map(v=>'<tr><td>৳ '+v+'</td><td><input id="q_'+v+'" type="number" inputmode="numeric" min="0"></td><td class="r" id="t_'+v+'">0</td></tr>').join('')+
-    '</table><div class="sum"><span>'+t('handsum')+'</span><span id="s_hand2"></span></div></div></div>';
-  $('fields').querySelectorAll('input').forEach(i=>i.oninput=cashCalc);
-  cashCalc();
-}
-function cashCalc(){
-  if(!$('s_hand'))return;
-  let hand=0;
-  NOTES.forEach(v=>{const x=v*nv('q_'+v);hand+=x;$('t_'+v).textContent=x.toLocaleString(lang==='bn'?'bn-BD':'en-IN')});
-  const tot=nv('f_prev')+nv('f_ibos')+nv('f_recov')+nv('f_cashin');
-  const led=tot-nv('f_expense')-nv('f_cashout')-nv('f_cod');
-  const diff=hand-led;
-  $('s_hand').textContent=$('s_hand2').textContent=fmt(hand);
-  $('s_led').textContent=$('s_led2').textContent=fmt(led);
-  $('s_tot').textContent=fmt(tot);
-  $('s_box').className='stat '+(diff===0?'ok':'bad');
-  $('s_lab').textContent=diff===0?t('match'):diff>0?t('over'):t('short');
-  $('s_diff').textContent=fmt(Math.abs(diff));
-}
-function form(){
-  say('');
-  if(F[cur].custom){cashView();return}
-  const box=$('fields');box.innerHTML='';
-  F[cur].fields.forEach(([id,k,type,opts],i)=>{
-    const l=document.createElement('label');l.htmlFor='f_'+id;l.textContent=t(k);if(!i)l.style.marginTop='0';box.appendChild(l);
-    let el;
-    if(type==='select'){el=document.createElement('select');opts.forEach(([v,lk])=>{const o=document.createElement('option');o.value=v;o.textContent=t(lk);el.appendChild(o)})}
-    else if(type==='textarea'){el=document.createElement('textarea');el.rows=2}
-    else{el=document.createElement('input');el.type=type;if(type==='number'){el.inputMode='decimal';el.step='any'}}
-    el.id='f_'+id;if(type==='date')el.value=today();box.appendChild(el);
-  });
-}
-async function recent(){
-  $('recent').textContent=t('loading');$('recent').style.padding='12px';
-  try{
-    const r=await call('recent',cur);
-    if(!r.rows.length){$('recent').textContent=t('none');return}
-    $('recent').style.padding='0';
-    const hd=h=>lang==='bn'&&HB[h]?HB[h]:h;
-    let h='<table><tr>'+r.head.map(x=>'<th>'+hd(x)+'</th>').join('')+'</tr>';
-    r.rows.forEach(row=>h+='<tr>'+row.map(x=>'<td>'+String(x).replace(/</g,'&lt;')+'</td>').join('')+'</tr>');
-    $('recent').innerHTML=h+'</table>';
-    if(cur==='daily'&&$('f_prev')&&!$('f_prev').value){const l=Number(String(r.rows[0][9]).replace(/,/g,''));if(l){$('f_prev').value=l;cashCalc()}}
-  }catch(e){$('recent').textContent=errText(e)}
-}
-function clearForm(){
-  $('fields').querySelectorAll('input,textarea').forEach(e=>{if(e.type!=='date')e.value=''});
-  if(cur==='daily')cashCalc();
-}
-$('clear').onclick=()=>{clearForm();say('')};
-$('save').onclick=async()=>{
-  const d={};F[cur].fields.forEach(([id])=>d[id]=$('f_'+id).value);
-  if(cur==='daily'){['prev','ibos','recov','cashin','expense','cashout','cod'].forEach(k=>d[k]=$('f_'+k).value);d.notes={};NOTES.forEach(v=>d.notes[v]=nv('q_'+v))}
-  if(!d.date){say(t('needdate'),1);return}
-  $('save').disabled=true;say(t('saving'));
-  try{await call('save',cur,d);say(t('saved'));clearForm();recent()}
-  catch(e){say(errText(e),1)}
-  $('save').disabled=false;
-};
+document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{
+  lang=b.dataset.l;try{localStorage.setItem('lang',lang)}catch(e){}
+  applyLang();if(DATA)render();
+});
 $('enter').onclick=async()=>{
   PIN=$('pin').value;$('lmsg').textContent='';
-  try{await call('recent','expense');$('lock').hidden=true;$('app').hidden=false;tabs();form();recent()}
+  try{await call('recent','expense');$('lock').hidden=true;$('app').hidden=false;$('d').value=today();build()}
   catch(e){$('lmsg').textContent=errText(e)}
 };
 $('pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('enter').click()});
-document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>{
-  lang=b.dataset.l;try{localStorage.setItem('lang',lang)}catch(e){}
-  const s=$('app').hidden?null:snapshot();applyLang();
-  if(s){tabs();form();restore(s);recent();$('msg').textContent=''}
-});
+$('load').onclick=build;
+$('d').onchange=build;
+$('dl').onclick=download;
 applyLang();
 </script>
 </body>
