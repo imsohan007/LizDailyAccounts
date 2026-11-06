@@ -409,9 +409,14 @@ const money=v=>'৳ '+num(v).toLocaleString(loc());
 let DATA=null,DATE='';
 
 function normDate(x){
-  const s=String(x).trim();let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return m[1]+'-'+m[2]+'-'+m[3];
+  if(x instanceof Date&&!isNaN(x))return new Date(x-x.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+  const s=String(x==null?'':x).replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d)).trim();let m;
+  const z=n=>String(n).padStart(2,'0');
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+  if(/^\d{4}-\d{2}-\d{2}T/.test(s)){const d=new Date(s);if(!isNaN(d))return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);return m[1]+'-'+m[2]+'-'+m[3]}
+  m=s.match(/^(\d{4})[\/.\-](\d{1,2})[\/.\-](\d{1,2})/);if(m)return m[1]+'-'+z(m[2])+'-'+z(m[3]);
+  m=s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})/);if(m){const a=+m[1],b=+m[2];return a>12||b<=12?m[3]+'-'+z(b)+'-'+z(a):m[3]+'-'+z(a)+'-'+z(b)}
   const d=new Date(s);if(!isNaN(d))return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
-  m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);if(m)return m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
   return s;
 }
 const pick=(head,n)=>head.indexOf(n);
@@ -422,7 +427,7 @@ async function build(){
   $('rmsg').textContent=t('loading');$('dl').disabled=true;
   try{
     const types=['daily','expense','cash','recovery','baki'];
-    const res=await Promise.all(types.map(k=>call('recent',k,{limit:1000})));
+    const res=await Promise.all(types.map(k=>call('recent',k,{limit:1000,date:DATE})));
     DATA={};types.forEach((k,i)=>DATA[k]={head:res[i].head,rows:rowsFor(res[i],DATE)});
     latestDaily();
     $('rmsg').textContent=DATA.daily.rows.length?'':t('noDaily');initD();render();$('dl').disabled=false;
