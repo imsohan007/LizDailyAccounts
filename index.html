@@ -6,7 +6,7 @@
 <title>Liz Fashion – AponBazaar | Daily Accounts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 [hidden]{display:none!important}
@@ -118,56 +118,35 @@ table.notes td:first-child{font-weight:700;color:var(--blue)}
 .dlbar{max-width:600px;margin:0 auto}.dlbar .btn{width:100%;padding:16px;font-size:17px}
 @media(max-width:720px){.cols{grid-template-columns:1fr;gap:6px}.stats{grid-template-columns:1fr}.stat b{font-size:22px}.brand b{font-size:16px}}
 
-/* ================= SQUARE REPORT 600x600 ================= */
-#rep{width:600px;height:600px;background:#fff;color:var(--ink);font-size:12.5px;line-height:1.4;display:flex;flex-direction:column;overflow:hidden;position:relative;
-  font-family:Inter,"Noto Sans Bengali",sans-serif}
-html[lang=bn] #rep{font-family:"Noto Sans Bengali",Inter,sans-serif;font-size:13.5px}
-#rep .hd{background:linear-gradient(115deg,var(--blue-d),var(--blue));color:#fff;padding:16px 24px 15px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
-#rep .hd:before{content:"";position:absolute;right:-50px;top:-80px;width:220px;height:220px;border-radius:50%;background:rgba(248,181,24,.18)}
-#rep .hd:after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:linear-gradient(90deg,var(--yellow),#ffd566,var(--yellow))}
-#rep .lg{width:62px;height:62px;border-radius:14px;background:#fff center/155% no-repeat;flex:none;position:relative;box-shadow:0 0 0 3px var(--yellow),0 8px 18px rgba(0,0,0,.25);
-  display:flex;align-items:center;justify-content:center;color:var(--blue);font-weight:800;font-size:20px}
-#rep .lg.ok{background-image:var(--logo);font-size:0}
-#rep .nm{flex:1;position:relative}
-#rep .nm b{display:block;font-size:19px;font-weight:800;line-height:1.25}
-#rep .nm span{color:#ffd566;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
-html[lang=bn] #rep .nm span{letter-spacing:0;text-transform:none;font-size:13.5px}
-#rep .dd{text-align:right;position:relative}
-#rep .dd b{display:block;font-size:14px;font-weight:700}
-#rep .dd span{font-size:10.5px;color:#b9c9ec}
-#rep .bd{flex:1;padding:14px 24px 6px;display:flex;flex-direction:column;gap:12px;min-height:0;position:relative}
-#rep .hero{display:flex;align-items:center;gap:14px;border-radius:14px;padding:10px 16px;background:#fff;border:1px solid var(--line);border-left:6px solid;box-shadow:0 6px 16px rgba(21,47,112,.08)}
-#rep .hero.ok{border-left-color:var(--ok);color:var(--ok);background:linear-gradient(100deg,#fff 35%,var(--okbg))}
-#rep .hero.bad{border-left-color:var(--bad);color:var(--bad);background:linear-gradient(100deg,#fff 35%,var(--badbg))}
-#rep .hero .ic{box-shadow:0 0 0 5px rgba(0,0,0,.06)}
-#rep .wm{position:absolute;right:-60px;bottom:10px;width:360px;height:360px;background-position:center;background-size:contain;background-repeat:no-repeat;opacity:.05;pointer-events:none}
-#rep .hero .ic{width:40px;height:40px;border-radius:50%;color:#fff;font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
-#rep .hero.ok .ic{background:var(--ok)}#rep .hero.bad .ic{background:var(--bad)}
-#rep .hero .tx{flex:1}
-#rep .hero small{display:block;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;font-weight:700}
-html[lang=bn] #rep .hero small{letter-spacing:0;text-transform:none;font-size:13px}
-#rep .hero .tx b{display:block;font-size:25px;font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums lining-nums}
-#rep .hero .mini{text-align:right;color:var(--ink);font-size:12px;line-height:1.7;padding-left:14px;border-left:1px dashed #cdd5e6}
-#rep .cl{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:16px;min-height:0}
-#rep .h{margin:0 0 6px;padding-left:9px;border-left:4px solid var(--yellow);font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:1px}
-html[lang=bn] #rep .h{text-transform:none;letter-spacing:0;font-size:14px}
-#rep table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-html[lang=bn] #rep table{font-size:13px}
-#rep td,#rep th{padding:4px 10px;border-bottom:1px solid #edf0f6;white-space:nowrap}
-#rep tbody tr:nth-child(even) td{background:#fff}
-#rep tr:last-child td{border-bottom:0}
-#rep th{background:var(--blue);color:#ffd566;font-size:10.5px;letter-spacing:.5px}
-#rep .r{text-align:right}
-#rep td:last-child{text-align:right;font-weight:700}
-#rep td.q{font-weight:500;color:var(--mut)}
-#rep tr.tot td{background:var(--blue-l)!important;font-weight:800;color:var(--blue)}
-#rep tr.neg td:last-child{color:var(--bad)}
-#rep tr.fin td{background:linear-gradient(115deg,var(--blue-d),var(--blue))!important;color:#ffd566;font-weight:800;font-size:13px;border:0}
-#rep tr.fin td:last-child{color:#fff}
-#rep tr.z td{color:#b3bccd}
-#rep tfoot td{background:var(--yellow);color:var(--blue-d);font-weight:800}
-#rep .ft{padding:8px 24px;display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--mut);border-top:3px solid var(--yellow);background:var(--blue-xl)}
-#rep .ft b{color:var(--blue)}
+/* ================= SQUARE REPORT 600x600 — KHATA ================= */
+#rep{width:600px;height:600px;position:relative;overflow:hidden;color:#1d2b5e;
+  background:#f8f2df repeating-linear-gradient(to bottom,transparent 0 31px,#a6bddc 31px 32px);
+  font:600 14.5px/32px "Noto Serif Bengali",Georgia,serif;font-variant-numeric:lining-nums}
+#rep *{box-sizing:border-box}
+#rep p{margin:0}
+#rep .mg{position:absolute;top:0;bottom:0;left:60px;width:2px;background:#d6403f}#rep .mg.b{left:65px}
+#rep .kh{height:96px;padding:0 24px 0 82px;display:grid;grid-template-columns:1fr auto;grid-template-rows:32px 32px 32px}
+#rep .kh b{grid-row:2;font-size:21px;font-weight:800;white-space:nowrap}
+#rep .kh .dt{grid-row:2;font-size:14px;color:#5a6690}
+#rep .kh .sb,#rep .kh .no{grid-row:3;font-size:13px;color:#5a6690}
+#rep .kh .no{text-align:right}
+#rep .kg{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:0 24px 0 82px}
+#rep .kg p{display:flex;height:32px;white-space:nowrap}
+#rep .kg u{flex:1;border-bottom:2px dotted #8b97c0;margin:0 5px;height:20px}
+#rep .kg b{font-weight:800}
+#rep .kg .r b{color:#c1272d}
+#rep .kg .t{font-weight:800}
+#rep .kg .t b{border-bottom:4px double #1d2b5e;line-height:30px}
+#rep .kg .hh{font-size:13px;color:#5a6690}
+#rep .kg .z{opacity:.4}
+#rep .nn{height:320px;padding-top:0;line-height:32px;font-size:14px;color:#5a6690;white-space:normal}
+#rep .stamp{position:absolute;left:100px;top:486px;width:106px;height:106px;border-radius:50%;border:4px double #c1272d;color:#c1272d;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-12deg);text-align:center;line-height:1.2}
+#rep .stamp.ov{border-color:#2f5fb3;color:#2f5fb3}
+#rep .stamp span{font-size:14px;font-weight:800;padding:0 6px}
+#rep .stamp b{font-size:24px;font-weight:800;line-height:1.1}
+#rep .kf{position:absolute;right:24px;top:480px;text-align:right;font-size:13px;color:#5a6690;white-space:nowrap}
+#rep .kf p{height:32px}
 </style>
 </head>
 <body>
@@ -482,28 +461,24 @@ function drawReport(ds,d){
   const label=ok?t('sOk'):diff>0?t('sOver'):t('sShort');
   const icon=ok?'✓':diff>0?'▲':'▼';
   const row=(l,v,c='')=>`<tr class="${c}"><td>${l}</td><td>${c==='neg'&&num(v)?'− ':''}${fmt(v)}</td></tr>`;
+  const R=(l,v,c='')=>`<p class="${c}"><span>${l}</span><u></u><b>${c==='r'&&num(v)?'− ':''}${nf(v)}</b></p>`;
+  const dtxt=ok?'0':(diff>0?'+ ':'− ')+nf(Math.abs(diff));
+  const sign=lang==='bn'?'হিসাব মিলিয়েছেন: ……………':'Checked by: ……………';
+  const notesCol=(hand>0&&rows.every(x=>!x[1]))
+    ?`<div class="nn">${t('noNotes')}</div>`
+    :rows.map(([n,q,a])=>`<p class="${q?'':'z'}"><span>৳ ${nf(n)}</span><u></u><span>× ${nf(q)}</span><u style="flex:.3"></u><b>${nf(a)}</b></p>`).join('');
   $('rep').innerHTML=`
-   <div class="hd"><div class="lg${window.__logoOK?' ok':''}">AB</div>
-     <div class="nm"><b>Liz Fashion – AponBazaar</b><span>${t('rpt')}</span></div>
-     <div class="dd"><b>${esc(longDate(ds))}</b><span>${t('no')}: LF-${ds.replace(/-/g,'')}</span></div></div>
-   <div class="bd">
-     <div class="hero ${ok?'ok':'bad'}"><div class="ic">${icon}</div>
-       <div class="tx"><small>${label}</small><b>${ok?'৳ 0':(diff>0?'+ ':'− ')+fmt(Math.abs(diff))}</b></div>
-       <div class="mini">${t('hand')}: <b>${fmt(hand)}</b><br>${t('led')}: <b>${fmt(led)}</b></div></div>
-     <div class="cl">
-       <div><div class="h">${t('secL')}</div><table><tbody>
-         ${row(t('prev'),prev)}${row(t('ibos'),sale)}${row(t('recov'),rec)}${row(t('cashin'),ci)}
-         ${row(t('total'),total,'tot')}${row(t('expense'),exp,'neg')}${row(t('cashout'),out,'neg')}${row(t('cod'),cod,'neg')}
-         ${row(t('ledger'),led,'fin')}</tbody></table></div>
-       <div><div class="h">${t('secN')}</div><table><thead><tr><th>${t('noteCol')}</th><th class="r">${t('qty')}</th><th class="r">${t('amount')}</th></tr></thead><tbody>
-         ${(hand>0&&rows.every(x=>!x[1]))
-           ?`<tr><td colspan="3" style="text-align:center;font-weight:500;color:var(--mut);padding:70px 10px;white-space:normal;line-height:1.7">${t('noNotes')}</td></tr>`
-           :rows.map(([n,q,a])=>`<tr class="${q?'':'z'}"><td>৳ ${nf(n)}</td><td class="q r">× ${nf(q)}</td><td>${nf(a)}</td></tr>`).join('')}</tbody>
-         <tfoot><tr><td colspan="2">${t('handsum')}</td><td>${fmt(hand)}</td></tr></tfoot></table></div>
-     </div>
+   <i class="mg"></i><i class="mg b"></i>
+   <div class="kh"><b>Liz Fashion – AponBazaar</b><span class="dt">${esc(longDate(ds))}</span><span class="sb">${t('rpt')} (৳)</span><span class="no">${t('no')}: LF-${ds.replace(/-/g,'')}</span></div>
+   <div class="kg">
+     <div>${R(t('prev'),prev)}${R(t('ibos'),sale)}${R(t('recov'),rec)}${R(t('cashin'),ci)}${R(t('total'),total,'t')}
+       ${R(t('expense'),exp,'r')}${R(t('cashout'),out,'r')}${R(t('cod'),cod,'r')}${R(t('ledger'),led,'t')}<p></p>
+       ${R(t('hand'),hand)}<p class="${ok?'':'r'}"><span>${t('diff')}</span><u></u><b>${dtxt}</b></p></div>
+     <div><p class="hh"><span>${t('noteCol')}</span><u></u><b>${t('qty')}</b><u style="flex:.3"></u><b>${t('amount')}</b></p>${notesCol}
+       <p class="t"><span>${t('handsum')}</span><u></u><b>${nf(hand)}</b></p></div>
    </div>
-   <div class="wm" style="background-image:${window.__logoOK?'url('+LOGO+')':'none'}"></div>
-   <div class="ft"><span><b>Liz Fashion – AponBazaar</b> · ${t('tag')}</span><span>${t('gen')}: ${new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'})}</span></div>`;
+   <div class="stamp${diff>0?' ov':''}"><span>${label}</span><b>${ok?'✓':dtxt}</b></div>
+   <div class="kf"><p>${sign}</p><p>${t('gen')}: ${new Date().toLocaleDateString(loc(),{day:'numeric',month:'short',year:'numeric'})}</p><p>${t('tag')}</p></div>`;
   $('holder').hidden=false;$('dl').disabled=false;
 }
 async function download(){
