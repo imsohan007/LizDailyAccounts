@@ -277,6 +277,8 @@ const F={
 let cur='report',PIN='',prevLocked=true;
 /* Which sheets allow only ONE entry per date. Set true/false per sheet. */
 const ONCE={daily:true,expense:false,cash:false,recovery:false,baki:false};
+T.bn.noNotes='এই তারিখের নোটওয়াইজ সংখ্যা সংরক্ষিত নেই।<br>শুধু মোট ক্যাশ নিচে দেখানো হয়েছে।';
+T.en.noNotes='Note-wise counts were not saved for this date.<br>Only the total cash is shown below.';
 T.bn.dup='এই তারিখের এন্ট্রি আগেই করা হয়েছে। একই তারিখে দুইবার করা যাবে না।';
 T.en.dup='An entry for this date already exists. Only one entry per date is allowed.';
 async function dateTaken(sheet,date){
@@ -478,7 +480,9 @@ function drawReport(ds,d){
          ${row(t('total'),total,'tot')}${row(t('expense'),exp,'neg')}${row(t('cashout'),out,'neg')}${row(t('cod'),cod,'neg')}
          ${row(t('ledger'),led,'fin')}</tbody></table></div>
        <div><div class="h">${t('secN')}</div><table><thead><tr><th>${t('noteCol')}</th><th class="r">${t('qty')}</th><th class="r">${t('amount')}</th></tr></thead><tbody>
-         ${rows.map(([n,q,a])=>`<tr class="${q?'':'z'}"><td>৳ ${nf(n)}</td><td class="q r">× ${nf(q)}</td><td>${nf(a)}</td></tr>`).join('')}</tbody>
+         ${(hand>0&&rows.every(x=>!x[1]))
+           ?`<tr><td colspan="3" style="text-align:center;font-weight:500;color:var(--mut);padding:70px 10px;white-space:normal;line-height:1.7">${t('noNotes')}</td></tr>`
+           :rows.map(([n,q,a])=>`<tr class="${q?'':'z'}"><td>৳ ${nf(n)}</td><td class="q r">× ${nf(q)}</td><td>${nf(a)}</td></tr>`).join('')}</tbody>
          <tfoot><tr><td colspan="2">${t('handsum')}</td><td>${fmt(hand)}</td></tr></tfoot></table></div>
      </div>
    </div>
