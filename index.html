@@ -414,7 +414,7 @@ async function saveEntry(){
     const r=await call('add',{sheet:cur,data});
     if(r&&r.duplicate){setMsg(t('dup'),true);return}
     if(r&&r.ok===false){setMsg(r.error||t('net'),true)}
-    else{const dt=data.date;buildFields(false);$('f_date').value=dt;await guardDate();setMsg(t('saved'));loadRecent();$('save').disabled=!!(ONCE[cur]);return}
+    else{buildFields(false);if(!ONCE[cur])$('save').disabled=false;await guardDate();setMsg(t('saved'));loadRecent();return}
   }catch(e){setMsg(t('net'),true)}
   $('save').disabled=false;
 }
@@ -437,7 +437,7 @@ function showTab(k){
   const isRep=k==='report';
   $('entry').hidden=isRep;$('repmain').hidden=!isRep;
   if(isRep){if(!$('d').value)$('d').value=today();}
-  else{buildFields(true);setMsg('');loadRecent();}
+  else{buildFields(false);setMsg('');loadRecent();}
 }
 
 /* ---------- Report ---------- */
@@ -545,7 +545,7 @@ document.querySelector('.lang').addEventListener('click',e=>{const b=e.target.cl
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)showTab(b.dataset.tab)});
 $('enter').onclick=()=>login();$('pin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 $('logout').onclick=logout;
-$('save').onclick=saveEntry;$('clear').onclick=()=>{buildFields(true);setMsg('')};
+$('save').onclick=saveEntry;$('clear').onclick=()=>{buildFields(false);setMsg('')};
 $('pv').onclick=()=>{shiftDate(-1);loadReport()};$('nx').onclick=()=>{shiftDate(1);loadReport()};
 $('td').onclick=()=>{$('d').value=today();loadReport()};$('load').onclick=loadReport;$('dl').onclick=download;$('sh').onclick=shareReport;
 applyI18n();
