@@ -140,11 +140,11 @@ table.notes td:first-child{font-weight:700;color:var(--blue)}
 #rep .kg .hh{font-size:13px;color:#5a6690}
 #rep .kg .z{opacity:.4}
 #rep .nn{height:320px;padding-top:0;line-height:32px;font-size:14px;color:#5a6690;white-space:normal}
-#rep .stamp{position:absolute;left:100px;top:486px;width:106px;height:106px;border-radius:50%;border:4px double #c1272d;color:#c1272d;
+#rep .stamp{position:absolute;left:96px;top:484px;width:114px;height:114px;border-radius:50%;border:4px double #c1272d;color:#c1272d;
   display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-12deg);text-align:center;line-height:1.2}
-#rep .stamp.ov{border-color:#2f5fb3;color:#2f5fb3}
+#rep .stamp.ok{border-color:#2f5fb3;color:#2f5fb3}#rep .stamp.ov{border-color:#15803d;color:#15803d}#rep .kg .g b{color:#15803d}
 #rep .stamp span{font-size:14px;font-weight:800;padding:0 6px}
-#rep .stamp b{font-size:24px;font-weight:800;line-height:1.1}
+#rep .stamp b{font-size:21px;font-weight:800;line-height:1.1}
 #rep .kf{position:absolute;right:24px;top:480px;text-align:right;font-size:13px;color:#5a6690;white-space:nowrap}
 #rep .kf p{height:32px}
 </style>
@@ -473,11 +473,11 @@ function drawReport(ds,d){
    <div class="kg">
      <div>${R(t('prev'),prev)}${R(t('ibos'),sale)}${R(t('recov'),rec)}${R(t('cashin'),ci)}${R(t('total'),total,'t')}
        ${R(t('expense'),exp,'r')}${R(t('cashout'),out,'r')}${R(t('cod'),cod,'r')}${R(t('ledger'),led,'t')}<p></p>
-       ${R(t('hand'),hand)}<p class="${ok?'':'r'}"><span>${t('diff')}</span><u></u><b>${dtxt}</b></p></div>
+       ${R(t('hand'),hand)}<p class="${ok?'':diff>0?'g':'r'}"><span>${t('diff')}</span><u></u><b>${dtxt}</b></p></div>
      <div><p class="hh"><span>${t('noteCol')}</span><u></u><b>${t('qty')}</b><u style="flex:.3"></u><b>${t('amount')}</b></p>${notesCol}
        <p class="t"><span>${t('handsum')}</span><u></u><b>${nf(hand)}</b></p></div>
    </div>
-   <div class="stamp${diff>0?' ov':''}"><span>${label}</span><b>${ok?'✓':dtxt}</b></div>
+   <div class="stamp ${ok?'ok':diff>0?'ov':'sh'}"><span>${label}</span><b>${ok?'✓':(diff>0?'+ ':'− ')+'৳ '+nf(Math.abs(diff))}</b></div>
    <div class="kf"><p>${sign}</p><p>${t('gen')}: ${new Date().toLocaleDateString(loc(),{day:'numeric',month:'short',year:'numeric'})}</p><p>${t('tag')}</p></div>`;
   $('holder').hidden=false;$('dl').disabled=false;
 }
