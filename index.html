@@ -115,7 +115,7 @@ table.notes td:first-child{font-weight:700;color:var(--blue)}
 #rmsg{color:var(--bad);font-size:14px;min-height:20px;margin:10px 2px 0}
 .stage{overflow-x:auto;padding:14px 0 20px}
 .holder{width:600px;margin:0 auto;border-radius:8px;box-shadow:0 24px 60px rgba(21,47,112,.3)}
-.dlbar{max-width:600px;margin:0 auto}.dlbar .btn{width:100%;padding:16px;font-size:17px}
+.dlbar{max-width:600px;margin:0 auto;display:flex;gap:10px}.dlbar .btn{flex:1;padding:16px;font-size:16px}
 @media(max-width:720px){.cols{grid-template-columns:1fr;gap:6px}.stats{grid-template-columns:1fr}.stat b{font-size:22px}.brand b{font-size:16px}}
 
 /* ================= SQUARE REPORT 600x600 — OCEAN ================= */
@@ -186,7 +186,7 @@ table.notes td:first-child{font-weight:700;color:var(--blue)}
     </div>
     <div id="rmsg"></div>
     <div class="stage"><div class="holder" id="holder" hidden><div id="rep"></div></div></div>
-    <div class="dlbar"><button class="btn gold" id="dl" data-i="dl" disabled></button></div>
+    <div class="dlbar"><button class="btn gold" id="dl" data-i="dl" disabled></button><button class="btn pri" id="sh" data-i="share" disabled></button></div>
   </main>
 </div>
 
@@ -265,6 +265,10 @@ T.en.autoNote='Filled automatically from all entries to date (approved ones excl
 Object.assign(T.en,{rTotal:'Gross ledger',rFinal:'Net ledger',rFinalS:'Net ledger',ledger:'Net ledger',led:'Net ledger',rCashIn:'Cash in (to date)',rExp:'Expense (to date)',rOut:'Cash out (to date)',rCod:'COD (to date)'});
 T.bn.dup='এই তারিখের এন্ট্রি আগেই করা হয়েছে। একই তারিখে দুইবার করা যাবে না।';
 T.en.dup='An entry for this date already exists. Only one entry per date is allowed.';
+T.bn.share='📤 শেয়ার করুন';T.en.share='📤 Share';
+T.bn.noShare='এই ব্রাউজারে সরাসরি শেয়ার চলে না, ছবিটি ডাউনলোড হয়েছে। গ্যালারি থেকে শেয়ার করুন।';
+T.en.noShare='Direct sharing is not supported here, so the image was downloaded. Share it from your gallery.';
+T.bn.shareFail='শেয়ার করা যায়নি।';T.en.shareFail='Could not share.';
 async function dateTaken(sheet,date){
   try{
     const r=await call('exists',{sheet,date});
@@ -445,7 +449,7 @@ async function loadReport(){
   try{
     const r=await call('report',{date:ds});
     let d=r&&(r.daily||r.data);
-    if(!d||r.ok===false){$('holder').hidden=true;$('dl').disabled=true;$('rmsg').style.color='var(--bad)';$('rmsg').textContent=t('noDaily');}
+    if(!d||r.ok===false){$('holder').hidden=true;$('dl').disabled=true;$('sh').disabled=true;$('rmsg').style.color='var(--bad)';$('rmsg').textContent=t('noDaily');}
     else{drawReport(ds,d);$('rmsg').textContent='';}
   }catch(e){$('rmsg').style.color='var(--bad)';$('rmsg').textContent=t('net')}
   $('load').disabled=false;
@@ -482,7 +486,30 @@ function drawReport(ds,d){
      <div class="box"><h4>${t('secN')}</h4>${notesBody}<p class="f"><span>${t('handsum')}</span><b>${nf(hand)}</b></p></div>
    </div>
    <footer><span><b>Liz Fashion – AponBazaar</b> · ${t('tag')}</span><span>${t('gen')}: ${new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'})}</span></footer>`;
-  $('holder').hidden=false;$('dl').disabled=false;
+  $('holder').hidden=false;$('dl').disabled=false;$('sh').disabled=false;prepShare();
+}
+function prepShare(){
+  window.__sp=(async()=>{
+    await new Promise(r=>setTimeout(r,300));
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    const c=await html2canvas($('rep'),{scale:3,backgroundColor:'#ffffff',useCORS:true});
+    return await new Promise(res=>c.toBlob(res,'image/jpeg',0.95));
+  })().catch(()=>null);
+}
+async function shareReport(){
+  $('sh').disabled=true;
+  try{
+    let b=await window.__sp;
+    if(!b){prepShare();b=await window.__sp}
+    const f=new File([b],'LizFashion-Report-'+$('d').value+'.jpg',{type:'image/jpeg'});
+    if(navigator.canShare&&navigator.canShare({files:[f]})){
+      await navigator.share({files:[f],title:'Liz Fashion – '+t('rpt')});
+    }else{
+      const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+      $('rmsg').style.color='var(--mut)';$('rmsg').textContent=t('noShare');
+    }
+  }catch(e){if(e&&e.name!=='AbortError'){$('rmsg').style.color='var(--bad)';$('rmsg').textContent=t('shareFail')}}
+  $('sh').disabled=false;
 }
 async function download(){
   $('dl').disabled=true;
@@ -518,7 +545,7 @@ $('enter').onclick=()=>login();$('pin').addEventListener('keydown',e=>{if(e.key=
 $('logout').onclick=logout;
 $('save').onclick=saveEntry;$('clear').onclick=()=>{buildFields(true);setMsg('')};
 $('pv').onclick=()=>{shiftDate(-1);loadReport()};$('nx').onclick=()=>{shiftDate(1);loadReport()};
-$('td').onclick=()=>{$('d').value=today();loadReport()};$('load').onclick=loadReport;$('dl').onclick=download;
+$('td').onclick=()=>{$('d').value=today();loadReport()};$('load').onclick=loadReport;$('dl').onclick=download;$('sh').onclick=shareReport;
 applyI18n();
 try{const s=localStorage.getItem('pin');if(s)login(s)}catch(e){}
 </script>
