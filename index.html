@@ -242,4 +242,314 @@ const num=v=>Number(String(v==null?'':v).replace(/[^\d.\-]/g,''))||0;
 const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
 const fmt=v=>'৳ '+num(v).toLocaleString(loc());
 const nf=v=>num(v).toLocaleString(loc());
-const esc=s=>
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const NOTES=[1000,500,200,100,50,20,10,5,2,1];
+
+const F={
+ report:{fields:[]},
+ daily:{custom:true,fields:[['date','date','date']]},
+ expense:{fields:[['date','dateE','date'],['note','reasonF','text'],['amount','amount','number'],
+   ['status','status','select',[['pending','st_pending'],['entry done','st_done'],['approved','st_approved']]],['code','code','text']]},
+ cash:{fields:[['date','date','date'],['kind','kind','select',[['Cash In','cin'],['Cash Out','cout']]],['note','noteF','text'],['amount','amount','number'],
+   ['status','status','select',[['pending','st_pending'],['entry done','st_done'],['approved','st_approved']]]]},
+ recovery:{fields:[['date','date','date'],['custId','custId','text'],['custName','custName','text'],['amount','amount','number'],['exchange','exchange','number'],['remarks','remarks','text']]},
+ baki:{fields:[['date','date','date'],['name','bname','text'],['amount','amount','number'],['reason','reason','textarea']]}
+};
+let cur='report',PIN='',prevLocked=true;
+/* Which sheets allow only ONE entry per date. Set true/false per sheet. */
+const ONCE={daily:true,expense:false,cash:false,recovery:false,baki:false};
+T.bn.noNotes='এই তারিখের নোটওয়াইজ সংখ্যা সংরক্ষিত নেই।<br>শুধু মোট ক্যাশ নিচে দেখানো হয়েছে।';
+T.en.noNotes='Note-wise counts were not saved for this date.<br>Only the total cash is shown below.';
+T.bn.autoNote='নিচের ঘরগুলো এ পর্যন্ত সব এন্ট্রি থেকে নিজে থেকে আসে (অনুমোদিত বাদে)';
+Object.assign(T.bn,{rTotal:'গ্রস লেজার',rFinal:'নিট লেজার',rFinalS:'নিট লেজার',ledger:'নিট লেজার',led:'নিট লেজার',rCashIn:'ক্যাশ ইন (এ পর্যন্ত)',rExp:'খরচ (এ পর্যন্ত)',rOut:'ক্যাশ আউট (এ পর্যন্ত)',rCod:'সিওডি (এ পর্যন্ত)'});
+T.en.autoNote='Filled automatically from all entries to date (approved ones excluded)';
+Object.assign(T.en,{rTotal:'Gross ledger',rFinal:'Net ledger',rFinalS:'Net ledger',ledger:'Net ledger',led:'Net ledger',rCashIn:'Cash in (to date)',rExp:'Expense (to date)',rOut:'Cash out (to date)',rCod:'COD (to date)'});
+T.bn.dup='এই তারিখের এন্ট্রি আগেই করা হয়েছে। একই তারিখে দুইবার করা যাবে না।';
+T.en.dup='An entry for this date already exists. Only one entry per date is allowed.';
+T.bn.share='📤 শেয়ার করুন';T.en.share='📤 Share';
+T.bn.noShare='এই ব্রাউজারে সরাসরি শেয়ার চলে না, ছবিটি ডাউনলোড হয়েছে। গ্যালারি থেকে শেয়ার করুন।';
+T.en.noShare='Direct sharing is not supported here, so the image was downloaded. Share it from your gallery.';
+T.bn.shareFail='শেয়ার করা যায়নি।';T.en.shareFail='Could not share.';
+async function dateTaken(sheet,date){
+  try{
+    const r=await call('exists',{sheet,date});
+    if(r&&typeof r.exists==='boolean')return r.exists;
+    if(sheet==='daily'){const q=await call('report',{date});return !!(q&&q.ok!==false&&(q.daily||q.data));}
+  }catch(e){}
+  return false;
+}
+async function guardDate(){
+  if(!ONCE[cur]||!$('f_date'))return false;
+  const dup=await dateTaken(cur,$('f_date').value);
+  $('save').disabled=dup;
+  if(dup)setMsg(t('dup'),true);else if($('msg').className==='err')setMsg('');
+  return dup;
+}
+
+/* ---------- Logo ---------- */
+(function(){
+  const im=new Image();
+  im.onload=()=>{document.documentElement.style.setProperty('--logo',`url("${LOGO}")`);
+    document.querySelectorAll('.logo,#rep .lg').forEach(e=>e.classList.add('ok'));window.__logoOK=true;};
+  im.src=LOGO;
+})();
+
+/* ---------- API ----------
+   POST text/plain JSON: {action, pin, ...}
+   actions: login | add{sheet,data} | recent{sheet} | prev{date} | report{date}
+   Adjust this one function + the 5 action names if your Apps Script differs. */
+async function call(act,data={}){
+  const r=await fetch(APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:act,pin:PIN,...data})});
+  return r.json();
+}
+
+/* ---------- i18n ---------- */
+function applyI18n(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
+  document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===lang));
+  const tabs=['daily','expense','cash','recovery','baki','report'];
+  $('tabs').innerHTML=tabs.map(k=>`<button data-tab="${k}" class="${k===cur?'on':''}">${t('t_'+k)}</button>`).join('');
+  $('save').textContent=t('save');$('clear').textContent=t('clear');
+  $('lmsg').textContent='';
+}
+
+/* ---------- Entry forms ---------- */
+function buildFields(keepDate){
+  const cfg=F[cur];const box=$('fields');const oldDate=keepDate&&$('f_date')?$('f_date').value:today();
+  if(cfg.custom){ buildDaily(oldDate); return; }
+  box.innerHTML=cfg.fields.map(([k,lab,type,opts])=>{
+    const id='f_'+k;let inp;
+    if(type==='select')inp=`<select id="${id}">${opts.map(o=>`<option value="${esc(o[0])}">${esc(t(o[1]))}</option>`).join('')}</select>`;
+    else if(type==='textarea')inp=`<textarea id="${id}"></textarea>`;
+    else inp=`<input id="${id}" type="${type}" ${type==='number'?'inputmode="decimal" min="0" step="any"':''}>`;
+    return `<label for="${id}">${t(lab)}</label>${inp}`;
+  }).join('');
+  $('f_date').value=oldDate;
+  $('f_date').addEventListener('change',guardDate);guardDate();
+}
+function numField(id,lab,locked){
+  return `<label for="${id}">${t(lab)}</label><input id="${id}" type="number" inputmode="decimal" step="any" min="0" ${locked?'class="lk" readonly':''}>`;
+}
+function buildDaily(d){
+  $('fields').innerHTML=`
+   <label for="f_date">${t('date')}</label><input id="f_date" type="date">
+   <div class="cols">
+     <div>
+       <h3>${t('secL')}</h3>
+       ${numField('f_prev','prev',true)}<button type="button" class="dtog" id="ptog">${t('edit')}</button>
+       ${numField('f_sale','ibos')}
+       <div class="autohd">${t('autoNote')}</div>
+       ${numField('f_cashin','cashin',true)}
+       ${numField('f_exp','expense',true)}${numField('f_out','cashout',true)}${numField('f_cod','cod',true)}
+       <div class="sum"><span>${t('ledger')}</span><span id="s_led" class="num">৳ 0</span></div>
+     </div>
+     <div>
+       <h3>${t('secN')}</h3>
+       <table class="notes"><thead><tr><th>${t('noteCol')}</th><th class="r">${t('qty')}</th><th class="r">${t('amount')}</th></tr></thead><tbody>
+       ${NOTES.map(n=>`<tr><td>${nf(n)}</td><td><input class="nq" data-n="${n}" type="number" inputmode="numeric" min="0" step="1"></td><td class="r" id="na_${n}">0</td></tr>`).join('')}
+       </tbody></table>
+       <div class="sum"><span>${t('handsum')}</span><span id="s_hand" class="num">৳ 0</span></div>
+     </div>
+   </div>
+   <div class="stats">
+     <div class="stat"><small>${t('handlab')}</small><b id="k_hand">৳ 0</b></div>
+     <div class="stat"><small>${t('ledlab')}</small><b id="k_led">৳ 0</b></div>
+     <div class="stat" id="k_box"><small id="k_lab">${t('match')}</small><b id="k_diff">৳ 0</b></div>
+   </div>`;
+  $('f_date').value=d;
+  $('fields').addEventListener('input',calc);
+  $('ptog').onclick=()=>{prevLocked=!prevLocked;const p=$('f_prev');p.classList.toggle('lk',prevLocked);p.readOnly=prevLocked;$('ptog').textContent=prevLocked?t('edit'):t('lockit');if(!prevLocked)p.focus()};
+  $('f_date').addEventListener('change',fetchPrev);
+  $('f_date').addEventListener('change',fetchAuto);
+  $('f_date').addEventListener('change',guardDate);
+  prevLocked=true;fetchPrev();fetchAuto();calc();guardDate();
+}
+async function fetchPrev(){
+  const p=$('f_prev');if(!p)return;
+  try{const r=await call('prev',{date:$('f_date').value});if(r&&r.ok!==false&&r.prev!=null){p.value=r.prev;calc();}}catch(e){}
+}
+async function fetchAuto(){
+  if(!$('f_cashin'))return;
+  try{
+    const r=await call('auto',{date:$('f_date').value});
+    if(r&&r.ok!==false){
+      [['cashin','f_cashin'],['exp','f_exp'],['out','f_out'],['cod','f_cod']].forEach(([k,id])=>{const e=$(id);if(e)e.value=r[k]!=null?r[k]:0});
+      calc();
+    }
+  }catch(e){}
+}
+function calc(){
+  if(!$('f_prev'))return;
+  const v=id=>num($(id).value);
+  const total=v('f_prev')+v('f_sale')+v('f_cashin');
+  const led=total-v('f_exp')-v('f_out')-v('f_cod');
+  let hand=0;document.querySelectorAll('.nq').forEach(i=>{const a=num(i.value)*Number(i.dataset.n);$('na_'+i.dataset.n).textContent=nf(a);hand+=a});
+  const diff=hand-led;
+  $('s_led').textContent=fmt(led);$('s_hand').textContent=fmt(hand);
+  $('k_hand').textContent=fmt(hand);$('k_led').textContent=fmt(led);
+  $('k_diff').textContent=(diff>0?'+ ':diff<0?'− ':'')+fmt(Math.abs(diff));
+  $('k_box').className='stat '+(diff===0?'ok':'bad');
+  $('k_lab').textContent=diff===0?t('match'):diff>0?t('over'):t('short');
+}
+function collect(){
+  const out={};
+  if(F[cur].custom){
+    out.date=$('f_date').value;
+    out.prev=num($('f_prev').value);out.sale=num($('f_sale').value);out.cashin=num($('f_cashin').value);
+    out.exp=num($('f_exp').value);out.out=num($('f_out').value);out.cod=num($('f_cod').value);
+    out.notes={};let hand=0;document.querySelectorAll('.nq').forEach(i=>{out.notes[i.dataset.n]=num(i.value);hand+=num(i.value)*Number(i.dataset.n)});
+    out.total=out.prev+out.sale+out.cashin;
+    out.ledger=out.total-out.exp-out.out-out.cod;out.hand=hand;out.diff=hand-out.ledger;
+  }else F[cur].fields.forEach(([k])=>out[k]=$('f_'+k).value);
+  return out;
+}
+function setMsg(s,err){const m=$('msg');m.textContent=s;m.className=err?'err':''}
+async function saveEntry(){
+  const data=collect();
+  if(!data.date){setMsg(t('needdate'),true);return}
+  $('save').disabled=true;setMsg(t('saving'));
+  if(ONCE[cur]&&await dateTaken(cur,data.date)){setMsg(t('dup'),true);return}
+  try{
+    const r=await call('add',{sheet:cur,data});
+    if(r&&r.duplicate){setMsg(t('dup'),true);return}
+    if(r&&r.ok===false){setMsg(r.error||t('net'),true)}
+    else{const dt=data.date;buildFields(false);$('f_date').value=dt;await guardDate();setMsg(t('saved'));loadRecent();$('save').disabled=!!(ONCE[cur]);return}
+  }catch(e){setMsg(t('net'),true)}
+  $('save').disabled=false;
+}
+async function loadRecent(){
+  const box=$('recent');box.innerHTML=`<div class="empty">${t('loading')}</div>`;
+  try{
+    const r=await call('recent',{sheet:cur});
+    const rows=(r&&(r.rows||r.data))||[];
+    if(!rows.length){box.innerHTML=`<div class="empty">${t('none')}</div>`;return}
+    const keys=Object.keys(rows[0]).filter(k=>!(cur==='expense'&&(k==='Expense Name'||k==='name')));
+    const H=k=>lang==='bn'?(HB[k]||k):k;
+    box.innerHTML=`<table><thead><tr>${keys.map(k=>`<th>${esc(H(k))}</th>`).join('')}</tr></thead><tbody>${
+      rows.map(o=>`<tr>${keys.map(k=>`<td>${esc(o[k])}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  }catch(e){box.innerHTML=`<div class="empty">${t('net')}</div>`}
+}
+
+/* ---------- Tabs ---------- */
+function showTab(k){
+  cur=k;applyI18n();
+  const isRep=k==='report';
+  $('entry').hidden=isRep;$('repmain').hidden=!isRep;
+  if(isRep){if(!$('d').value)$('d').value=today();}
+  else{buildFields(true);setMsg('');loadRecent();}
+}
+
+/* ---------- Report ---------- */
+function shiftDate(n){const d=new Date($('d').value||today());d.setDate(d.getDate()+n);$('d').value=new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)}
+function longDate(s){try{return new Date(s+'T00:00:00').toLocaleDateString(loc(),{day:'numeric',month:'long',year:'numeric'})}catch(e){return s}}
+function weekDay(s){try{return new Date(s+'T00:00:00').toLocaleDateString(loc(),{weekday:'long'})}catch(e){return ''}}
+async function loadReport(){
+  const ds=$('d').value;$('rmsg').textContent='';
+  if(!ds){$('rmsg').textContent=t('needdate');return}
+  $('load').disabled=true;$('rmsg').textContent=t('loading');$('rmsg').style.color='var(--mut)';
+  try{
+    const r=await call('report',{date:ds});
+    let d=r&&(r.daily||r.data);
+    if(!d||r.ok===false){$('holder').hidden=true;$('dl').disabled=true;$('sh').disabled=true;$('rmsg').style.color='var(--bad)';$('rmsg').textContent=t('noDaily');}
+    else{drawReport(ds,d);$('rmsg').textContent='';}
+  }catch(e){$('rmsg').style.color='var(--bad)';$('rmsg').textContent=t('net')}
+  $('load').disabled=false;
+}
+function pick(d,...ks){for(const k of ks)if(d[k]!=null&&d[k]!=='')return num(d[k]);return 0}
+function drawReport(ds,d){
+  const prev=pick(d,'prev','Previous Ledger'),sale=pick(d,'sale','Ajker Cash Sell'),ci=pick(d,'cashin','Cash In');
+  const exp=pick(d,'exp','Expense'),out=pick(d,'out','Cash Out (Deposit)'),cod=pick(d,'cod','COD');
+  const total=(d.total!=null||d.Total!=null)?pick(d,'total','Total'):prev+sale+ci;
+  const led=(d.ledger!=null||d['Ledger Amount']!=null)?pick(d,'ledger','Ledger Amount'):total-exp-out-cod;
+  const nt=d.notes||{};let hand=0;
+  const rows=NOTES.map(n=>{const q=num(nt[n]!=null?nt[n]:d['N'+n]!=null?d['N'+n]:d[n]);const a=q*n;hand+=a;return [n,q,a]});
+  if(d.hand!=null||d['Cash In Hand']!=null){const h=pick(d,'hand','Cash In Hand');if(h)hand=h}
+  const diff=hand-led;const ok=diff===0;
+  const label=ok?t('sOk'):diff>0?t('sOver'):t('sShort');
+  const icon=ok?'✓':diff>0?'▲':'▼';
+  const row=(l,v,c='')=>`<tr class="${c}"><td>${l}</td><td>${c==='neg'&&num(v)?'− ':''}${fmt(v)}</td></tr>`;
+  const R=(l,v,c='')=>`<p class="${c}"><span>${l}</span><b>${c==='r'&&num(v)?'− ':''}${nf(v)}</b></p>`;
+  const st=ok?'ok':diff>0?'ov':'sh';
+  const amt=ok?'✓':(diff>0?'+ ':'− ')+'৳ '+nf(Math.abs(diff));
+  const fs=amt.length>10?13:amt.length>8?15:18;
+  const notesBody=(hand>0&&rows.every(x=>!x[1]))
+    ?`<p class="nn">${t('noNotes')}</p>`
+    :rows.map(([n,q,a])=>`<p class="${q?'':'z'}"><span>৳ ${nf(n)} × ${nf(q)}</span><b>${nf(a)}</b></p>`).join('');
+  $('rep').innerHTML=`
+   <div class="hd"><div class="lg${window.__logoOK?' ok':''}">AB</div>
+     <div class="nm"><b>Liz Fashion – AponBazaar</b><span>${t('rpt')}</span></div>
+     <div class="dd"><b>${esc(longDate(ds))}</b><span class="wd">${esc(weekDay(ds))}</span><span>${t('no')}: LF-${ds.replace(/-/g,'')}</span></div></div>
+   <div class="st ${st}"><div class="fg"><div class="lb">${label}</div><div>${t('hand')}: <b>${fmt(hand)}</b></div><div>${t('led')}: <b>${fmt(led)}</b></div></div>
+     <div class="stamp"><span>${label}</span><b style="font-size:${fs}px">${amt}</b></div></div>
+   <div class="cd"><div><small>${t('ibos')}</small><b>${fmt(sale)}</b></div><div><small>${t('rTotal')}</small><b>${fmt(total)}</b></div><div><small>${t('expense')}</small><b>${fmt(exp)}</b></div><div><small>${t('rFinalS')}</small><b>${fmt(led)}</b></div></div>
+   <div class="tb">
+     <div class="box"><h4>${t('secL')}</h4>${R(t('prev'),prev)}${R(t('ibos'),sale)}${R(t('rCashIn'),ci)}${R(t('rTotal'),total,'t')}${R(t('rExp'),exp,'r')}${R(t('rOut'),out,'r')}${R(t('rCod'),cod,'r')}${R(t('rFinal'),led,'f')}</div>
+     <div class="box"><h4>${t('secN')}</h4>${notesBody}<p class="f"><span>${t('handsum')}</span><b>${nf(hand)}</b></p></div>
+   </div>
+   <footer><span><b>Liz Fashion – AponBazaar</b> · ${t('tag')}</span><span>${t('gen')}: ${new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'})}</span></footer>`;
+  $('holder').hidden=false;$('dl').disabled=false;$('sh').disabled=false;prepShare();
+}
+function prepShare(){
+  window.__sp=(async()=>{
+    await new Promise(r=>setTimeout(r,300));
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    const c=await html2canvas($('rep'),{scale:3,backgroundColor:'#ffffff',useCORS:true});
+    return await new Promise(res=>c.toBlob(res,'image/jpeg',0.95));
+  })().catch(()=>null);
+}
+async function shareReport(){
+  $('sh').disabled=true;
+  try{
+    let b=await window.__sp;
+    if(!b){prepShare();b=await window.__sp}
+    const f=new File([b],'LizFashion-Report-'+$('d').value+'.jpg',{type:'image/jpeg'});
+    if(navigator.canShare&&navigator.canShare({files:[f]})){
+      await navigator.share({files:[f],title:'Liz Fashion – '+t('rpt')});
+    }else{
+      const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+      $('rmsg').style.color='var(--mut)';$('rmsg').textContent=t('noShare');
+    }
+  }catch(e){if(e&&e.name!=='AbortError'){$('rmsg').style.color='var(--bad)';$('rmsg').textContent=t('shareFail')}}
+  $('sh').disabled=false;
+}
+async function download(){
+  $('dl').disabled=true;
+  try{
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    const c=await html2canvas($('rep'),{scale:3,backgroundColor:'#ffffff',useCORS:true});
+    c.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='LizFashion-Report-'+$('d').value+'.jpg';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000)},'image/jpeg',0.95);
+  }catch(e){$('rmsg').style.color='var(--bad)';$('rmsg').textContent='Download failed. Open the page via a web server (not file://) so the logo can be exported.'}
+  $('dl').disabled=false;
+}
+
+/* ---------- Login ---------- */
+async function login(auto){
+  const pin=auto||$('pin').value.trim();if(!pin)return;
+  $('enter').disabled=true;$('lmsg').textContent='';
+  try{
+    PIN=pin;const r=await call('login');
+    if(r&&r.ok===false){PIN='';if(!auto)$('lmsg').textContent=t('wrongpin');try{localStorage.removeItem('pin')}catch(e){}}
+    else{
+      try{if($('rem').checked)localStorage.setItem('pin',pin);else localStorage.removeItem('pin')}catch(e){}
+      $('lock').hidden=true;$('app').hidden=false;$('logout').hidden=false;$('d').value=today();showTab(cur);
+    }
+  }catch(e){PIN='';if(!auto)$('lmsg').textContent=t('net')}
+  $('enter').disabled=false;
+}
+function logout(){PIN='';try{localStorage.removeItem('pin')}catch(e){}$('app').hidden=true;$('logout').hidden=true;$('lock').hidden=false;$('pin').value=''}
+
+/* ---------- Events ---------- */
+document.querySelector('.lang').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lang=b.dataset.l;try{localStorage.setItem('lang',lang)}catch(x){}
+  applyI18n();if(!$('app').hidden){if(cur==='report'){if(!$('holder').hidden)loadReport()}else{buildFields(true);loadRecent()}}});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)showTab(b.dataset.tab)});
+$('enter').onclick=()=>login();$('pin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
+$('logout').onclick=logout;
+$('save').onclick=saveEntry;$('clear').onclick=()=>{buildFields(true);setMsg('')};
+$('pv').onclick=()=>{shiftDate(-1);loadReport()};$('nx').onclick=()=>{shiftDate(1);loadReport()};
+$('td').onclick=()=>{$('d').value=today();loadReport()};$('load').onclick=loadReport;$('dl').onclick=download;$('sh').onclick=shareReport;
+applyI18n();
+try{const s=localStorage.getItem('pin');if(s)login(s)}catch(e){}
+</script>
+</body>
+</html>
