@@ -83,6 +83,7 @@ button:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:8px}
 .sum{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;margin-top:14px;border-radius:12px;background:var(--yellow-l);border:1px solid #f3d27a;font-weight:700;color:var(--blue-d)}
 input.lk{background:#eef1f7;color:var(--mut);pointer-events:none}
+.autohd{margin-top:18px;padding:8px 12px;border-radius:10px;background:var(--blue-l);color:var(--blue);font-size:13px;font-weight:600}
 .dtog{display:block;margin-top:6px;background:none;border:0;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline;padding:0}
 
 /* tables */
@@ -279,6 +280,8 @@ let cur='report',PIN='',prevLocked=true;
 const ONCE={daily:true,expense:false,cash:false,recovery:false,baki:false};
 T.bn.noNotes='এই তারিখের নোটওয়াইজ সংখ্যা সংরক্ষিত নেই।<br>শুধু মোট ক্যাশ নিচে দেখানো হয়েছে।';
 T.en.noNotes='Note-wise counts were not saved for this date.<br>Only the total cash is shown below.';
+T.bn.autoNote='নিচের ঘরগুলো অন্য ট্যাবের এন্ট্রি থেকে নিজে থেকে আসে';
+T.en.autoNote='The fields below are filled automatically from the other tabs';
 T.bn.dup='এই তারিখের এন্ট্রি আগেই করা হয়েছে। একই তারিখে দুইবার করা যাবে না।';
 T.en.dup='An entry for this date already exists. Only one entry per date is allowed.';
 async function dateTaken(sheet,date){
@@ -349,8 +352,10 @@ function buildDaily(d){
      <div>
        <h3>${t('secL')}</h3>
        ${numField('f_prev','prev',true)}<button type="button" class="dtog" id="ptog">${t('edit')}</button>
-       ${numField('f_sale','ibos')}${numField('f_recov','recov')}${numField('f_cashin','cashin')}
-       ${numField('f_exp','expense')}${numField('f_out','cashout')}${numField('f_cod','cod')}
+       ${numField('f_sale','ibos')}
+       <div class="autohd">${t('autoNote')}</div>
+       ${numField('f_recov','recov',true)}${numField('f_cashin','cashin',true)}
+       ${numField('f_exp','expense',true)}${numField('f_out','cashout',true)}${numField('f_cod','cod',true)}
        <div class="sum"><span>${t('ledger')}</span><span id="s_led" class="num">৳ 0</span></div>
      </div>
      <div>
@@ -370,12 +375,23 @@ function buildDaily(d){
   $('fields').addEventListener('input',calc);
   $('ptog').onclick=()=>{prevLocked=!prevLocked;const p=$('f_prev');p.classList.toggle('lk',prevLocked);p.readOnly=prevLocked;$('ptog').textContent=prevLocked?t('edit'):t('lockit');if(!prevLocked)p.focus()};
   $('f_date').addEventListener('change',fetchPrev);
+  $('f_date').addEventListener('change',fetchAuto);
   $('f_date').addEventListener('change',guardDate);
-  prevLocked=true;fetchPrev();calc();guardDate();
+  prevLocked=true;fetchPrev();fetchAuto();calc();guardDate();
 }
 async function fetchPrev(){
   const p=$('f_prev');if(!p)return;
   try{const r=await call('prev',{date:$('f_date').value});if(r&&r.ok!==false&&r.prev!=null){p.value=r.prev;calc();}}catch(e){}
+}
+async function fetchAuto(){
+  if(!$('f_recov'))return;
+  try{
+    const r=await call('auto',{date:$('f_date').value});
+    if(r&&r.ok!==false){
+      [['recov','f_recov'],['cashin','f_cashin'],['exp','f_exp'],['out','f_out'],['cod','f_cod']].forEach(([k,id])=>{const e=$(id);if(e)e.value=r[k]!=null?r[k]:0});
+      calc();
+    }
+  }catch(e){}
 }
 function calc(){
   if(!$('f_prev'))return;
