@@ -142,7 +142,7 @@ table.notes td:first-child{font-weight:700;color:var(--blue)}
 #rep h4{margin:0;padding:6px 14px;font-size:14px;font-weight:800;background:#1d4ed8;color:#fff}
 #rep .box p{display:flex;justify-content:space-between;gap:8px;padding:2.5px 14px;font-size:12.5px;border-bottom:1px solid #eef0f5}
 #rep .box p b{font-weight:700}#rep .box .r b{color:#d62839}#rep .box .z{opacity:.38}
-#rep .box .t{background:#dbeafe;font-weight:800}#rep .box .f{background:#1d4ed8;color:#fff;font-weight:800;border:0}
+#rep .box .t{background:#dbeafe;font-weight:800}#rep .box .f span{white-space:normal;line-height:1.25}#rep .box .f{align-items:center}#rep .box .f{background:#1d4ed8;color:#fff;font-weight:800;border:0}
 #rep .box .nn{display:block;padding:40px 14px;text-align:center;color:#5d6679;white-space:normal;line-height:1.7}
 #rep footer{margin-top:auto;padding:8px 22px;display:flex;justify-content:space-between;font-size:11.5px;color:#5d6679;border-top:3px solid #1d4ed8}
 #rep footer b{color:#1d4ed8}
@@ -192,7 +192,7 @@ table.notes td:first-child{font-weight:700;color:var(--blue)}
 
 <script>
 // ===== Apps Script Web App URL =====
-const APP_URL = 'https://script.google.com/macros/s/AKfycbx9sC-pVZ9GVxtuXwqRB1cSeslbcKwFYz5Ff5u9BqgODIobZhqqoFjsAl3kXgr3rhb7tQ/exec';
+const APP_URL = 'https://script.google.com/macros/s/AKfycbwfbN5vcP79kYMwIsP05DmFzJ_A_TzIHeySUUSkSJmn1uowCNSKzmAbln1txmbQZkbDwg/exec';
 // ===== Logo file (put logo.png next to this html) =====
 const LOGO = 'logo.png';
 // ====================================
@@ -200,10 +200,10 @@ const LOGO = 'logo.png';
 const T={
  en:{sub:'Daily Accounts',signin:'Sign in',signinSub:'Enter your PIN to continue.',pin:'PIN',enter:'Sign in',remember:'Remember me on this device',out:'🔒 Lock',
   t_daily:'Cash Summary',t_expense:'Expenses',t_cash:'Cash In / Out',t_recovery:'Recovery',t_baki:'Dues Receivable',t_report:'Report',
-  date:'Date',name:'Expense name',noteF:'Note / reason',amount:'Amount (৳)',code:'Expense code',status:'Status',
-  st_done:'Entry done',st_pending:'Pending',st_approved:'Approved',kind:'Type',cin:'Cash In',cout:'Cash Out',
+  date:'Date',dateE:'Expense date',reasonF:'Expense reason',name:'Expense name',noteF:'Note / reason',amount:'Amount (৳)',code:'Expense code no.',status:'Entry status',
+  st_done:'Entry done',st_pending:'Pending',st_approved:'Approved (not counted)',kind:'Type',cin:'Cash In',cout:'Cash Out',
   custId:'Customer ID',custName:'Customer name',exchange:'Exchanged with cash (৳)',remarks:'Remarks',bname:'Customer name & ID',reason:'Reason',
-  handlab:'Cash in hand',ledlab:'Ledger amount',match:'Balanced',over:'Cash over',short:'Cash short',
+  handlab:'Cash in hand',ledlab:'Net ledger',match:'Balanced',over:'Cash over',short:'Cash short',
   secL:'Ledger calculation',prev:'Previous ledger',ibos:"Today's cash sales",recov:'Recovery sales',cashin:'Cash in',total:'Total',
   expense:'Expense',cashout:'Cash out (deposit)',cod:'COD',ledger:'Ledger amount',secN:'Note counting',noteCol:'Note',qty:'Qty',handsum:'Total cash in hand',
   edit:'Edit',lockit:'Lock',
@@ -215,10 +215,10 @@ const T={
   noDaily:'No cash summary entry found for this date.',gen:'Generated',tag:'...a little more, more'},
  bn:{sub:'দৈনিক হিসাব',signin:'প্রবেশ করুন',signinSub:'চালিয়ে যেতে আপনার পিন দিন।',pin:'পিন',enter:'প্রবেশ করুন',remember:'এই ডিভাইসে মনে রাখুন',out:'🔒 লক',
   t_daily:'ক্যাশ হিসাব',t_expense:'খরচ',t_cash:'ক্যাশ ইন / আউট',t_recovery:'আদায়',t_baki:'বাকি পাওনা',t_report:'রিপোর্ট',
-  date:'তারিখ',name:'খরচের নাম',noteF:'নোট / কারণ',amount:'টাকার পরিমাণ (৳)',code:'খরচের কোড',status:'অবস্থা',
-  st_done:'এন্ট্রি সম্পন্ন',st_pending:'অপেক্ষমাণ',st_approved:'অনুমোদিত',kind:'ধরন',cin:'ক্যাশ ইন',cout:'ক্যাশ আউট',
+  date:'তারিখ',dateE:'খরচের তারিখ',reasonF:'খরচের কারণ',name:'খরচের নাম',noteF:'নোট / কারণ',amount:'কত টাকা খরচ (৳)',code:'খরচের কোড নম্বর',status:'এন্ট্রি অবস্থা',
+  st_done:'এন্ট্রি সম্পন্ন (Entry done)',st_pending:'অপেক্ষমাণ (Pending)',st_approved:'অনুমোদিত (Approved) — হিসাবে ধরা হবে না',kind:'ধরন',cin:'ক্যাশ ইন',cout:'ক্যাশ আউট',
   custId:'কাস্টমার আইডি',custName:'কাস্টমারের নাম',exchange:'ক্যাশের বিনিময়ে (৳)',remarks:'মন্তব্য',bname:'কাস্টমারের নাম ও আইডি',reason:'কারণ',
-  handlab:'হাতে থাকা ক্যাশ',ledlab:'লেজার অ্যামাউন্ট',match:'হিসাব মিলেছে',over:'ক্যাশ বেশি',short:'ক্যাশ কম',
+  handlab:'হাতে থাকা ক্যাশ',ledlab:'নিট লেজার',match:'হিসাব মিলেছে',over:'ক্যাশ বেশি',short:'ক্যাশ কম',
   secL:'লেজার হিসাব',prev:'আগের লেজার',ibos:'আজকের ক্যাশ বিক্রি',recov:'আদায় (রিকভারি) বিক্রি',cashin:'ক্যাশ ইন',total:'মোট',
   expense:'খরচ',cashout:'ক্যাশ আউট (জমা)',cod:'সিওডি (COD)',ledger:'লেজার অ্যামাউন্ট',secN:'নোট গণনা',noteCol:'নোট',qty:'সংখ্যা',handsum:'হাতে মোট ক্যাশ',
   edit:'বদলান',lockit:'লক',
@@ -229,7 +229,7 @@ const T={
   hand:'হাতে থাকা ক্যাশ',led:'বর্তমান লেজার',sale:'আজকের ক্যাশ সেল',rec:'আদায় সেল',exp:'খরচ',rcout:'ক্যাশ আউট (জমা)',diff:'পার্থক্য',
   noDaily:'এই তারিখে ক্যাশ হিসাবের কোনো এন্ট্রি পাওয়া যায়নি।',gen:'তৈরির সময়',tag:'...একটু বেশি বেশি'}
 };
-const HB={'Date':'তারিখ','Expense Name':'খরচের নাম','Note':'নোট','Amount':'পরিমাণ','Status':'অবস্থা','Expense Code':'কোড','Entered At':'এন্ট্রির সময়','Type':'ধরন',
+const HB={'Reason':'কারণ','Ledger Base':'লেজার বেস','Gross Ledger':'গ্রস লেজার','Net Ledger':'নিট লেজার','Date':'তারিখ','Expense Name':'খরচের নাম','Note':'নোট','Amount':'পরিমাণ','Status':'অবস্থা','Expense Code':'কোড','Entered At':'এন্ট্রির সময়','Type':'ধরন',
  'Customer ID':'কাস্টমার আইডি','Customer Name':'কাস্টমারের নাম','Exchange With Cash':'ক্যাশের বিনিময়ে','Remarks':'মন্তব্য','Name':'নাম','Reason':'কারণ',
  'Previous Ledger':'আগের লেজার','Ajker Cash Sell':'আজকের বিক্রি','Recovery Sell':'আদায়','Cash In':'ক্যাশ ইন','Total':'মোট','Expense':'খরচ','Cash Out (Deposit)':'ক্যাশ আউট (জমা)','COD':'সিওডি','Ledger Amount':'লেজার','Cash In Hand':'হাতের ক্যাশ','Partokkho (Hand - Ledger)':'পার্থক্য'};
 
@@ -247,9 +247,10 @@ const NOTES=[1000,500,200,100,50,20,10,5,2,1];
 const F={
  report:{fields:[]},
  daily:{custom:true,fields:[['date','date','date']]},
- expense:{fields:[['date','date','date'],['name','name','text'],['note','noteF','textarea'],['amount','amount','number'],['code','code','text'],
-   ['status','status','select',[['entry done','st_done'],['pending','st_pending'],['approved','st_approved']]]]},
- cash:{fields:[['date','date','date'],['kind','kind','select',[['Cash In','cin'],['Cash Out','cout']]],['note','noteF','text'],['amount','amount','number']]},
+ expense:{fields:[['date','dateE','date'],['note','reasonF','text'],['amount','amount','number'],
+   ['status','status','select',[['pending','st_pending'],['entry done','st_done'],['approved','st_approved']]],['code','code','text']]},
+ cash:{fields:[['date','date','date'],['kind','kind','select',[['Cash In','cin'],['Cash Out','cout']]],['note','noteF','text'],['amount','amount','number'],
+   ['status','status','select',[['pending','st_pending'],['entry done','st_done'],['approved','st_approved']]]]},
  recovery:{fields:[['date','date','date'],['custId','custId','text'],['custName','custName','text'],['amount','amount','number'],['exchange','exchange','number'],['remarks','remarks','text']]},
  baki:{fields:[['date','date','date'],['name','bname','text'],['amount','amount','number'],['reason','reason','textarea']]}
 };
@@ -258,8 +259,10 @@ let cur='report',PIN='',prevLocked=true;
 const ONCE={daily:true,expense:false,cash:false,recovery:false,baki:false};
 T.bn.noNotes='এই তারিখের নোটওয়াইজ সংখ্যা সংরক্ষিত নেই।<br>শুধু মোট ক্যাশ নিচে দেখানো হয়েছে।';
 T.en.noNotes='Note-wise counts were not saved for this date.<br>Only the total cash is shown below.';
-T.bn.autoNote='নিচের ঘরগুলো অন্য ট্যাবের এন্ট্রি থেকে নিজে থেকে আসে';
-T.en.autoNote='The fields below are filled automatically from the other tabs';
+T.bn.autoNote='নিচের ঘরগুলো এ পর্যন্ত সব এন্ট্রি থেকে নিজে থেকে আসে (অনুমোদিত বাদে)';
+Object.assign(T.bn,{rTotal:'গ্রস লেজার',rFinal:'নিট লেজার',rFinalS:'নিট লেজার',ledger:'নিট লেজার',led:'নিট লেজার',rCashIn:'ক্যাশ ইন (এ পর্যন্ত)',rExp:'খরচ (এ পর্যন্ত)',rOut:'ক্যাশ আউট (এ পর্যন্ত)',rCod:'সিওডি (এ পর্যন্ত)'});
+T.en.autoNote='Filled automatically from all entries to date (approved ones excluded)';
+Object.assign(T.en,{rTotal:'Gross ledger',rFinal:'Net ledger',rFinalS:'Net ledger',ledger:'Net ledger',led:'Net ledger',rCashIn:'Cash in (to date)',rExp:'Expense (to date)',rOut:'Cash out (to date)',rCod:'COD (to date)'});
 T.bn.dup='এই তারিখের এন্ট্রি আগেই করা হয়েছে। একই তারিখে দুইবার করা যাবে না।';
 T.en.dup='An entry for this date already exists. Only one entry per date is allowed.';
 async function dateTaken(sheet,date){
@@ -332,7 +335,7 @@ function buildDaily(d){
        ${numField('f_prev','prev',true)}<button type="button" class="dtog" id="ptog">${t('edit')}</button>
        ${numField('f_sale','ibos')}
        <div class="autohd">${t('autoNote')}</div>
-       ${numField('f_recov','recov',true)}${numField('f_cashin','cashin',true)}
+       ${numField('f_cashin','cashin',true)}
        ${numField('f_exp','expense',true)}${numField('f_out','cashout',true)}${numField('f_cod','cod',true)}
        <div class="sum"><span>${t('ledger')}</span><span id="s_led" class="num">৳ 0</span></div>
      </div>
@@ -362,11 +365,11 @@ async function fetchPrev(){
   try{const r=await call('prev',{date:$('f_date').value});if(r&&r.ok!==false&&r.prev!=null){p.value=r.prev;calc();}}catch(e){}
 }
 async function fetchAuto(){
-  if(!$('f_recov'))return;
+  if(!$('f_cashin'))return;
   try{
     const r=await call('auto',{date:$('f_date').value});
     if(r&&r.ok!==false){
-      [['recov','f_recov'],['cashin','f_cashin'],['exp','f_exp'],['out','f_out'],['cod','f_cod']].forEach(([k,id])=>{const e=$(id);if(e)e.value=r[k]!=null?r[k]:0});
+      [['cashin','f_cashin'],['exp','f_exp'],['out','f_out'],['cod','f_cod']].forEach(([k,id])=>{const e=$(id);if(e)e.value=r[k]!=null?r[k]:0});
       calc();
     }
   }catch(e){}
@@ -374,7 +377,7 @@ async function fetchAuto(){
 function calc(){
   if(!$('f_prev'))return;
   const v=id=>num($(id).value);
-  const total=v('f_prev')+v('f_sale')+v('f_recov')+v('f_cashin');
+  const total=v('f_prev')+v('f_sale')+v('f_cashin');
   const led=total-v('f_exp')-v('f_out')-v('f_cod');
   let hand=0;document.querySelectorAll('.nq').forEach(i=>{const a=num(i.value)*Number(i.dataset.n);$('na_'+i.dataset.n).textContent=nf(a);hand+=a});
   const diff=hand-led;
@@ -388,10 +391,10 @@ function collect(){
   const out={};
   if(F[cur].custom){
     out.date=$('f_date').value;
-    out.prev=num($('f_prev').value);out.sale=num($('f_sale').value);out.recov=num($('f_recov').value);out.cashin=num($('f_cashin').value);
+    out.prev=num($('f_prev').value);out.sale=num($('f_sale').value);out.cashin=num($('f_cashin').value);
     out.exp=num($('f_exp').value);out.out=num($('f_out').value);out.cod=num($('f_cod').value);
     out.notes={};let hand=0;document.querySelectorAll('.nq').forEach(i=>{out.notes[i.dataset.n]=num(i.value);hand+=num(i.value)*Number(i.dataset.n)});
-    out.total=out.prev+out.sale+out.recov+out.cashin;
+    out.total=out.prev+out.sale+out.cashin;
     out.ledger=out.total-out.exp-out.out-out.cod;out.hand=hand;out.diff=hand-out.ledger;
   }else F[cur].fields.forEach(([k])=>out[k]=$('f_'+k).value);
   return out;
@@ -416,7 +419,7 @@ async function loadRecent(){
     const r=await call('recent',{sheet:cur});
     const rows=(r&&(r.rows||r.data))||[];
     if(!rows.length){box.innerHTML=`<div class="empty">${t('none')}</div>`;return}
-    const keys=Object.keys(rows[0]);
+    const keys=Object.keys(rows[0]).filter(k=>!(cur==='expense'&&(k==='Expense Name'||k==='name')));
     const H=k=>lang==='bn'?(HB[k]||k):k;
     box.innerHTML=`<table><thead><tr>${keys.map(k=>`<th>${esc(H(k))}</th>`).join('')}</tr></thead><tbody>${
       rows.map(o=>`<tr>${keys.map(k=>`<td>${esc(o[k])}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
@@ -441,7 +444,7 @@ async function loadReport(){
   $('load').disabled=true;$('rmsg').textContent=t('loading');$('rmsg').style.color='var(--mut)';
   try{
     const r=await call('report',{date:ds});
-    const d=r&&(r.daily||r.data);
+    let d=r&&(r.daily||r.data);
     if(!d||r.ok===false){$('holder').hidden=true;$('dl').disabled=true;$('rmsg').style.color='var(--bad)';$('rmsg').textContent=t('noDaily');}
     else{drawReport(ds,d);$('rmsg').textContent='';}
   }catch(e){$('rmsg').style.color='var(--bad)';$('rmsg').textContent=t('net')}
@@ -449,9 +452,9 @@ async function loadReport(){
 }
 function pick(d,...ks){for(const k of ks)if(d[k]!=null&&d[k]!=='')return num(d[k]);return 0}
 function drawReport(ds,d){
-  const prev=pick(d,'prev','Previous Ledger'),sale=pick(d,'sale','Ajker Cash Sell'),rec=pick(d,'recov','Recovery Sell'),ci=pick(d,'cashin','Cash In');
+  const prev=pick(d,'prev','Previous Ledger'),sale=pick(d,'sale','Ajker Cash Sell'),ci=pick(d,'cashin','Cash In');
   const exp=pick(d,'exp','Expense'),out=pick(d,'out','Cash Out (Deposit)'),cod=pick(d,'cod','COD');
-  const total=(d.total!=null||d.Total!=null)?pick(d,'total','Total'):prev+sale+rec+ci;
+  const total=(d.total!=null||d.Total!=null)?pick(d,'total','Total'):prev+sale+ci;
   const led=(d.ledger!=null||d['Ledger Amount']!=null)?pick(d,'ledger','Ledger Amount'):total-exp-out-cod;
   const nt=d.notes||{};let hand=0;
   const rows=NOTES.map(n=>{const q=num(nt[n]!=null?nt[n]:d['N'+n]!=null?d['N'+n]:d[n]);const a=q*n;hand+=a;return [n,q,a]});
@@ -473,9 +476,9 @@ function drawReport(ds,d){
      <div class="dd"><b>${esc(longDate(ds))}</b><span>${t('no')}: LF-${ds.replace(/-/g,'')}</span></div></div>
    <div class="st ${st}"><div class="fg"><div class="lb">${label}</div><div>${t('hand')}: <b>${fmt(hand)}</b></div><div>${t('led')}: <b>${fmt(led)}</b></div></div>
      <div class="stamp"><span>${label}</span><b style="font-size:${fs}px">${amt}</b></div></div>
-   <div class="cd"><div><small>${t('ibos')}</small><b>${fmt(sale)}</b></div><div><small>${t('recov')}</small><b>${fmt(rec)}</b></div><div><small>${t('expense')}</small><b>${fmt(exp)}</b></div><div><small>${t('ledger')}</small><b>${fmt(led)}</b></div></div>
+   <div class="cd"><div><small>${t('ibos')}</small><b>${fmt(sale)}</b></div><div><small>${t('rTotal')}</small><b>${fmt(total)}</b></div><div><small>${t('expense')}</small><b>${fmt(exp)}</b></div><div><small>${t('rFinalS')}</small><b>${fmt(led)}</b></div></div>
    <div class="tb">
-     <div class="box"><h4>${t('secL')}</h4>${R(t('prev'),prev)}${R(t('ibos'),sale)}${R(t('recov'),rec)}${R(t('cashin'),ci)}${R(t('total'),total,'t')}${R(t('expense'),exp,'r')}${R(t('cashout'),out,'r')}${R(t('cod'),cod,'r')}${R(t('ledger'),led,'f')}</div>
+     <div class="box"><h4>${t('secL')}</h4>${R(t('prev'),prev)}${R(t('ibos'),sale)}${R(t('rCashIn'),ci)}${R(t('rTotal'),total,'t')}${R(t('rExp'),exp,'r')}${R(t('rOut'),out,'r')}${R(t('rCod'),cod,'r')}${R(t('rFinal'),led,'f')}</div>
      <div class="box"><h4>${t('secN')}</h4>${notesBody}<p class="f"><span>${t('handsum')}</span><b>${nf(hand)}</b></p></div>
    </div>
    <footer><span><b>Liz Fashion – AponBazaar</b> · ${t('tag')}</span><span>${t('gen')}: ${new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'})}</span></footer>`;
