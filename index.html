@@ -387,6 +387,7 @@ Object.assign(T.en,{recent5:'Last 5 entries',allT:'All entries',seeAll:'See all'
   delAsk:'Delete this entry? This cannot be undone.',deleted:'Entry deleted ✓',updated:'Updated ✓',stale:'This entry was changed elsewhere. The list was reloaded, please try again.'});
 /* PIN confirmation for edit / delete */
 T.bn.pinAsk='নিশ্চিত করতে পিন দিন';T.en.pinAsk='Enter PIN to confirm';
+T.bn.pinGo='চালিয়ে যান';T.en.pinGo='Continue';
 T.bn.pinNeed='পিন দিন';T.en.pinNeed='Please enter the PIN';
 /* Offline notice */
 T.bn.offl='⚠️ ইন্টারনেট নেই। সংযোগ এলে আবার চেষ্টা করুন।';T.en.offl='⚠️ You are offline. Try again when connected.';
@@ -672,7 +673,7 @@ const origOf=o=>{const c={...o};delete c._row;return c};
 const findRow=id=>rowsCache.find(o=>String(o._row)===String(id));
 
 /* PIN is asked every time before edit / delete */
-const pinField=()=>`<label for="e_pin">${t('pinAsk')}</label><input id="e_pin" type="password" inputmode="numeric" autocomplete="off" style="text-align:center;letter-spacing:6px">`;
+const pinField=()=>`<label for="e_pin">${t('pinAsk')}</label><input id="e_pin" type="password" inputmode="numeric" autocomplete="off" style="text-align:center;letter-spacing:6px" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('mok').click()}">`;
 async function checkPin(){
   const v=($('e_pin')||{}).value||'';
   if(!v){toast(t('pinNeed'),true);return false}
@@ -683,14 +684,20 @@ async function checkPin(){
   }catch(e){toast(t('net'),true);return false}
 }
 function openEdit(o){
+  openModal(t('pinAsk'),pinField(),t('pinGo'),false,async()=>{
+    if(!await checkPin())return;
+    openEditForm(o);
+  });
+  setTimeout(()=>{const p=$('e_pin');if(p)p.focus()},50);
+}
+function openEditForm(o){
   const keys=Object.keys(o).filter(k=>k!=='_row');
   const val=k=>o[k]==null?'':String(o[k]);
   openModal(t('editEntry'),keys.map((k,i)=>{
     if(k==='Status'||k==='status')return `<label for="e_${i}">${esc(hdr(k))}</label>${statusSel(i,k,val(k))}`;
     const isD=/^\d{4}-\d{2}-\d{2}$/.test(val(k));
     return `<label for="e_${i}">${esc(hdr(k))}</label><input id="e_${i}" data-k="${esc(k)}" type="${isD?'date':'text'}" value="${esc(val(k))}">`;
-  }).join('')+pinField(),t('update'),false,async()=>{
-    if(!await checkPin())return;
+  }).join(''),t('update'),false,async()=>{
     const data={};
     document.querySelectorAll('#mb [data-k]').forEach(i=>{if(i.value!==val(i.dataset.k))data[i.dataset.k]=i.value});
     if(!Object.keys(data).length){closeModal();return}
