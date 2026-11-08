@@ -86,7 +86,7 @@ button:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
 #msg.err,#lmsg{color:var(--bad)}
 
 /* toast */
-#toast{position:fixed;left:50%;top:18px;z-index:50;transform:translate(-50%,-140%);opacity:0;pointer-events:none;
+#toast{position:fixed;left:50%;top:18px;z-index:80;transform:translate(-50%,-140%);opacity:0;pointer-events:none;
   background:var(--ok);color:#fff;padding:12px 22px;border-radius:999px;font-weight:700;box-shadow:0 14px 34px rgba(0,0,0,.28);
   transition:.35s cubic-bezier(.2,.9,.3,1.2);max-width:92vw;text-align:center;font-size:15px}
 #toast.show{transform:translate(-50%,0);opacity:1}
@@ -141,6 +141,22 @@ table.notes td:first-child{font-weight:700;color:var(--blue)}
   font-weight:600;font-size:inherit;color:var(--ink);cursor:pointer;box-shadow:0 6px 16px rgba(21,47,112,.06);transition:.15s;text-align:left}
 .quick button:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px)}
 .quick .ic{font-size:24px}
+
+/* recent / all entries */
+.rh{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.btn.sm{padding:8px 16px;font-size:14px;border-radius:999px;margin-bottom:6px}
+.rq{margin:0 0 10px}
+.tbl.tall{max-height:70vh;overflow:auto}
+.tbl.tall th{position:sticky;top:0;z-index:1}
+td.act{white-space:nowrap;text-align:right}
+.ib{border:0;background:var(--blue-l);border-radius:10px;width:36px;height:36px;font-size:16px;cursor:pointer;margin-left:6px;transition:.15s}
+.ib:hover{background:var(--yellow-l);transform:translateY(-1px)}
+#modal{position:fixed;inset:0;z-index:60;background:rgba(15,25,55,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.mbox{background:#fff;border-radius:18px;padding:22px;width:100%;max-width:440px;max-height:90vh;overflow:auto;box-shadow:0 30px 70px rgba(0,0,0,.4);border-top:6px solid var(--yellow)}
+.mbox p{margin:12px 0 8px}
+.btn.dng{background:linear-gradient(135deg,#e04a3d,var(--bad));border-color:var(--bad);color:#fff;box-shadow:0 8px 20px rgba(192,40,28,.28)}
+.btn.dng:hover{color:#fff}
+.dsum{background:var(--blue-xl);border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.7}
 
 /* login */
 #lock{padding:18px;min-height:calc(100vh - 80px);display:flex;align-items:center;justify-content:center;
@@ -214,6 +230,11 @@ table.notes td:first-child{font-weight:700;color:var(--blue)}
 
 <div id="toast" role="status" aria-live="polite"></div>
 
+<div id="modal" hidden><div class="mbox">
+  <h3 id="mt"></h3><div id="mb"></div>
+  <div class="btns"><button class="btn pri" id="mok"></button><button class="btn" id="mno"></button></div>
+</div></div>
+
 <div class="top"><div class="in">
   <div class="brand"><div class="logo" id="hlogo">AB</div><div><b>Liz Fashion – AponBazaar</b><span data-i="sub"></span></div></div>
   <button class="lockb" id="logout" data-i="out" hidden></button>
@@ -245,7 +266,8 @@ table.notes td:first-child{font-weight:700;color:var(--blue)}
       <div class="btns"><button class="btn pri" id="save"></button><button class="btn" id="clear"></button></div>
       <div id="msg" role="status"></div>
     </div>
-    <h2 data-i="recent"></h2>
+    <div class="rh"><h2 id="rtitle"></h2><button class="btn sm" id="seeall"></button></div>
+    <input id="rq" class="rq" type="search" hidden>
     <div class="tbl" id="recent"></div>
   </main>
 
@@ -346,6 +368,10 @@ T.en.noShare='Direct sharing is not supported here, so the image was downloaded.
 T.bn.shareFail='শেয়ার করা যায়নি।';T.en.shareFail='Could not share.';
 /* Single signature label — change the text here if you want e.g. 'মালিকের স্বাক্ষর' */
 T.bn.sig='স্বাক্ষর';T.en.sig='Signature';
+Object.assign(T.bn,{recent5:'সর্বশেষ ৫টি এন্ট্রি',allT:'সব এন্ট্রি',seeAll:'সব দেখুন',showLess:'কম দেখুন',search:'খুঁজুন…',editEntry:'এন্ট্রি বদলান',update:'আপডেট করুন',cancel:'বাতিল',delete:'ডিলিট',
+  delAsk:'এই এন্ট্রিটি মুছে ফেলবেন? এটা আর ফেরত আনা যাবে না।',deleted:'এন্ট্রি মুছে ফেলা হয়েছে ✓',updated:'আপডেট হয়েছে ✓',stale:'এন্ট্রিটি অন্য কোথাও বদলে গেছে। তালিকা নতুন করে লোড করা হলো, আবার চেষ্টা করুন।'});
+Object.assign(T.en,{recent5:'Last 5 entries',allT:'All entries',seeAll:'See all',showLess:'Show less',search:'Search…',editEntry:'Edit entry',update:'Update',cancel:'Cancel',delete:'Delete',
+  delAsk:'Delete this entry? This cannot be undone.',deleted:'Entry deleted ✓',updated:'Updated ✓',stale:'This entry was changed elsewhere. The list was reloaded, please try again.'});
 
 /* ---------- Toast ---------- */
 let _tt;
@@ -502,22 +528,83 @@ async function saveEntry(){
   }catch(e){setMsg(t('net'),true);b.disabled=false}
   finally{b.classList.remove('busy')}
 }
+/* ---------- Recent / all entries (edit & delete) ---------- */
+let showAll=false,rowsCache=[],canEdit=true,rq='',mAct=null;
+const hdr=k=>lang==='bn'?(HB[k]||k):k;
+function recTitle(n){
+  $('rtitle').textContent=showAll?t('allT')+(n!=null?' ('+nf(n)+')':''):t('recent5');
+  $('seeall').textContent=showAll?t('showLess'):t('seeAll');
+  $('rq').hidden=!showAll;$('rq').placeholder=t('search');
+}
 async function loadRecent(){
-  const box=$('recent');box.innerHTML=`<div class="empty">${t('loading')}</div>`;
+  const box=$('recent');recTitle();box.className='tbl'+(showAll?' tall':'');
+  box.innerHTML=`<div class="empty">${t('loading')}</div>`;
   try{
-    const r=await call('recent',{sheet:cur});
-    const rows=(r&&(r.rows||r.data))||[];
-    if(!rows.length){box.innerHTML=`<div class="empty"><span class="ei">📭</span>${t('none')}</div>`;return}
-    const keys=Object.keys(rows[0]).filter(k=>!(cur==='expense'&&(k==='Expense Name'||k==='name')));
-    const H=k=>lang==='bn'?(HB[k]||k):k;
-    box.innerHTML=`<table><thead><tr>${keys.map(k=>`<th>${esc(H(k))}</th>`).join('')}</tr></thead><tbody>${
-      rows.map(o=>`<tr>${keys.map(k=>`<td>${esc(o[k])}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    let rows,total=null;
+    let r=await call('list',{sheet:cur,limit:showAll?0:5});
+    if(r&&r.ok!==false&&Array.isArray(r.rows)){rows=r.rows;total=r.total;canEdit=true}
+    else{
+      r=await call('recent',{sheet:cur});
+      rows=(r&&(r.rows||r.data))||[];canEdit=false;
+      if(!showAll)rows=rows.slice(0,5);
+    }
+    rowsCache=rows;recTitle(showAll?(total!=null?total:rows.length):null);
+    renderRows();
   }catch(e){box.innerHTML=`<div class="empty"><span class="ei">⚠️</span>${t('net')}</div>`}
+}
+function renderRows(){
+  const box=$('recent');let rows=rowsCache;
+  if(showAll&&rq){const q=rq.toLowerCase();rows=rows.filter(o=>Object.values(o).join(' ').toLowerCase().includes(q))}
+  if(!rows.length){box.innerHTML=`<div class="empty"><span class="ei">📭</span>${t('none')}</div>`;return}
+  const keys=Object.keys(rowsCache[0]).filter(k=>k!=='_row'&&!(cur==='expense'&&(k==='Expense Name'||k==='name')));
+  box.innerHTML=`<table><thead><tr>${keys.map(k=>`<th>${esc(hdr(k))}</th>`).join('')}${canEdit?'<th></th>':''}</tr></thead><tbody>${
+    rows.map(o=>`<tr>${keys.map(k=>`<td>${esc(o[k])}</td>`).join('')}${canEdit?`<td class="act"><button class="ib" data-e="${o._row}" aria-label="${t('editEntry')}">✏️</button><button class="ib" data-d="${o._row}" aria-label="${t('delete')}">🗑️</button></td>`:''}</tr>`).join('')}</tbody></table>`;
+}
+function openModal(title,body,okText,danger,act){
+  $('mt').textContent=title;$('mb').innerHTML=body;
+  $('mok').textContent=okText;$('mno').textContent=t('cancel');
+  $('mok').classList.toggle('dng',!!danger);$('mok').classList.toggle('pri',!danger);
+  mAct=act;$('modal').hidden=false;
+}
+function closeModal(){$('modal').hidden=true;mAct=null;$('mok').classList.remove('busy');$('mok').disabled=false}
+const origOf=o=>{const c={...o};delete c._row;return c};
+const findRow=id=>rowsCache.find(o=>String(o._row)===String(id));
+function openEdit(o){
+  const keys=Object.keys(o).filter(k=>k!=='_row');
+  const val=k=>o[k]==null?'':String(o[k]);
+  openModal(t('editEntry'),keys.map((k,i)=>{
+    const isD=/^\d{4}-\d{2}-\d{2}$/.test(val(k));
+    return `<label for="e_${i}">${esc(hdr(k))}</label><input id="e_${i}" data-k="${esc(k)}" type="${isD?'date':'text'}" value="${esc(val(k))}">`;
+  }).join(''),t('update'),false,async()=>{
+    const data={};
+    document.querySelectorAll('#mb input').forEach(i=>{if(i.value!==val(i.dataset.k))data[i.dataset.k]=i.value});
+    if(!Object.keys(data).length){closeModal();return}
+    await sendMut('update',{row:o._row,orig:origOf(o),data},t('updated'));
+  });
+}
+function openDel(o){
+  const sum=Object.keys(o).filter(k=>k!=='_row').slice(0,4).map(k=>`<div><b>${esc(hdr(k))}:</b> ${esc(o[k])}</div>`).join('');
+  openModal(t('delete'),`<p>${t('delAsk')}</p><div class="dsum">${sum}</div>`,t('delete'),true,
+    ()=>sendMut('delete',{row:o._row,orig:origOf(o)},t('deleted')));
+}
+async function sendMut(act,payload,okMsg){
+  const b=$('mok');b.disabled=true;b.classList.add('busy');
+  try{
+    const r=await call(act,{sheet:cur,...payload});
+    if(r&&r.ok===false){
+      const stale=r.error==='stale';
+      toast(stale?t('stale'):(r.error||t('net')),true);
+      b.classList.remove('busy');b.disabled=false;
+      if(stale){closeModal();loadRecent()}
+      return;
+    }
+    closeModal();toast(okMsg);loadRecent();
+  }catch(e){toast(t('net'),true);b.classList.remove('busy');b.disabled=false}
 }
 
 /* ---------- Tabs ---------- */
 function showTab(k){
-  cur=k;applyI18n();
+  cur=k;showAll=false;rq='';$('rq').value='';applyI18n();
   const isRep=k==='report',isHome=k==='home';
   $('homemain').hidden=!isHome;$('entry').hidden=isRep||isHome;$('repmain').hidden=!isRep;
   if(isHome)loadHome();
@@ -666,6 +753,17 @@ $('logout').onclick=logout;
 $('save').onclick=saveEntry;$('clear').onclick=()=>{buildFields(false);setMsg('')};
 $('pv').onclick=()=>{shiftDate(-1);loadReport()};$('nx').onclick=()=>{shiftDate(1);loadReport()};
 $('td').onclick=()=>{$('d').value=today();loadReport()};$('load').onclick=loadReport;$('dl').onclick=download;$('sh').onclick=shareReport;
+$('seeall').onclick=()=>{showAll=!showAll;rq='';$('rq').value='';loadRecent()};
+$('rq').addEventListener('input',e=>{rq=e.target.value.trim();renderRows()});
+$('recent').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  const isE=b.dataset.e!==undefined,id=isE?b.dataset.e:b.dataset.d;if(id===undefined)return;
+  const o=findRow(id);if(!o)return;
+  isE?openEdit(o):openDel(o);
+});
+$('mok').onclick=()=>{if(mAct)mAct()};$('mno').onclick=closeModal;
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('modal').hidden)closeModal()});
 applyI18n();
 try{const s=localStorage.getItem('pin');if(s)login(s)}catch(e){}
 
