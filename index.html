@@ -166,6 +166,9 @@ td.act{white-space:nowrap;text-align:right}
 .btn.dng{background:linear-gradient(135deg,#e04a3d,var(--bad));border-color:var(--bad);color:#fff;box-shadow:0 8px 20px rgba(192,40,28,.28)}
 .btn.dng:hover{color:#fff}
 .dsum{background:var(--blue-xl);border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.7}
+.nh{margin:4px 2px 0;font-size:13.5px;font-weight:700;color:var(--blue)}
+.nh:empty{display:none}
+.dw{margin-top:8px;padding:8px 12px;border-radius:10px;background:var(--yellow-l);border:1px solid #f3d27a;color:#8a5a00;font-size:13.5px;font-weight:600}
 
 /* login */
 #lock{padding:18px;min-height:calc(100vh - 80px);display:flex;align-items:center;justify-content:center;
@@ -388,6 +391,11 @@ T.bn.pinNeed='পিন দিন';T.en.pinNeed='Please enter the PIN';
 /* Offline notice */
 T.bn.offl='⚠️ ইন্টারনেট নেই। সংযোগ এলে আবার চেষ্টা করুন।';T.en.offl='⚠️ You are offline. Try again when connected.';
 T.bn.back='ইন্টারনেট ফিরেছে ✓';T.en.back='Back online ✓';
+/* Confirm before saving cash summary + date warnings */
+T.bn.cfTitle='সেভ করার আগে মিলিয়ে দেখুন';T.en.cfTitle='Check before saving';
+T.bn.cfOk='হ্যাঁ, সেভ করুন';T.en.cfOk='Yes, save';
+T.bn.dwFut='⚠️ ভবিষ্যতের তারিখ দিয়েছেন। ঠিক আছে তো?';T.en.dwFut='⚠️ This is a future date. Is that correct?';
+T.bn.dwOld='⚠️ এই তারিখ {n} দিন আগের। ঠিক আছে তো?';T.en.dwOld='⚠️ This date is {n} days ago. Is that correct?';
 function setOff(){const o=$('offline');if(!o)return;o.textContent=t('offl');o.hidden=navigator.onLine}
 
 /* ---------- Toast ---------- */
@@ -452,6 +460,8 @@ function buildFields(keepDate){
   }).join('');
   $('f_date').value=oldDate;
   $('f_date').addEventListener('change',guardDate);guardDate();
+  $('f_date').addEventListener('change',dateWarn);dateWarn();
+  loadSugg();
 }
 function numField(id,lab,locked){
   return `<label for="${id}">${t(lab)}</label><input id="${id}" type="number" inputmode="decimal" step="any" min="0" ${locked?'class="lk" readonly':''}>`;
@@ -489,6 +499,7 @@ function buildDaily(d){
   $('f_date').addEventListener('change',fetchAuto);
   $('f_date').addEventListener('change',guardDate);
   prevLocked=true;fetchPrev();fetchAuto();calc();guardDate();
+  $('f_date').addEventListener('change',dateWarn);dateWarn();
 }
 async function fetchPrev(){
   const p=$('f_prev');if(!p)return;
@@ -533,7 +544,69 @@ function setMsg(s,err){
   const m=$('msg');m.textContent=s;m.className=err?'err':'';
   if(s&&(err||s===t('saved')))toast(s,err);
 }
-async function saveEntry(){
+/* live comma hint under amount fields */
+function numHint(e){
+  const i=e.target;
+  if(!i.matches||!i.matches('input[type=number]:not(.nq):not(.lk)'))return;
+  let h=i.nextElementSibling;
+  if(!h||!h.classList.contains('nh')){h=document.createElement('div');h.className='nh';i.after(h)}
+  const v=num(i.value);h.textContent=v?'৳ '+nf(v):'';
+}
+/* reason suggestions (from earlier entries) */
+const SUG={};
+async function loadSugg(){
+  if(!(cur==='expense'||cur==='cash')||!$('f_note'))return;
+  const sheet=cur;
+  if(!SUG[sheet]){
+    try{
+      const r=await call('list',{sheet,limit:0});
+      const rows=(r&&r.ok!==false&&Array.isArray(r.rows))?r.rows:[];
+      const cnt={};
+      rows.forEach(o=>{const v=String(o['Note']||o['Reason']||o['note']||o['Expense Name']||'').trim();if(v)cnt[v]=(cnt[v]||0)+1});
+      SUG[sheet]=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]).slice(0,40);
+    }catch(e){SUG[sheet]=[]}
+  }
+  if(cur!==sheet||!$('f_note'))return;
+  let dl=$('sg_note');
+  if(!dl){dl=document.createElement('datalist');dl.id='sg_note';$('fields').appendChild(dl)}
+  dl.innerHTML=SUG[sheet].map(v=>`<option value="${esc(v)}">`).join('');
+  $('f_note').setAttribute('list','sg_note');
+  $('f_note').setAttribute('autocomplete','off');
+}
+/* warn on old / future date */
+function dateWarn(){
+  const el=$('f_date');if(!el)return;
+  let w=$('dwarn');
+  if(!w){w=document.createElement('div');w.id='dwarn';w.className='dw';el.after(w)}
+  const v=el.value;let msg='';
+  if(v){
+    const diff=Math.round((new Date(v+'T00:00:00')-new Date(today()+'T00:00:00'))/864e5);
+    if(diff>0)msg=t('dwFut');else if(diff<-3)msg=t('dwOld').replace('{n}',nf(-diff));
+  }
+  w.textContent=msg;w.hidden=!msg;
+}
+/* status dropdown used inside the edit popup */
+const STV=[['pending','st_pending'],['entry done','st_done'],['approved','st_approved']];
+function statusSel(i,k,cur0){
+  const lc=String(cur0).toLowerCase();let found=false;
+  let opts=STV.map(([v,l])=>{const sel=v===lc;if(sel)found=true;return `<option value="${esc(sel?cur0:v)}"${sel?' selected':''}>${esc(t(l))}</option>`}).join('');
+  if(!found)opts=`<option value="${esc(cur0)}" selected>${esc(cur0)}</option>`+opts;
+  return `<select id="e_${i}" data-k="${esc(k)}">${opts}</select>`;
+}
+/* save: cash summary asks for confirmation first */
+function saveEntry(){
+  const data=collect();
+  if(!data.date){setMsg(t('needdate'),true);return}
+  if(F[cur].custom){
+    const d=data.diff;
+    const lab=d===0?t('match'):d>0?t('over'):t('short');
+    openModal(t('cfTitle'),`<div class="dsum"><div><b>${t('date')}:</b> ${esc(longDate(data.date))}</div><div><b>${t('handlab')}:</b> ${fmt(data.hand)}</div><div><b>${t('ledlab')}:</b> ${fmt(data.ledger)}</div><div><b>${lab}:</b> ${d?fmt(Math.abs(d)):'✓'}</div></div>`,
+      t('cfOk'),false,async()=>{closeModal();await doSave()});
+    return;
+  }
+  doSave();
+}
+async function doSave(){
   const data=collect();
   if(!data.date){setMsg(t('needdate'),true);return}
   const b=$('save');b.disabled=true;b.classList.add('busy');setMsg(t('saving'));
@@ -542,6 +615,7 @@ async function saveEntry(){
     const r=await call('add',{sheet:cur,data});
     if(r&&r.duplicate){setMsg(t('dup'),true);return}
     if(r&&r.ok===false){setMsg(r.error||t('net'),true);b.disabled=false;return}
+    delete SUG[cur];
     buildFields(false);if(!ONCE[cur])b.disabled=false;await guardDate();setMsg(t('saved'));loadRecent();
   }catch(e){setMsg(t('net'),true);b.disabled=false}
   finally{b.classList.remove('busy')}
@@ -612,12 +686,13 @@ function openEdit(o){
   const keys=Object.keys(o).filter(k=>k!=='_row');
   const val=k=>o[k]==null?'':String(o[k]);
   openModal(t('editEntry'),keys.map((k,i)=>{
+    if(k==='Status'||k==='status')return `<label for="e_${i}">${esc(hdr(k))}</label>${statusSel(i,k,val(k))}`;
     const isD=/^\d{4}-\d{2}-\d{2}$/.test(val(k));
     return `<label for="e_${i}">${esc(hdr(k))}</label><input id="e_${i}" data-k="${esc(k)}" type="${isD?'date':'text'}" value="${esc(val(k))}">`;
   }).join('')+pinField(),t('update'),false,async()=>{
     if(!await checkPin())return;
     const data={};
-    document.querySelectorAll('#mb input[data-k]').forEach(i=>{if(i.value!==val(i.dataset.k))data[i.dataset.k]=i.value});
+    document.querySelectorAll('#mb [data-k]').forEach(i=>{if(i.value!==val(i.dataset.k))data[i.dataset.k]=i.value});
     if(!Object.keys(data).length){closeModal();return}
     await sendMut('update',{row:o._row,orig:origOf(o),data},t('updated'));
   });
@@ -824,6 +899,16 @@ $('recent').addEventListener('click',e=>{
 $('mok').onclick=()=>{if(mAct)mAct()};$('mno').onclick=closeModal;
 $('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('modal').hidden)closeModal()});
+$('fields').addEventListener('input',numHint);
+$('fields').addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const el=e.target;
+  if(!el.matches||!el.matches('input,select'))return;
+  e.preventDefault();
+  const list=[...$('fields').querySelectorAll('input:not([readonly]),select,textarea')].filter(x=>!x.disabled&&x.offsetParent!==null);
+  const i=list.indexOf(el);
+  if(i>-1&&i<list.length-1)list[i+1].focus();else $('save').focus();
+});
 window.addEventListener('offline',setOff);
 window.addEventListener('online',()=>{setOff();toast(t('back'))});
 applyI18n();
