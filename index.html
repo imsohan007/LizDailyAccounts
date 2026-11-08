@@ -366,6 +366,8 @@ const F={
 };
 let cur='home',PIN='',prevLocked=true;
 /* Which sheets allow only ONE entry per date. Set true/false per sheet. */
+/* Amounts at or above this ask "are the zeros correct?" before saving. Change the number if needed. */
+const BIG_AMOUNT=50000;
 const ONCE={daily:true,expense:false,cash:false,recovery:false,baki:false};
 T.bn.noNotes='এই তারিখের নোটওয়াইজ সংখ্যা সংরক্ষিত নেই।<br>শুধু মোট ক্যাশ নিচে দেখানো হয়েছে।';
 T.en.noNotes='Note-wise counts were not saved for this date.<br>Only the total cash is shown below.';
@@ -388,6 +390,15 @@ Object.assign(T.en,{recent5:'Last 5 entries',allT:'All entries',seeAll:'See all'
 /* PIN confirmation for edit / delete */
 T.bn.pinAsk='নিশ্চিত করতে পিন দিন';T.en.pinAsk='Enter PIN to confirm';
 T.bn.pinGo='চালিয়ে যান';T.en.pinGo='Continue';
+T.bn.dupT='একই এন্ট্রি আগে আছে';T.en.dupT='Same entry already exists';
+T.bn.dupAsk='এই তারিখে একই টাকা আর একই কারণে একটি এন্ট্রি আগেই আছে। আবার সেভ করবেন?';T.en.dupAsk='An entry with the same date, amount and reason already exists. Save again?';
+T.bn.dupOk='হ্যাঁ, আবার সেভ করুন';T.en.dupOk='Yes, save again';
+T.bn.alk='🔒 কিছুক্ষণ কাজ না করায় অটো লক হয়েছে। আবার পিন দিন।';T.en.alk='🔒 Locked after inactivity. Enter your PIN again.';
+T.bn.bigT='বড় অঙ্ক — আবার দেখুন';T.en.bigT='Large amount — please check';
+T.bn.bigAsk='এই অঙ্কটা অনেক বড়। শূন্য ঠিক আছে তো?';T.en.bigAsk='This amount is very large. Are the zeros correct?';
+T.bn.bigOk='হ্যাঁ, ঠিক আছে';T.en.bigOk='Yes, it is correct';
+T.bn.yMiss='গতকালের ক্যাশ হিসাব এখনো করা হয়নি';T.en.yMiss='Yesterday’s cash summary is not done yet';
+T.bn.capTot='টোটাল ক্যাশ';T.en.capTot='Total cash';
 T.bn.pinNeed='পিন দিন';T.en.pinNeed='Please enter the PIN';
 /* Offline notice */
 T.bn.offl='⚠️ ইন্টারনেট নেই। সংযোগ এলে আবার চেষ্টা করুন।';T.en.offl='⚠️ You are offline. Try again when connected.';
@@ -594,6 +605,22 @@ function statusSel(i,k,cur0){
   if(!found)opts=`<option value="${esc(cur0)}" selected>${esc(cur0)}</option>`+opts;
   return `<select id="e_${i}" data-k="${esc(k)}">${opts}</select>`;
 }
+/* duplicate entry check (same date + amount + reason) */
+async function findDup(data){
+  if(!num(data.amount))return false;
+  try{
+    const r=await call('list',{sheet:cur,limit:0});
+    const rows=(r&&r.ok!==false&&Array.isArray(r.rows))?r.rows:[];
+    const txt=String(data.note||data.name||data.custName||'').trim().toLowerCase();
+    return rows.some(o=>{
+      const d=String(o['Date']||o['date']||'').slice(0,10);
+      if(d!==data.date)return false;
+      if(num(o['Amount']!=null?o['Amount']:o['amount'])!==num(data.amount))return false;
+      const rt=String(o['Note']||o['Reason']||o['Customer Name']||o['Name']||o['note']||'').trim().toLowerCase();
+      return !txt||!rt||rt===txt;
+    });
+  }catch(e){return false}
+}
 /* save: cash summary asks for confirmation first */
 function saveEntry(){
   const data=collect();
@@ -605,7 +632,26 @@ function saveEntry(){
       t('cfOk'),false,async()=>{closeModal();await doSave()});
     return;
   }
-  doSave();
+  (async()=>{
+    const go=async()=>{
+      const b=$('save');b.disabled=true;
+      const dup=await findDup(data);
+      b.disabled=false;
+      if(dup){
+        const txt=data.note||data.name||data.custName||'';
+        openModal(t('dupT'),`<p>${t('dupAsk')}</p><div class="dsum"><div><b>${t('date')}:</b> ${esc(longDate(data.date))}</div>${txt?`<div>${esc(txt)}</div>`:''}<div><b>${t('amount')}:</b> ${fmt(data.amount)}</div></div>`,
+          t('dupOk'),false,async()=>{closeModal();await doSave()});
+        return;
+      }
+      doSave();
+    };
+    if(num(data.amount)>=BIG_AMOUNT){
+      openModal(t('bigT'),`<p>${t('bigAsk')}</p><div class="dsum"><div><b>${t('amount')}:</b> ${fmt(data.amount)}</div></div>`,
+        t('bigOk'),false,async()=>{closeModal();await go()});
+      return;
+    }
+    await go();
+  })();
 }
 async function doSave(){
   const data=collect();
@@ -787,7 +833,13 @@ function drawReport(ds,d){
      <div class="box"><h4>${t('secN')}</h4>${notesBody}<p class="f"><span>${t('handsum')}</span><b>${nf(hand)}</b></p></div>
    </div>
    <footer><span><b>Liz Fashion – AponBazaar</b> · ${t('tag')}</span><span>${t('gen')}: ${new Date().toLocaleString(loc(),{dateStyle:'medium',timeStyle:'short'})}</span></footer>`;
+  window.__cap=capText(ds,hand,diff);
   $('holder').hidden=false;$('dl').disabled=false;$('sh').disabled=false;prepShare();
+}
+function capText(ds,hand,diff){
+  const dt=new Date(ds+'T00:00:00').toLocaleDateString(loc(),{day:'numeric',month:'long'});
+  const st=diff===0?t('sOk')+' ✓':(diff>0?t('sOver'):t('sShort'))+' ৳'+nf(Math.abs(diff));
+  return `${dt}, ${weekDay(ds)}, ${t('capTot')} ৳${nf(hand)}, ${st}`;
 }
 function prepShare(){
   window.__sp=(async()=>{
@@ -800,11 +852,12 @@ function prepShare(){
 async function shareReport(){
   const b0=$('sh');b0.disabled=true;b0.classList.add('busy');
   try{
+    try{await navigator.clipboard.writeText(window.__cap||'')}catch(x){}
     let b=await window.__sp;
     if(!b){prepShare();b=await window.__sp}
     const f=new File([b],'LizFashion-Report-'+$('d').value+'.png',{type:'image/png'});
     if(navigator.canShare&&navigator.canShare({files:[f]})){
-      await navigator.share({files:[f],title:'Liz Fashion – '+t('rpt')});
+      await navigator.share({files:[f],title:'Liz Fashion – '+t('rpt'),text:window.__cap||''});
     }else{
       const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
       $('rmsg').style.color='var(--mut)';$('rmsg').textContent=t('noShare');
@@ -840,6 +893,20 @@ function countUp(el){
 }
 function animateNums(root){root.querySelectorAll('.big,.hc b').forEach(countUp)}
 
+async function yestCheck(){
+  const d=new Date();d.setDate(d.getDate()-1);
+  const yd=new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+  try{
+    const r=await call('report',{date:yd});
+    const has=r&&r.ok!==false&&(r.daily||r.data);
+    if(has||cur!=='home')return;
+    const box=$('homebody'),hello=box&&box.querySelector('.hello');
+    if(!hello||$('ybar'))return;
+    const el=document.createElement('div');el.id='ybar';el.className='hs none';
+    el.innerHTML=`<div><div class="lb">${t('yMiss')}</div><div class="sb">${esc(longDate(yd))} · ${esc(weekDay(yd))}</div></div><button class="btn pri" data-gody="${yd}">${t('hGo')}</button>`;
+    hello.after(el);
+  }catch(e){}
+}
 async function loadHome(){
   const ds=today(),box=$('homebody'),hr=new Date().getHours();
   const g=hr<12?t('gMor'):hr<17?t('gAft'):t('gEve');
@@ -852,6 +919,7 @@ async function loadHome(){
   if(cur!=='home')return;
   if(!d){
     box.innerHTML=head+`<div class="hs none"><div><div class="lb">${t('hNone')}</div><div class="sb">${t('hNoneS')}</div></div><button class="btn pri" data-go="daily">${t('hGo')}</button></div>`+quick;
+    yestCheck();
     return;
   }
   const {sale,exp,led,hand,diff}=calcR(d);
@@ -862,6 +930,7 @@ async function loadHome(){
    `<div class="hs ${st}"><div><div class="lb">${label}</div><div class="sb">${t('hand')}: <b>${fmt(hand)}</b><br>${t('led')}: <b>${fmt(led)}</b></div></div><div class="big">${amt}</div></div>`+
    `<div class="hgrid"><div class="hc"><small>${t('ibos')}</small><b>${fmt(sale)}</b></div><div class="hc"><small>${t('hand')}</small><b>${fmt(hand)}</b></div><div class="hc"><small>${t('hExp')}</small><b>${fmt(exp)}</b></div><div class="hc"><small>${t('rFinalS')}</small><b>${fmt(led)}</b></div></div>`+quick;
   animateNums(box);
+  yestCheck();
 }
 
 /* ---------- Login ---------- */
@@ -873,7 +942,7 @@ async function login(auto){
     if(r&&r.ok===false){PIN='';if(!auto)$('lmsg').textContent=t('wrongpin');try{localStorage.removeItem('pin')}catch(e){}}
     else{
       try{if($('rem').checked)localStorage.setItem('pin',pin);else localStorage.removeItem('pin')}catch(e){}
-      $('lock').hidden=true;$('app').hidden=false;$('logout').hidden=false;$('d').value=today();showTab(cur);
+      bump();$('lock').hidden=true;$('app').hidden=false;$('logout').hidden=false;$('d').value=today();showTab(cur);
     }
   }catch(e){PIN='';if(!auto)$('lmsg').textContent=t('net')}
   eb.classList.remove('busy');eb.disabled=false;
@@ -890,6 +959,11 @@ document.querySelector('.lang').addEventListener('click',e=>{const b=e.target.cl
   }});
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)showTab(b.dataset.tab)});
 $('homemain').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)showTab(b.dataset.go)});
+$('homemain').addEventListener('click',e=>{
+  const b=e.target.closest('[data-gody]');if(!b)return;
+  const d=b.dataset.gody;showTab('daily');
+  const f=$('f_date');if(f){f.value=d;f.dispatchEvent(new Event('change'))}
+});
 $('enter').onclick=()=>login();$('pin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 $('logout').onclick=logout;
 $('save').onclick=saveEntry;$('clear').onclick=()=>{buildFields(false);setMsg('')};
@@ -916,6 +990,15 @@ $('fields').addEventListener('keydown',e=>{
   const i=list.indexOf(el);
   if(i>-1&&i<list.length-1)list[i+1].focus();else $('save').focus();
 });
+/* auto-lock after 5 minutes of inactivity */
+const LOCK_MS=5*60*1000;let lastAct=Date.now();
+function bump(){lastAct=Date.now()}
+['pointerdown','keydown','touchstart','scroll'].forEach(ev=>window.addEventListener(ev,bump,{passive:true,capture:true}));
+function chkLock(){
+  if(!$('app').hidden&&Date.now()-lastAct>LOCK_MS){closeModal();logout();$('lmsg').textContent=t('alk')}
+}
+setInterval(chkLock,15000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)chkLock()});
 window.addEventListener('offline',setOff);
 window.addEventListener('online',()=>{setOff();toast(t('back'))});
 applyI18n();
