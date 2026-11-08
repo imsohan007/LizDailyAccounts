@@ -92,6 +92,10 @@ button:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
 #toast.show{transform:translate(-50%,0);opacity:1}
 #toast.err{background:var(--bad)}
 
+/* offline notice */
+#offline{position:fixed;left:0;right:0;top:0;z-index:90;padding:calc(8px + env(safe-area-inset-top)) 14px 8px;
+  background:var(--bad);color:#fff;text-align:center;font-weight:700;font-size:14px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+
 /* stats */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 4px}
 .stat{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:linear-gradient(180deg,#fff,var(--blue-xl));position:relative;overflow:hidden}
@@ -149,6 +153,11 @@ table.notes td:first-child{font-weight:700;color:var(--blue)}
 .tbl.tall{max-height:70vh;overflow:auto}
 .tbl.tall th{position:sticky;top:0;z-index:1}
 td.act{white-space:nowrap;text-align:right}
+/* status badges */
+.bdg{display:inline-block;padding:3px 11px;border-radius:999px;font-size:12.5px;font-weight:700}
+.bdg.pd{background:#fff4d6;color:#8a5a00}
+.bdg.dn{background:#e7f6ed;color:#14803c}
+.bdg.ap{background:#e8eefb;color:#1F449C}
 .ib{border:0;background:var(--blue-l);border-radius:10px;width:36px;height:36px;font-size:16px;cursor:pointer;margin-left:6px;transition:.15s}
 .ib:hover{background:var(--yellow-l);transform:translateY(-1px)}
 #modal{position:fixed;inset:0;z-index:60;background:rgba(15,25,55,.55);display:flex;align-items:center;justify-content:center;padding:16px}
@@ -229,6 +238,7 @@ td.act{white-space:nowrap;text-align:right}
 <body>
 
 <div id="toast" role="status" aria-live="polite"></div>
+<div id="offline" role="alert" hidden></div>
 
 <div id="modal" hidden><div class="mbox">
   <h3 id="mt"></h3><div id="mb"></div>
@@ -372,6 +382,13 @@ Object.assign(T.bn,{recent5:'সর্বশেষ ৫টি এন্ট্র�
   delAsk:'এই এন্ট্রিটি মুছে ফেলবেন? এটা আর ফেরত আনা যাবে না।',deleted:'এন্ট্রি মুছে ফেলা হয়েছে ✓',updated:'আপডেট হয়েছে ✓',stale:'এন্ট্রিটি অন্য কোথাও বদলে গেছে। তালিকা নতুন করে লোড করা হলো, আবার চেষ্টা করুন।'});
 Object.assign(T.en,{recent5:'Last 5 entries',allT:'All entries',seeAll:'See all',showLess:'Show less',search:'Search…',editEntry:'Edit entry',update:'Update',cancel:'Cancel',delete:'Delete',
   delAsk:'Delete this entry? This cannot be undone.',deleted:'Entry deleted ✓',updated:'Updated ✓',stale:'This entry was changed elsewhere. The list was reloaded, please try again.'});
+/* PIN confirmation for edit / delete */
+T.bn.pinAsk='নিশ্চিত করতে পিন দিন';T.en.pinAsk='Enter PIN to confirm';
+T.bn.pinNeed='পিন দিন';T.en.pinNeed='Please enter the PIN';
+/* Offline notice */
+T.bn.offl='⚠️ ইন্টারনেট নেই। সংযোগ এলে আবার চেষ্টা করুন।';T.en.offl='⚠️ You are offline. Try again when connected.';
+T.bn.back='ইন্টারনেট ফিরেছে ✓';T.en.back='Back online ✓';
+function setOff(){const o=$('offline');if(!o)return;o.textContent=t('offl');o.hidden=navigator.onLine}
 
 /* ---------- Toast ---------- */
 let _tt;
@@ -419,6 +436,7 @@ function applyI18n(){
   $('tabs').innerHTML=tabs.map(k=>`<button data-tab="${k}" class="${k===cur?'on':''}"><span class="ic">${IC[k]}</span><span>${t('t_'+k)}</span></button>`).join('');
   $('save').textContent=t('save');$('clear').textContent=t('clear');
   $('lmsg').textContent='';
+  setOff();
 }
 
 /* ---------- Entry forms ---------- */
@@ -552,13 +570,22 @@ async function loadRecent(){
     renderRows();
   }catch(e){box.innerHTML=`<div class="empty"><span class="ei">⚠️</span>${t('net')}</div>`}
 }
+/* table cell: status as colored badge, everything else plain text */
+function cell(k,v){
+  if(k==='Status'||k==='status'){
+    const s=String(v||'').toLowerCase();
+    const c=s.includes('approved')?'ap':s.includes('done')?'dn':'pd';
+    return `<span class="bdg ${c}">${esc(v)}</span>`;
+  }
+  return esc(v);
+}
 function renderRows(){
   const box=$('recent');let rows=rowsCache;
   if(showAll&&rq){const q=rq.toLowerCase();rows=rows.filter(o=>Object.values(o).join(' ').toLowerCase().includes(q))}
   if(!rows.length){box.innerHTML=`<div class="empty"><span class="ei">📭</span>${t('none')}</div>`;return}
   const keys=Object.keys(rowsCache[0]).filter(k=>k!=='_row'&&!(cur==='expense'&&(k==='Expense Name'||k==='name')));
   box.innerHTML=`<table><thead><tr>${keys.map(k=>`<th>${esc(hdr(k))}</th>`).join('')}${canEdit?'<th></th>':''}</tr></thead><tbody>${
-    rows.map(o=>`<tr>${keys.map(k=>`<td>${esc(o[k])}</td>`).join('')}${canEdit?`<td class="act"><button class="ib" data-e="${o._row}" aria-label="${t('editEntry')}">✏️</button><button class="ib" data-d="${o._row}" aria-label="${t('delete')}">🗑️</button></td>`:''}</tr>`).join('')}</tbody></table>`;
+    rows.map(o=>`<tr>${keys.map(k=>`<td>${cell(k,o[k])}</td>`).join('')}${canEdit?`<td class="act"><button class="ib" data-e="${o._row}" aria-label="${t('editEntry')}">✏️</button><button class="ib" data-d="${o._row}" aria-label="${t('delete')}">🗑️</button></td>`:''}</tr>`).join('')}</tbody></table>`;
 }
 function openModal(title,body,okText,danger,act){
   $('mt').textContent=title;$('mb').innerHTML=body;
@@ -569,23 +596,38 @@ function openModal(title,body,okText,danger,act){
 function closeModal(){$('modal').hidden=true;mAct=null;$('mok').classList.remove('busy');$('mok').disabled=false}
 const origOf=o=>{const c={...o};delete c._row;return c};
 const findRow=id=>rowsCache.find(o=>String(o._row)===String(id));
+
+/* PIN is asked every time before edit / delete */
+const pinField=()=>`<label for="e_pin">${t('pinAsk')}</label><input id="e_pin" type="password" inputmode="numeric" autocomplete="off" style="text-align:center;letter-spacing:6px">`;
+async function checkPin(){
+  const v=($('e_pin')||{}).value||'';
+  if(!v){toast(t('pinNeed'),true);return false}
+  try{
+    const r=await call('login',{pin:v});
+    if(r&&r.ok===false){toast(t('wrongpin'),true);return false}
+    return true;
+  }catch(e){toast(t('net'),true);return false}
+}
 function openEdit(o){
   const keys=Object.keys(o).filter(k=>k!=='_row');
   const val=k=>o[k]==null?'':String(o[k]);
   openModal(t('editEntry'),keys.map((k,i)=>{
     const isD=/^\d{4}-\d{2}-\d{2}$/.test(val(k));
     return `<label for="e_${i}">${esc(hdr(k))}</label><input id="e_${i}" data-k="${esc(k)}" type="${isD?'date':'text'}" value="${esc(val(k))}">`;
-  }).join(''),t('update'),false,async()=>{
+  }).join('')+pinField(),t('update'),false,async()=>{
+    if(!await checkPin())return;
     const data={};
-    document.querySelectorAll('#mb input').forEach(i=>{if(i.value!==val(i.dataset.k))data[i.dataset.k]=i.value});
+    document.querySelectorAll('#mb input[data-k]').forEach(i=>{if(i.value!==val(i.dataset.k))data[i.dataset.k]=i.value});
     if(!Object.keys(data).length){closeModal();return}
     await sendMut('update',{row:o._row,orig:origOf(o),data},t('updated'));
   });
 }
 function openDel(o){
   const sum=Object.keys(o).filter(k=>k!=='_row').slice(0,4).map(k=>`<div><b>${esc(hdr(k))}:</b> ${esc(o[k])}</div>`).join('');
-  openModal(t('delete'),`<p>${t('delAsk')}</p><div class="dsum">${sum}</div>`,t('delete'),true,
-    ()=>sendMut('delete',{row:o._row,orig:origOf(o)},t('deleted')));
+  openModal(t('delete'),`<p>${t('delAsk')}</p><div class="dsum">${sum}</div>${pinField()}`,t('delete'),true,async()=>{
+    if(!await checkPin())return;
+    await sendMut('delete',{row:o._row,orig:origOf(o)},t('deleted'));
+  });
 }
 async function sendMut(act,payload,okMsg){
   const b=$('mok');b.disabled=true;b.classList.add('busy');
@@ -699,6 +741,23 @@ async function download(){
 }
 
 /* ---------- Home dashboard ---------- */
+/* number count-up animation */
+const bnD=s=>s.replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d));
+function countUp(el){
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const txt=el.textContent,mm=txt.match(/[\d০-৯][\d০-৯,]*/);
+  if(!mm)return;
+  const end=Number(bnD(mm[0]).replace(/,/g,''));
+  if(!end)return;
+  const pre=txt.slice(0,mm.index),post=txt.slice(mm.index+mm[0].length),t0=performance.now(),dur=900;
+  (function step(now){
+    const p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,3);
+    el.textContent=pre+Math.round(end*e).toLocaleString(loc())+post;
+    if(p<1)requestAnimationFrame(step);
+  })(t0);
+}
+function animateNums(root){root.querySelectorAll('.big,.hc b').forEach(countUp)}
+
 async function loadHome(){
   const ds=today(),box=$('homebody'),hr=new Date().getHours();
   const g=hr<12?t('gMor'):hr<17?t('gAft'):t('gEve');
@@ -720,6 +779,7 @@ async function loadHome(){
   box.innerHTML=head+
    `<div class="hs ${st}"><div><div class="lb">${label}</div><div class="sb">${t('hand')}: <b>${fmt(hand)}</b><br>${t('led')}: <b>${fmt(led)}</b></div></div><div class="big">${amt}</div></div>`+
    `<div class="hgrid"><div class="hc"><small>${t('ibos')}</small><b>${fmt(sale)}</b></div><div class="hc"><small>${t('hand')}</small><b>${fmt(hand)}</b></div><div class="hc"><small>${t('hExp')}</small><b>${fmt(exp)}</b></div><div class="hc"><small>${t('rFinalS')}</small><b>${fmt(led)}</b></div></div>`+quick;
+  animateNums(box);
 }
 
 /* ---------- Login ---------- */
@@ -764,6 +824,8 @@ $('recent').addEventListener('click',e=>{
 $('mok').onclick=()=>{if(mAct)mAct()};$('mno').onclick=closeModal;
 $('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('modal').hidden)closeModal()});
+window.addEventListener('offline',setOff);
+window.addEventListener('online',()=>{setOff();toast(t('back'))});
 applyI18n();
 try{const s=localStorage.getItem('pin');if(s)login(s)}catch(e){}
 
