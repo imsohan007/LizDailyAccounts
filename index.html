@@ -56,10 +56,9 @@ html[lang=bn] .brand span{letter-spacing:0;text-transform:none;font-size:13.5px}
 /* ---------- Layout: slider sidebar ---------- */
 #navov{position:fixed;inset:0;z-index:25;background:rgba(12,22,52,.5);backdrop-filter:blur(3px);display:none}
 body.nav-open #navov{display:block}
-#app{max-width:1180px;margin:0 auto;padding:24px 20px 60px;display:grid;grid-template-columns:var(--navw) minmax(0,1fr);gap:26px;align-items:start;transition:grid-template-columns .3s ease,gap .3s ease}
+#app{max-width:1180px;margin:0 auto;padding:24px 20px 60px;display:grid;grid-template-columns:var(--navw) minmax(0,1fr);gap:26px;align-items:start;transition:grid-template-columns .28s ease,gap .28s ease}
 body.nav-closed #app{grid-template-columns:0 minmax(0,1fr);gap:0}
-nav{position:sticky;top:18px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:10px;box-shadow:var(--sh1);
-  transition:opacity .22s ease,transform .3s ease,visibility .22s;overflow:hidden}
+nav{position:sticky;top:18px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:10px;box-shadow:var(--sh1);transition:opacity .22s ease,transform .28s ease,visibility .22s;overflow:hidden}
 body.nav-closed nav{opacity:0;visibility:hidden;pointer-events:none;transform:translateX(-18px);border:0;padding:0;box-shadow:none}
 nav .in{display:flex;flex-direction:column;gap:4px}
 nav button{display:flex;align-items:center;gap:12px;width:100%;border:0;background:transparent;padding:9px 12px;border-radius:13px;font-weight:600;font-size:14.5px;color:#4b5573;cursor:pointer;transition:.15s;text-align:left;white-space:nowrap}
@@ -67,7 +66,9 @@ nav button .ic{width:34px;height:34px;border-radius:10px;background:var(--blue-l
 nav button:hover{background:var(--blue-xl);color:var(--blue)}
 nav button.on{background:linear-gradient(135deg,var(--blue),var(--blue-d));color:#fff;box-shadow:0 8px 18px rgba(31,68,156,.32)}
 nav button.on .ic{background:rgba(255,255,255,.18)}
-.navhd{display:none}
+nav button[data-pt]{color:var(--blue-d);background:linear-gradient(135deg,#fff6dc,#ffe9a8);border:1px solid #f1d27c;margin-top:4px}
+nav button[data-pt] .ic{background:var(--yellow-l)}
+nav button[data-pt]:hover{background:linear-gradient(135deg,#ffe9a8,#ffd75f)}
 main{min-width:0;padding:0}
 
 /* ---------- Cards & forms ---------- */
@@ -171,6 +172,8 @@ td.act{white-space:nowrap;text-align:right}
 .quick button{display:flex;align-items:center;gap:12px;padding:15px 18px;border-radius:16px;border:1px solid var(--line);background:#fff;font-weight:600;font-size:inherit;color:var(--ink);cursor:pointer;box-shadow:var(--sh1);transition:.16s;text-align:left}
 .quick button:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-3px);box-shadow:var(--sh2)}
 .quick .ic{font-size:22px;width:44px;height:44px;border-radius:13px;background:var(--blue-l);display:grid;place-items:center;flex:none}
+.quick [data-pt]{grid-column:1/-1;background:linear-gradient(135deg,#ffd15a,var(--yellow));border-color:var(--yellow-d);color:var(--blue-d)}
+.quick [data-pt]:hover{color:var(--blue-d);border-color:var(--yellow-d)}
 
 /* ---------- Modal ---------- */
 #modal{position:fixed;inset:0;z-index:60;background:rgba(12,22,52,.55);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:16px}
@@ -199,25 +202,16 @@ td.act{white-space:nowrap;text-align:right}
 @media(max-width:900px){
   #app{display:block;padding:18px 14px 40px}
   body{padding-bottom:0}
-  body.nav-open{overflow:hidden}
   nav{
     position:fixed;top:0;bottom:0;left:0;z-index:30;
-    width:288px;max-width:86vw;border:0;border-radius:0 22px 22px 0;
-    padding:calc(10px + env(safe-area-inset-top)) 10px calc(14px + env(safe-area-inset-bottom));
-    background:#fff;box-shadow:10px 0 44px rgba(19,41,106,.28);
-    overflow-y:auto;overflow-x:hidden;transform:translateX(-112%);
-    opacity:1;visibility:visible;pointer-events:none;
-    transition:transform .32s cubic-bezier(.2,.8,.2,1);
+    width:282px;max-width:86vw;border:0;border-radius:0 22px 22px 0;
+    padding:calc(14px + env(safe-area-inset-top)) 10px calc(14px + env(safe-area-inset-bottom));
+    background:#fff;box-shadow:10px 0 40px rgba(19,41,106,.25);
+    overflow-y:auto;transform:translateX(-112%);opacity:1;visibility:visible;pointer-events:none;
+    transition:transform .3s cubic-bezier(.2,.8,.2,1);
   }
   body.nav-open nav{transform:translateX(0);pointer-events:auto}
-  body.nav-closed nav{opacity:1;visibility:visible;transform:translateX(-112%);border:0;
-    padding:calc(10px + env(safe-area-inset-top)) 10px calc(14px + env(safe-area-inset-bottom))}
-  .navhd{display:flex;align-items:center;gap:10px;padding:4px 8px 10px;margin-bottom:6px;border-bottom:1px solid var(--line)}
-  .navhd .logo{width:40px;height:40px;border-radius:12px}
-  .navhd .tt{min-width:0}
-  .navhd b{display:block;font-size:15px;color:var(--blue-d);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .navhd span{display:block;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .navhd button{margin-left:auto;border:0;background:var(--blue-l);color:var(--blue);width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer;flex:none;display:grid;place-items:center}
+  body.nav-closed nav{opacity:1;visibility:visible;transform:translateX(-112%);border:0;padding:calc(14px + env(safe-area-inset-top)) 10px calc(14px + env(safe-area-inset-bottom))}
   nav .in{flex-direction:column;gap:4px}
   nav button{flex-direction:row;gap:12px;width:100%;padding:10px 12px;font-size:15px;border-radius:14px;text-align:left;min-width:0}
   nav button .ic{width:36px;height:36px;font-size:18px;background:var(--blue-l);border-radius:11px}
@@ -280,7 +274,7 @@ td.act{white-space:nowrap;text-align:right}
 </div></div>
 
 <div class="top"><div class="in">
-  <button class="menub" id="menub" type="button" aria-label="Menu" aria-controls="tabs" aria-expanded="false">☰</button>
+  <button class="menub" id="menub" type="button" aria-label="Menu">☰</button>
   <div class="brand"><div class="logo" id="hlogo">AB</div><div><b>Liz Fashion – AponBazaar</b><span data-i="sub"></span></div></div>
   <button class="lockb" id="logout" data-i="out" hidden></button>
   <div class="lang" role="group" aria-label="Language">
@@ -301,14 +295,7 @@ td.act{white-space:nowrap;text-align:right}
 </div></div>
 
 <div id="app" hidden>
-  <nav id="nav">
-    <div class="navhd">
-      <div class="logo" id="nlogo">AB</div>
-      <div class="tt"><b>Liz Fashion</b><span data-i="sub"></span></div>
-      <button id="navclose" type="button" aria-label="Close">✕</button>
-    </div>
-    <div class="in" id="tabs"></div>
-  </nav>
+  <nav><div class="in" id="tabs"></div></nav>
 
   <main id="homemain" hidden>
     <div id="homebody"></div>
@@ -480,51 +467,33 @@ async function call(act,data={}){
 }
 
 /* ---------- Slider nav ---------- */
-const isMobileNav=()=>window.innerWidth<=900;
+function isMobileNav(){return window.innerWidth<=900}
 function setNav(open){
   if(isMobileNav()){
     document.body.classList.remove('nav-closed');
     document.body.classList.toggle('nav-open',!!open);
     $('navov').hidden=!open;
-    $('menub').setAttribute('aria-expanded',open?'true':'false');
   }else{
     document.body.classList.remove('nav-open');
     $('navov').hidden=true;
     document.body.classList.toggle('nav-closed',!open);
-    try{localStorage.setItem('navClosed',open?'0':'1')}catch(e){}
-    $('menub').setAttribute('aria-expanded',open?'true':'false');
   }
 }
 function toggleNav(){
   if(isMobileNav()) setNav(!document.body.classList.contains('nav-open'));
   else setNav(document.body.classList.contains('nav-closed'));
 }
-/* restore desktop preference */
-try{
-  if(!isMobileNav()&&localStorage.getItem('navClosed')==='1') document.body.classList.add('nav-closed');
-}catch(e){}
-
 window.addEventListener('resize',()=>{
-  document.body.classList.remove('nav-open');
-  $('navov').hidden=true;
-  $('menub').setAttribute('aria-expanded','false');
-  if(isMobileNav()) document.body.classList.remove('nav-closed');
+  if(isMobileNav()){
+    document.body.classList.remove('nav-closed');
+    $('navov').hidden=true;
+    document.body.classList.remove('nav-open');
+  }else{
+    document.body.classList.remove('nav-open');
+    $('navov').hidden=true;
+    document.body.classList.remove('nav-closed');
+  }
 });
-
-/* swipe gestures on mobile */
-let _tx=0,_ty=0,_tt=0;
-document.addEventListener('touchstart',e=>{
-  if(!isMobileNav())return;
-  const t=e.touches[0];_tx=t.clientX;_ty=t.clientY;_tt=Date.now();
-},{passive:true});
-document.addEventListener('touchend',e=>{
-  if(!isMobileNav())return;
-  const t=e.changedTouches[0],dx=t.clientX-_tx,dy=t.clientY-_ty,dt=Date.now()-_tt;
-  if(dt>650||Math.abs(dy)>Math.abs(dx))return;
-  const open=document.body.classList.contains('nav-open');
-  if(!open&&_tx<26&&dx>62)setNav(true);
-  else if(open&&dx<-62)setNav(false);
-},{passive:true});
 
 /* ---------- i18n ---------- */
 function applyI18n(){
@@ -1020,7 +989,6 @@ function logout(){PIN='';try{localStorage.removeItem('pin')}catch(e){}$('app').h
 
 /* ---------- Events ---------- */
 $('menub').onclick=toggleNav;
-$('navclose').onclick=()=>setNav(false);
 $('navov').onclick=()=>setNav(false);
 document.querySelector('.lang').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;lang=b.dataset.l;try{localStorage.setItem('lang',lang)}catch(x){}
   applyI18n();
@@ -1029,7 +997,7 @@ document.querySelector('.lang').addEventListener('click',e=>{const b=e.target.cl
     else if(cur==='report'){if(!$('holder').hidden)loadReport()}
     else{buildFields(true);loadRecent()}
   }});
-$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)showTab(b.dataset.tab)});
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.tab)showTab(b.dataset.tab)});
 $('homemain').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)showTab(b.dataset.go)});
 $('homemain').addEventListener('click',e=>{
   const b=e.target.closest('[data-gody]');if(!b)return;
@@ -1146,8 +1114,7 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
     font-family: 'Arial Black', Impact, Arial, sans-serif; font-weight: 900;
     font-size: 11cqw; line-height: 1;
   }
-  .logo-icon { position: absolute; left: 4cqw; top: 38.8cqw; height: 12.5cqw; width: auto;
-    border-radius:50%; background:#fff; }
+  .logo-icon { position: absolute; left: 4cqw; top: 38.8cqw; height: 12.5cqw; width: auto; border-radius:50%; background:#fff; }
   .logo-text {
     position: absolute; left: 17.5cqw; top: 40.5cqw; color: #fff;
     font-weight: 700; font-size: 6.2cqw; line-height: 1.1; white-space: nowrap;
@@ -1246,10 +1213,6 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
 
   const st=document.createElement('style');
   st.textContent=`
-  #ptTop{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#ffd15a,var(--yellow));color:var(--blue-d);font-weight:700}
-  #ptTop:hover{background:linear-gradient(135deg,#ffd15a,var(--yellow));filter:brightness(1.05)}
-  .quick [data-pt]{grid-column:1/-1;background:linear-gradient(135deg,#ffd15a,var(--yellow));border-color:var(--yellow-d);color:var(--blue-d)}
-  .quick [data-pt]:hover{color:var(--blue-d);border-color:var(--yellow-d)}
   #ptov{position:fixed;inset:0;z-index:70;background:#e9e9e9;display:flex;flex-direction:column}
   #ptov .pth{display:flex;align-items:center;gap:12px;color:#fff;background:linear-gradient(115deg,var(--blue-d),var(--blue));
     padding:calc(10px + env(safe-area-inset-top)) 14px 10px;border-bottom:4px solid var(--yellow)}
@@ -1257,15 +1220,8 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   #ptov .pth button{border:0;background:rgba(255,255,255,.16);color:#fff;padding:9px 14px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer}
   #ptov .pth button:hover{background:rgba(255,255,255,.28)}
   #ptov .pth a{color:#ffd566;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap}
-  #ptov iframe{flex:1;width:100%;border:0;background:#e9e9e9;padding-bottom:env(safe-area-inset-bottom)}
-  @media(max-width:720px){#ptTop .pl{display:none}}`;
+  #ptov iframe{flex:1;width:100%;border:0;background:#e9e9e9;padding-bottom:env(safe-area-inset-bottom)}`;
   document.head.appendChild(st);
-
-  const top=document.createElement('button');
-  top.id='ptTop';top.className='lockb';top.hidden=true;
-  top.innerHTML='<span>🏷️</span><span class="pl"></span>';
-  const anchor=g('logout');
-  anchor.parentNode.insertBefore(top,anchor);
 
   const ov=document.createElement('div');
   ov.id='ptov';ov.hidden=true;
@@ -1276,10 +1232,9 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
 
   function labels(){
     const s=L[lg()];
-    top.querySelector('.pl').textContent=s.btn;top.title=s.btn;
     g('ptBack').textContent=s.back;g('ptTitle').textContent='🏷️ '+s.title;
     const a=g('ptTab');a.textContent=s.tab;a.href='#';
-    document.querySelectorAll('.quick [data-pt]').forEach(b=>b.lastChild.textContent=s.btn);
+    document.querySelectorAll('[data-pt]').forEach(b=>{const sp=b.lastElementChild;if(sp)sp.textContent=s.btn});
   }
   function open(){
     if(!loaded){fr.srcdoc=full();loaded=true}
@@ -1298,10 +1253,13 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   setInterval(()=>{if(keepAlive&&!ov.hidden&&typeof bump==='function')bump()},20000);
 
   g('ptTab').addEventListener('click',()=>{g('ptTab').href=URL.createObjectURL(new Blob([full()],{type:'text/html'}))});
-  top.onclick=open;
   g('ptBack').onclick=close;
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ov.hidden&&g('modal').hidden)close()});
-  document.addEventListener('click',e=>{if(e.target.closest('[data-pt]'))open()});
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-pt]');if(!b)return;
+    if(b.closest('#tabs')&&typeof isMobileNav==='function'&&isMobileNav())setNav(false);
+    open();
+  });
 
   function addHome(){
     const q=document.querySelector('#homebody .quick');
@@ -1310,13 +1268,19 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
     b.innerHTML='<span class="ic">🏷️</span><span></span>';
     q.appendChild(b);labels();
   }
+  function addNav(){
+    const nav=g('tabs');
+    if(!nav||nav.querySelector('[data-pt]'))return;
+    const b=document.createElement('button');
+    b.type='button';b.dataset.pt='1';
+    b.innerHTML='<span class="ic">🏷️</span><span></span>';
+    nav.appendChild(b);labels();
+  }
   new MutationObserver(addHome).observe(g('homebody'),{childList:true});
-  addHome();
-
-  function sync(){const out=g('app').hidden;top.hidden=out;if(out&&!ov.hidden)reset()}
-  new MutationObserver(sync).observe(g('app'),{attributes:true,attributeFilter:['hidden']});
+  new MutationObserver(addNav).observe(g('tabs'),{childList:true});
   new MutationObserver(labels).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
-  labels();sync();
+  new MutationObserver(()=>{if(g('app').hidden&&!ov.hidden)reset()}).observe(g('app'),{attributes:true,attributeFilter:['hidden']});
+  addHome();addNav();labels();
 })();
 </script>
 </body>
