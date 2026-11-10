@@ -60,6 +60,18 @@ nav button:hover{background:var(--blue-xl);color:var(--blue)}
 nav button.on{background:linear-gradient(135deg,var(--blue),var(--blue-d));color:#fff;box-shadow:0 8px 18px rgba(31,68,156,.32)}
 nav button.on .ic{background:rgba(255,255,255,.18)}
 main{min-width:0;padding:0}
+  /* ---------- 3-dot sidebar toggle ---------- */
+#app{grid-template-columns:auto minmax(0,1fr)}
+nav .dots{width:44px;height:44px;padding:0;justify-content:center;gap:0;font-size:26px;font-weight:800;line-height:1;color:var(--blue);background:var(--blue-l);border-radius:13px}
+nav .dots:hover{background:var(--yellow-l);color:var(--blue-d)}
+nav.open .dots{background:var(--blue);color:#fff}
+nav:not(.open) #tabs{display:none}
+nav.open #tabs{margin-top:8px;width:212px}
+@media(max-width:900px){
+  nav .dots{display:none}
+  nav:not(.open) #tabs{display:flex}
+  nav.open #tabs{width:auto;margin-top:0}
+}
 
 /* ---------- Cards & forms ---------- */
 .card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:var(--sh2)}
@@ -271,8 +283,7 @@ td.act{white-space:nowrap;text-align:right}
 </div></div>
 
 <div id="app" hidden>
-  <nav><div class="in" id="tabs"></div></nav>
-
+<nav id="sidenav"><button class="dots" id="navdots" aria-label="Menu" aria-expanded="false">⋮</button><div class="in" id="tabs"></div></nav>
   <main id="homemain" hidden>
     <div id="homebody"></div>
   </main>
@@ -970,6 +981,7 @@ $('homemain').addEventListener('click',e=>{
 });
 $('enter').onclick=()=>login();$('pin').addEventListener('keydown',e=>{if(e.key==='Enter')login()});
 $('logout').onclick=logout;
+  $('navdots').onclick=()=>{const o=$('sidenav').classList.toggle('open');$('navdots').setAttribute('aria-expanded',o)};
 $('save').onclick=saveEntry;$('clear').onclick=()=>{buildFields(false);setMsg('')};
 $('pv').onclick=()=>{shiftDate(-1);loadReport()};$('nx').onclick=()=>{shiftDate(1);loadReport()};
 $('td').onclick=()=>{$('d').value=today();loadReport()};$('load').onclick=loadReport;$('dl').onclick=download;$('sh').onclick=shareReport;
